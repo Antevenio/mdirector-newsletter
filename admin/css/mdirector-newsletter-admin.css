@@ -1,0 +1,371 @@
+.mdirector.nav-tab-wrapper a:before {
+    -webkit-font-smoothing: antialiased;
+    display: inline-block;
+    font: normal 16px/1 'dashicons';
+    left: 10px;
+    position: absolute;
+}
+
+.mdirector.nav-tab-wrapper a.settings:before {
+    content: "\f111";
+}
+
+.mdirector.nav-tab-wrapper a.help:before {
+    content: "\f223";
+    font: normal 18px/1 'dashicons';
+}
+
+.mdirector.nav-tab-wrapper a.welcome:before {
+    content: "\f466";
+    font: normal 18px/1 'dashicons';
+}
+
+.mdirector.nav-tab-wrapper a.debug:before {
+    content: "\f314";
+    font: normal 18px/1 'dashicons';
+}
+
+.mdirector.nav-tab-wrapper a {
+    padding-left: 31px;
+    position: relative;
+}
+
+.form-md h3 {
+    margin-top: 30px;
+    margin-bottom: 20px;
+}
+
+.form-md hr {
+    margin-top: 20px;
+}
+
+.md_cat_checkbox {
+    margin-bottom: 5px;
+}
+
+.form-md .md_cat_checkbox:first-child {
+    padding-top: 8px;
+}
+
+.md_cat_checkbox.child {
+    padding-left: 10px;
+}
+
+.md_cat_checkbox.grandchild {
+    padding-left: 20px;
+}
+
+label.checkbox, label.select, label.textinput {
+    background-color: transparent;
+    display: inline-block;
+    margin: 10px 0 5px;
+    width: 180px;
+}
+
+label.block {
+    display: block;
+}
+
+.margin-top-10 {
+    margin-top: 10px;
+}
+
+.margin-top-20 {
+    margin-top: 20px;
+}
+
+.margin-top-30 {
+    margin-top: 30px;
+}
+
+.margin-bottom-10 {
+    margin-bottom: 10px;
+}
+
+.margin-bottom-20 {
+    margin-bottom: 20px;
+}
+
+.margin-bottom-30 {
+    margin-bottom: 30px;
+}
+
+.margin-left-10 {
+    margin-left: 10px !important;
+}
+
+.margin-left-15 {
+    margin-left: 15px !important;
+}
+
+.text-red {
+    color: red;
+}
+
+#weekly_extra, #daily_extra {
+    background: #F1F1F1;
+    border-radius: 10px;
+    border: 1px solid #DDDDDD;
+    display: none;
+    margin-top: 10px;
+    padding: 20px;
+}
+
+.categories_list {
+    padding-top: 20px;
+}
+
+span.help-block {
+    font-size: 90%;
+    font-style: italic;
+}
+
+.notice-block {
+    background-color: #5BB286;
+    padding: 10px 10px 10px 18px;
+    color: #fff;
+    border-radius: 5px;
+}
+
+.notice-block:before {
+    content: "\f534";
+    font: normal 18px/1 'dashicons';
+    left: -7px;
+    position: relative;
+    top: 3px;
+}
+
+/** TIMEPICKER **/
+input.timepicker {
+    background: #ffffff url('../../assets/icon_clock.png') 97% 50% no-repeat;
+}
+
+.ui-timepicker-container {
+    box-sizing: border-box;
+    overflow: hidden;
+    position: absolute;
+}
+
+.ui-timepicker {
+    box-sizing: content-box;
+    display: block;
+    height: 205px;
+    list-style: none outside none;
+    margin: 0;
+    padding: 0 1px;
+    text-align: center;
+}
+
+.ui-timepicker-viewport {
+    box-sizing: content-box;
+    display: block;
+    height: 205px;
+    margin: 0;
+    overflow-x: hidden; /* IE */
+    overflow: auto;
+    padding: 0;
+}
+
+.ui-timepicker-standard {
+    background-color: #FFF;
+    border: 1px solid #AAA;
+    color: #222;
+    font-size: 14px;
+    margin: 0;
+    padding: 2px;
+}
+
+.ui-timepicker-standard a {
+    border: 1px solid transparent;
+    color: #222;
+    display: block;
+    padding: 0.2em 0.4em;
+    text-decoration: none;
+}
+
+.ui-timepicker-standard .ui-state-hover {
+    background-color: #DDDDDD;
+    color: #212121;
+    font-weight: normal;
+}
+
+.ui-timepicker-standard .ui-menu-item {
+    margin: 0;
+    padding: 0;
+}
+
+.ui-timepicker-corners,
+.ui-timepicker-corners .ui-corner-all {
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+}
+
+.ui-timepicker-hidden {
+    display: none;
+}
+
+.ui-timepicker-no-scrollbar .ui-timepicker {
+    border: none;
+}
+
+/** ERROR DIV **/
+.error-nag {
+    -webkit-box-shadow: 0 1px 1px 0 rgba(0, 0, 0, .1);
+    background-color: #fff;
+    border-left: 4px solid red;
+    box-shadow: 0 1px 1px 0 rgba(0, 0, 0, .1);
+    display: inline-block;
+    font-size: 14px;
+    line-height: 19px;
+    margin: 25px 20px 0 2px;
+    padding: 11px 15px;
+    text-align: left;
+}
+
+.mdirector-header {
+    background: #222222 url('../../assets/logo_md.png') no-repeat 20px center;
+    height: 80px;
+    margin-right: 20px;
+    margin-top: 20px;
+    width: 100%;
+}
+
+.mdirector-text {
+    padding: 20px;
+}
+
+.mdirector-settings-box {
+    background: #ffffff;
+    border-radius: 10px;
+    border: 1px solid #dddddd;
+    margin-top: 40px;
+    max-width: 700px;
+    padding: 20px 30px;
+}
+
+.mdirector-welcome-box {
+    background: #ffffff;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    max-width: 800px;
+}
+
+.mdirector-welcome-box p, .mdirector-welcome-box h3 {
+    padding: 5px 40px;
+}
+
+a.btn-orange {
+    background-color: #ff9d2a;
+    border-bottom: 4px solid #3a2300;
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    margin: 20px;
+    padding: 20px;
+    text-decoration: none !important;
+    text-transform: uppercase;
+}
+
+a.btn-blue {
+    background-color: #25b0e0;
+    border-bottom: 4px solid #3a2300;
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    margin: 40px;
+    padding: 20px;
+    text-decoration: none !important;
+    text-transform: uppercase;
+}
+
+.weekly_extra_selector fieldset {
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    font-size: 90%;
+    padding: 0 10px;
+}
+
+.weekly_extra_selector fieldset legend {
+    background-color: #f1f1f1;
+    font-size: 14px;
+    padding: 0 10px 0 5px;
+}
+
+.weekly_extra_selector .field-selector {
+    width: 465px;
+}
+
+.weekly_extra_selector .help-block {
+    font-size: 85%;
+    margin-left: 5px;
+    top: 4px;
+}
+
+.choice-block {
+    margin: 10px 0 25px;
+}
+
+.choice-block input[type="radio"] {
+    position: relative;
+    top: 2px;
+}
+
+.subset {
+    margin-top: 3px;
+    overflow: hidden;
+}
+
+.subset.disabled {
+    opacity: 0.4;
+}
+
+.subset.disabled input,
+.subset.disabled select {
+    cursor: not-allowed;
+}
+
+.block-50 {
+    float: left;
+    width: 50%;
+}
+
+.block-50 input,
+.block-50 select {
+    display: block;
+    height: 30px;
+    width: 310px;
+}
+
+.block-50 select {
+    width: 100%;
+}
+
+.md-notice,
+.md-error {
+    margin: 20px 0 0 2px !important;
+    padding: 11px 15px !important;
+}
+
+.md-error {
+    border-left-color: red !important;
+    background-color: #fcc !important;
+}
+
+.wp-core-ui .button-submit {
+    box-shadow: inset 0px -3px 0px 0px rgba(0, 0, 0, 0.1);
+    background-color: #59B285;
+    border-radius: 3px;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    line-height: 1;
+    text-align: center;
+    width: auto;
+}
+
+.wp-core-ui .button-submit:hover {
+    background: #499C73;
+    border-color: #3A7C5B;
+    color: #fff;
+}

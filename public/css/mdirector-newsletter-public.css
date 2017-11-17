@@ -1,0 +1,29 @@
+.md_ajax_loader {
+    display: none;
+}
+
+.md_handling {
+    margin: 2em 0.5em 1em 0em;;
+    padding: 0.2em 1em;
+}
+
+.md_error_handling {
+    border: 2px solid #ff0000;
+}
+
+.md_success_handling {
+    border: 2px solid #398f14;
+}
+
+.mdirector_sh_field, .widget_form_field {
+    margin-bottom: 10px
+}
+
+.mdirector_sh_field input[type="text"],
+.mdirector_sh_field select {
+    padding: 5px;
+    width: 90%;
+    max-width: 380px;
+    margin: 0px 0px 10px 0px;
+    border: 2px solid #ccc;
+}
