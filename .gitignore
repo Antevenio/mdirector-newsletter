@@ -2,3 +2,9 @@
 *.iml
 out
 gen
+
+#SVN Folders
+/assets/
+/branches/
+/tags/
+/trunk/
