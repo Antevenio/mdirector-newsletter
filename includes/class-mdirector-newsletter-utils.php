@@ -142,6 +142,30 @@ class Mdirector_Newsletter_Utils {
         return $subject;
     }
 
+    private function get_devilery_list_id ($frequency) {
+        if ($frequency === self::DAILY_FREQUENCY) {
+            if (get_option('mdirector_use_test_lists')) {
+                return get_option('mdirector_daily_test_list');
+            }
+
+            return get_option('mdirector_daily_list');
+        }
+
+        if (get_option('mdirector_use_test_lists')) {
+            return get_option('mdirector_weekly_test_list');
+        }
+
+        return get_option('mdirector_weekly_list');
+    }
+
+    private function get_delivery_campaign_id ($frequency) {
+        if ($frequency === self::DAILY_FREQUENCY) {
+            return get_option('mdirector_daily_campaign');
+        }
+
+        return get_option('mdirector_weekly_campaign');
+    }
+
     private function send_mail_API($mail_content, $mail_subject, $frequency = null) {
         $settings = get_option('mdirector_settings');
         $mdirector_active = get_option('mdirector_active');
@@ -149,14 +173,8 @@ class Mdirector_Newsletter_Utils {
         if ($mdirector_active == 'yes') {
             $key = $settings['api'];
             $secret = $settings['secret'];
-
-            if ($frequency === self::DAILY_FREQUENCY) {
-                $list_id = get_option('mdirector_daily_list');
-                $campaign_id = get_option('mdirector_daily_campaign');
-            } else {
-                $list_id = get_option('mdirector_weekly_list');
-                $campaign_id = get_option('mdirector_weekly_campaign');
-            }
+            $list_id = $this->get_devilery_list_id($frequency);
+            $campaign_id = $this->get_delivery_campaign_id($frequency);
 
             $mdirector_send_resp =
                 json_decode(
@@ -213,12 +231,12 @@ class Mdirector_Newsletter_Utils {
 
         if ($_POST['cpt_submit_test_now'] || ($actual_time >= strtotime($to_date) && $can_send == 1)) {
             $args = [
-                'post_type' 	=> 'post',
+                'post_type'     => 'post',
                 'post_status'   => 'publish',
                 'date_query'    => [
-                    'column'  	=> 'post_date',
-                    'after'   	=> $from_date,
-                    'before'	=> $to_date
+                    'column'    => 'post_date',
+                    'after'     => $from_date,
+                    'before'    => $to_date
                 ]
             ];
             $exclude_cats = ($settings['exclude_cats']) ? unserialize($settings['exclude_cats']) : [];
@@ -279,12 +297,12 @@ class Mdirector_Newsletter_Utils {
         if ($_POST['cpt_submit_test_now'] ||
             (date('N') === $day && ($actual_time >= strtotime($to_date)) && ($can_send === 1))) {
             $args = [
-                'post_type' 	=> 'post',
+                'post_type'     => 'post',
                 'post_status'   => 'publish',
                 'date_query'    => [
-                    'column'  	=> 'post_date',
-                    'after'   	=> $from_date,
-                    'before'	=> $to_date
+                    'column'    => 'post_date',
+                    'after'     => $from_date,
+                    'before'    => $to_date
                 ]
             ];
             $exclude_cats = ($settings['exclude_cats']) ? unserialize($settings['exclude_cats']) : [];

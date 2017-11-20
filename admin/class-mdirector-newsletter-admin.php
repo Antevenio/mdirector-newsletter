@@ -525,48 +525,60 @@ class MDirector_Newsletter_Admin {
 
     function md_tab_content_help() {
         echo __('<h4>Pasos para configurar el plugin de Newsletter de MDirector</h4>
-			<p>
-			El plugin de MDirector conecta tu wordpress con MDirector, enviando los últimos posts que hayas escrito diaria o semanalmente y permite a tus usuarios suscribirse a la newsletter.
-			</p>
-			<ol style="max-width:90%">
-				<li><p>Crea tu <a href="https://signup.mdirector.com/?lang=es" target="_blank">cuenta de MDirector</a>. Recuerda que con tu cuenta gratuíta puedes enviar hasta 5000 mensajes mensuales. Si ya tienes una puedes continuar con el paso 2.</p></li>
-				<li><p>Inicia sesión en tu <a href="https://auth.mdirector.com" target="_blank">cuenta de Email Marketing en MDirector</a>, accede a Preferencias > Información API y activa el API si aún no está activado.</p>
-				', self::MDIRECTOR_LANG_DOMAIN);
+            <p>
+            El plugin de MDirector conecta tu wordpress con MDirector, enviando los últimos posts que hayas escrito diaria o semanalmente y permite a tus usuarios suscribirse a la newsletter.
+            </p>
+            <ol style="max-width:90%">
+                <li><p>Crea tu <a href="https://signup.mdirector.com/?lang=es" target="_blank">cuenta de MDirector</a>. Recuerda que con tu cuenta gratuíta puedes enviar hasta 5000 mensajes mensuales. Si ya tienes una puedes continuar con el paso 2.</p></li>
+                <li><p>Inicia sesión en tu <a href="https://auth.mdirector.com" target="_blank">cuenta de Email Marketing en MDirector</a>, accede a Preferencias > Información API y activa el API si aún no está activado.</p>
+                ', self::MDIRECTOR_LANG_DOMAIN);
 
         echo '<br><img src="' . MDIRECTOR_NEWSLETTER_PLUGIN_URL . '/assets/api.jpg"/></li>';
 
         echo __('<li><p>Copia los valores de consumer-key y consumer-secret</p></li>
-				<li><p>Accede a la pestaña de configuración del plugin, introduce tu consumer-key y consumer-secret y pincha en guardar cambios.</p></li>
-				<li><p>Una vez hechos los primeros 4 pasos, automáticamente se crean dos listas en tu cuenta de MDirector, una para aquellos usuarios que se suscriban a la lista semanal y otra para los que se suscriban a la lista diaria.</p></li>
-				<li><p>A continuación elige el From name (Nombre que aparecerá en el mensaje en el campo <b>De:</b>) </p></li>
-				<li><p>Por defecto, están desactivados los envíos desde las listas semanales y diarias. Actívalas para activar los envíos automáticos. <br>Rellena el formulario que aparecerá con el asunto del mensaje, la hora a la que quieres programar los envíos y el día de la semana en caso de la lista semanal.<br>NOTA: A pesar de que estén desactivados los envíos, los usuarios podrán suscribirse a las listas. De esta forma podrás crear campañas directamente en MDirector y enviarlas a los suscriptores de tu blog.</p></li>
-				<li><p>A continuación puedes seleccionar también las categorías que quieres excluir de los envíos automáticos.</p></li>
-				<li><p>Guarda al final de la página de configuración del plugin. Una vez hecho, automáticamente se crean dos listas en tu cuenta de MDirector, una para aquellos usuarios que se suscriban a la newsletter semanal y otra para los que se suscriban a la newsletter diaria.</p></li>
-				<li><p>Si quieres realizar una prueba para ver el aspecto de tu campaña antes de enviarla utiliza la pestaña "Pruebas". Desde ahí, puedes indicar una lista alternativa a la que realizar el envío, por ejemplo, una donde figures tú y un par de amigos.</p></li>
-				<li><p>Una vez que lo tengas todo configurado, puedes lanzar tu campaña de forma inmediata, o bien esperar al momento programado. Si no quieres esperar, solo pulsa "Enviar ahora mismo" o "Enviar prueba ahora mismo" desde su correspondiente pestaña.</p></li>
-				<li><p>Ahora ya puedes colocar el formulario / widget en tu blog. Para ello accede a Apariencia > Widgets en el panel de tu wordpress y arrastra a tu sidebar el widget de MDirector. Podrás configurar un título, una descripción / explicación para que aparezca encima de tu formulario y un enlace y checkbox para la política de privacidad o términos legales. ¡Ya está! tus usuarios pueden comenzar a suscribirse.</p></li>
-				<li><p>Además del widget, puedes usar un shortcode para colocar el formulario de suscripción en cualquier página o post de tu blog. Para ello añade [mdirector_subscriptionbox] al contenido de cualquiera de tus páginas o posts.</p></li>
-				<li><p>Puedes personalizar el aspecto de la plantilla de newsletter enviada a los usuarios modificando los ficheros de la carpeta /templates/ del directorio del plugin (Conocimientos de HTML / CSS requeridos).</p></li>
-				<li><p>El plugin hace uso de WP Cron para realizar los envíos, el sistema de programación de tareas de Wordpress. Wp Cron funciona sólo cuando se producen visitas a la página, por lo que su ejecución en la hora planificada puede no ser precisa. <a href="http://stackoverflow.com/questions/12895706/when-does-wp-cron-php-run-in-wordpress" target="_blank">Más información aquí</a></p></li>
-			</ol>
-			', self::MDIRECTOR_LANG_DOMAIN);
+                <li><p>Accede a la pestaña de configuración del plugin, introduce tu consumer-key y consumer-secret y pincha en guardar cambios.</p></li>
+                <li><p>Una vez hechos los primeros 4 pasos, automáticamente se crean dos listas en tu cuenta de MDirector, una para aquellos usuarios que se suscriban a la lista semanal y otra para los que se suscriban a la lista diaria.</p></li>
+                <li><p>A continuación elige el From name (Nombre que aparecerá en el mensaje en el campo <b>De:</b>) </p></li>
+                <li><p>Por defecto, están desactivados los envíos desde las listas semanales y diarias. Actívalas para activar los envíos automáticos. <br>Rellena el formulario que aparecerá con el asunto del mensaje, la hora a la que quieres programar los envíos y el día de la semana en caso de la lista semanal.<br>NOTA: A pesar de que estén desactivados los envíos, los usuarios podrán suscribirse a las listas. De esta forma podrás crear campañas directamente en MDirector y enviarlas a los suscriptores de tu blog.</p></li>
+                <li><p>A continuación puedes seleccionar también las categorías que quieres excluir de los envíos automáticos.</p></li>
+                <li><p>Guarda al final de la página de configuración del plugin. Una vez hecho, automáticamente se crean dos listas en tu cuenta de MDirector, una para aquellos usuarios que se suscriban a la newsletter semanal y otra para los que se suscriban a la newsletter diaria.</p></li>
+                <li><p>Si quieres realizar una prueba para ver el aspecto de tu campaña antes de enviarla utiliza la pestaña "Pruebas". Desde ahí, puedes indicar una lista alternativa a la que realizar el envío, por ejemplo, una donde figures tú y un par de amigos.</p></li>
+                <li><p>Una vez que lo tengas todo configurado, puedes lanzar tu campaña de forma inmediata, o bien esperar al momento programado. Si no quieres esperar, solo pulsa "Enviar ahora mismo" o "Enviar prueba ahora mismo" desde su correspondiente pestaña.</p></li>
+                <li><p>Ahora ya puedes colocar el formulario / widget en tu blog. Para ello accede a Apariencia > Widgets en el panel de tu wordpress y arrastra a tu sidebar el widget de MDirector. Podrás configurar un título, una descripción / explicación para que aparezca encima de tu formulario y un enlace y checkbox para la política de privacidad o términos legales. ¡Ya está! tus usuarios pueden comenzar a suscribirse.</p></li>
+                <li><p>Además del widget, puedes usar un shortcode para colocar el formulario de suscripción en cualquier página o post de tu blog. Para ello añade [mdirector_subscriptionbox] al contenido de cualquiera de tus páginas o posts.</p></li>
+                <li><p>Puedes personalizar el aspecto de la plantilla de newsletter enviada a los usuarios modificando los ficheros de la carpeta /templates/ del directorio del plugin (Conocimientos de HTML / CSS requeridos).</p></li>
+                <li><p>El plugin hace uso de WP Cron para realizar los envíos, el sistema de programación de tareas de Wordpress. Wp Cron funciona sólo cuando se producen visitas a la página, por lo que su ejecución en la hora planificada puede no ser precisa. <a href="http://stackoverflow.com/questions/12895706/when-does-wp-cron-php-run-in-wordpress" target="_blank">Más información aquí</a></p></li>
+            </ol>
+            ', self::MDIRECTOR_LANG_DOMAIN);
     }
 
     function md_tab_content_welcome() {
         echo '
-			<div class="mdirector-welcome-box"><a href="https://signup.mdirector.com?lang=es" target="_blank"><img src="'
+            <div class="mdirector-welcome-box"><a href="https://signup.mdirector.com?lang=es" target="_blank"><img src="'
             . MDIRECTOR_NEWSLETTER_PLUGIN_URL
             . '/assets/mdirector-welcome.png"/></a>' .
             __('<h3>Wordpress + MDirector = Más visitas en tu blog</h3>
-			<p>Integra tu Wordpress con MDirector, la herramienta de envíos de email marketing y sms más avanzada y sencilla del mercado.</p>
-			<p>El plugin de MDirector permite a tus visitantes suscribirse a tus publicaciones, asignándoles una lista en MDirector según deseen recibir los posts diaria o semanalmente, y ocupándonos de que se envíen automáticamente tus mensajes a través de MDirector sin que tengas que preocuparte. Además todos tus suscriptores serán también administrables desde MDirector por lo que podrás hacer envíos desde la plataforma.</p>
-			<p>Configura ya tu plugin y en unos minutos podrás empezar a recibir suscriptores a tu blog.</p>
-			<p>Para usarlo tienes que crear una cuenta en MDirector, recuerda que tienes 5.000 emails gratis al mes sólo por registrarte.</p>
+            <p>Integra tu Wordpress con MDirector, la herramienta de envíos de email marketing y sms más avanzada y sencilla del mercado.</p>
+            <p>El plugin de MDirector permite a tus visitantes suscribirse a tus publicaciones, asignándoles una lista en MDirector según deseen recibir los posts diaria o semanalmente, y ocupándonos de que se envíen automáticamente tus mensajes a través de MDirector sin que tengas que preocuparte. Además todos tus suscriptores serán también administrables desde MDirector por lo que podrás hacer envíos desde la plataforma.</p>
+            <p>Configura ya tu plugin y en unos minutos podrás empezar a recibir suscriptores a tu blog.</p>
+            <p>Para usarlo tienes que crear una cuenta en MDirector, recuerda que tienes 5.000 emails gratis al mes sólo por registrarte.</p>
             <br class="clear">
             <p><a class="btn-orange" href="https://signup.mdirector.com?lang=es" target="_blank">Crear mi cuenta en MDirector</a> <a class="btn-blue" href="admin.php?page=mdirector-newsletter&tab=settings">Ya tengo cuenta en MDirector</a></p>
-			<br class="clear">
-			</div>
-			', self::MDIRECTOR_LANG_DOMAIN);
+            <br class="clear">
+            </div>
+            ', self::MDIRECTOR_LANG_DOMAIN);
+    }
+
+    private function get_daily_list_id() {
+        return get_option('mdirector_use_test_lists')
+            ? get_option('mdirector_daily_test_list')
+            : get_option('mdirector_daily_list');
+    }
+
+    private function get_weekly_list_id () {
+        return get_option('mdirector_use_test_lists')
+            ? get_option('mdirector_weekly_test_list')
+            : get_option('mdirector_weekly_list');
     }
 
     function md_tab_content_settings() {
@@ -576,8 +588,8 @@ class MDirector_Newsletter_Admin {
         $options_days = '';
         $options_subject_weekly_dynamic = '';
         $options_subject_daily_dynamic = '';
-        $daily_list = get_option('mdirector_daily_list');
-        $weekly_list = get_option('mdirector_weekly_list');
+        $daily_list = $this->get_daily_list_id();
+        $weekly_list = $this->get_weekly_list_id();
         $mdirector_use_custom_lists = $settings['mdirector_use_custom_lists'];
         $mdirector_daily_custom_list = $settings['mdirector_daily_custom_list'];
         $mdirector_weekly_custom_list = $settings['mdirector_weekly_custom_list'];
@@ -614,26 +626,26 @@ class MDirector_Newsletter_Admin {
 
         echo '<div class="mdirector-settings-box">
             <h4>' . __('1. Datos de conexión API MDirector', self::MDIRECTOR_LANG_DOMAIN) . '</h4>
-			<p>'
+            <p>'
             . __('Por favor, configura tus datos de conexión con la API. Puedes encontrarlos en las preferencias de tu cuenta de MDirector, pestaña <b>Información API</b>.',
                 self::MDIRECTOR_LANG_DOMAIN) . '</p>
-			<br class="clear">
-			<label class="select">' . __('consumer-key', self::MDIRECTOR_LANG_DOMAIN) . '</label>
-			<input id="api" name="api" type="text" value="' . $settings['api'] . '"/> <span class="help-block"></span>
-			<br class="clear">
-			<label class="select">' . __('consumer-secret', self::MDIRECTOR_LANG_DOMAIN) . '</label>
-			<input id="secret" name="secret" type="text" value="' . $settings['secret'] . '"/> <span class="help-block"></span>
-			<br class="clear">
-			</div>
-			';
+            <br class="clear">
+            <label class="select">' . __('consumer-key', self::MDIRECTOR_LANG_DOMAIN) . '</label>
+            <input id="api" name="api" type="text" value="' . $settings['api'] . '"/> <span class="help-block"></span>
+            <br class="clear">
+            <label class="select">' . __('consumer-secret', self::MDIRECTOR_LANG_DOMAIN) . '</label>
+            <input id="secret" name="secret" type="text" value="' . $settings['secret'] . '"/> <span class="help-block"></span>
+            <br class="clear">
+            </div>
+            ';
 
         if ($settings['api'] && $settings['secret']) {
             echo '
-				<div class="mdirector-settings-box">
+                <div class="mdirector-settings-box">
                     <h4>' . __('2. Listas de contactos personalizadas', self::MDIRECTOR_LANG_DOMAIN) . '</h4>
-                    <p>Este plugin crea de forma automática dos listas de contactos en tu cuenta de MDirector para enviar las campañas diarias o semanales. 
-                    Si lo prefieres, puedes indicar a continuación alguna de tus listas ya existentes para utilizarlas en su lugar.</p>                    
-                    <p class="notice-block">' . __('Las listas diaria y semanal que utilices deben existir y ser distintas.', self::MDIRECTOR_LANG_DOMAIN) . '</p>                    
+                    <p>Este plugin crea de forma automática dos listas de contactos en tu cuenta de MDirector para enviar las campañas diarias o semanales.
+                    Si lo prefieres, puedes indicar a continuación alguna de tus listas ya existentes para utilizarlas en su lugar.</p>
+                    <p class="notice-block">' . __('Las listas diaria y semanal que utilices deben existir y ser distintas.', self::MDIRECTOR_LANG_DOMAIN) . '</p>
                     <br class="clear">
                     <div class="md_cat_checkbox">
                         <input type="checkbox" name="mdirector_use_custom_lists" id="mdirector_use_custom_lists" value="yes" '
@@ -647,10 +659,10 @@ class MDirector_Newsletter_Admin {
                     <label class="select">' . __('Lista para envíos semanales', self::MDIRECTOR_LANG_DOMAIN) . '</label>
                     <input id="mdirector_weekly_custom_list" name="mdirector_weekly_custom_list" type="text" value="' . $mdirector_weekly_custom_list . '"/>
                     <br class="clear"><br class="clear">
-                    <small>' . __('Actualmente, enviando a la lista diaria ', self::MDIRECTOR_LANG_DOMAIN) . $daily_list . ' ' . __('y a la lista semanal ', self::MDIRECTOR_LANG_DOMAIN) . $weekly_list . '.</small>                    
+                    <small>' . __('Actualmente, enviando a la lista diaria ', self::MDIRECTOR_LANG_DOMAIN) . $daily_list . ' ' . __('y a la lista semanal ', self::MDIRECTOR_LANG_DOMAIN) . $weekly_list . '.</small>
                 </div>
-                
-				<div class="mdirector-settings-box">
+
+                <div class="mdirector-settings-box">
                     <h4>' . __('3. Campo From', self::MDIRECTOR_LANG_DOMAIN) . '</h4>
                     <p>' . __('Configura el nombre que aparecerá en el campo <b>De:</b> de los correos que se envíen automáticamente desde el plugin.', self::MDIRECTOR_LANG_DOMAIN) . '</p>
                     <br class="clear">
@@ -658,12 +670,12 @@ class MDirector_Newsletter_Admin {
 
                     <input id="from_name" name="from_name" type="text" value="'. $settings['from_name'] . '"/>
                     <br class="clear">
-				</div>
-				<div class="mdirector-settings-box">
-				    <h4>' . __('4. Enviar mensajes semanales', self::MDIRECTOR_LANG_DOMAIN) . '</h4>
-				    <p>' . __('Activa los envíos de newsletters para los usuarios para los usuarios suscritos a la información semanal. Si esta opción está activada, todas las semanas se enviará un email automático a los usuarios suscritos a la lista, con un resumen de los posts publicados cada la semana.', self::MDIRECTOR_LANG_DOMAIN) . '</p>
-				    <br class="clear">
-				    <input type="checkbox" name="frequency_weekly" id="frequency_weekly" value="yes" ' . (($settings['frequency_weekly'] === self::SETTINGS_OPTION_ON) ? 'checked' : '') . '> ' . __('Activa los envíos semanales', self::MDIRECTOR_LANG_DOMAIN) . '<br class="clear">
+                </div>
+                <div class="mdirector-settings-box">
+                    <h4>' . __('4. Enviar mensajes semanales', self::MDIRECTOR_LANG_DOMAIN) . '</h4>
+                    <p>' . __('Activa los envíos de newsletters para los usuarios para los usuarios suscritos a la información semanal. Si esta opción está activada, todas las semanas se enviará un email automático a los usuarios suscritos a la lista, con un resumen de los posts publicados cada la semana.', self::MDIRECTOR_LANG_DOMAIN) . '</p>
+                    <br class="clear">
+                    <input type="checkbox" name="frequency_weekly" id="frequency_weekly" value="yes" ' . (($settings['frequency_weekly'] === self::SETTINGS_OPTION_ON) ? 'checked' : '') . '> ' . __('Activa los envíos semanales', self::MDIRECTOR_LANG_DOMAIN) . '<br class="clear">
 
                     <div id="weekly_extra" class="weekly_extra_selector" style="' . (($settings['frequency_weekly'] === self::SETTINGS_OPTION_ON) ? 'display: block' : '') . '">
                         <fieldset>
@@ -717,8 +729,8 @@ class MDirector_Newsletter_Admin {
                         <p>' . __('Los envíos semanales se guardan en la campaña', self::MDIRECTOR_LANG_DOMAIN) . ' ' . get_option("mdirector_weekly_campaign_name") . '.</p>
                     </div>
 
-				</div>
-				<div class="mdirector-settings-box">
+                </div>
+                <div class="mdirector-settings-box">
                     <h4>' . __('5. Enviar mensajes diarios', self::MDIRECTOR_LANG_DOMAIN) . '</h4>
                     <p>'
                 . __('Activa los envíos de newsletters para los usuarios suscritos a la información diaria. Si esta opción está activada, todos los días se enviará un email automático a los usuarios que hayan elegido recibir emails diarios, con un resumen de los posts publicados cada día.',
@@ -773,38 +785,38 @@ class MDirector_Newsletter_Admin {
                         <p>' . __('Los envíos diarios se guardan en la campaña', self::MDIRECTOR_LANG_DOMAIN) . ' ' . get_option("mdirector_daily_campaign_name") . '.</p>
                     </div>
 
-				</div>
-				<div class="mdirector-settings-box">
-				<h4>' . __('6. Excluir categorías de posts en los envíos', self::MDIRECTOR_LANG_DOMAIN) . '</h4>
-				<p>'
+                </div>
+                <div class="mdirector-settings-box">
+                <h4>' . __('6. Excluir categorías de posts en los envíos', self::MDIRECTOR_LANG_DOMAIN) . '</h4>
+                <p>'
                 . __('Si por cualquier motivo no te interesa que los posts de una o varias categorías no sean enviados en los mensajes automáticos. Elige la/s categoría/s que deseas excluir de los envíos',
                     self::MDIRECTOR_LANG_DOMAIN) . '
-				</p>
-				<div class="categories_list" id="categories_list" style="'
+                </p>
+                <div class="categories_list" id="categories_list" style="'
                 . (($settings['exclude_categories'] === self::SETTINGS_OPTION_ON) ? 'display: block'
                     : '') . '">'
                 . $this->mdirector_get_categories($settings['exclude_cats']) . '</div>
-				<br class="clear">
-				</div>
-				<div class="mdirector-settings-box">
-				<h4>' . __('7. Configuración de widget / shortcode', self::MDIRECTOR_LANG_DOMAIN) . '</h4>
-				<p>'
+                <br class="clear">
+                </div>
+                <div class="mdirector-settings-box">
+                <h4>' . __('7. Configuración de widget / shortcode', self::MDIRECTOR_LANG_DOMAIN) . '</h4>
+                <p>'
                 . __('Configura el texto de aceptación y URL de la política de privacidad', self::MDIRECTOR_LANG_DOMAIN) . '
-				</p>
-				<br class="clear">
-				<label class="select">' . __('Texto de aceptación de política', self::MDIRECTOR_LANG_DOMAIN) . '</label>
-				<input id="md_privacy_text" name="md_privacy_text" type="text" value="'
+                </p>
+                <br class="clear">
+                <label class="select">' . __('Texto de aceptación de política', self::MDIRECTOR_LANG_DOMAIN) . '</label>
+                <input id="md_privacy_text" name="md_privacy_text" type="text" value="'
                 . $settings['md_privacy_text'] . '"/> <span class="help-block"></span>
-				<br class="clear">
-				<label class="select">' . __('URL de la política', self::MDIRECTOR_LANG_DOMAIN) . '</label>
-				<input id="md_privacy_text" name="md_privacy_url" type="text" value="'. $settings['md_privacy_url'] . '"/> <span class="help-block"></span>
-				<br class="clear">
-				</div>
-				';
+                <br class="clear">
+                <label class="select">' . __('URL de la política', self::MDIRECTOR_LANG_DOMAIN) . '</label>
+                <input id="md_privacy_text" name="md_privacy_url" type="text" value="'. $settings['md_privacy_url'] . '"/> <span class="help-block"></span>
+                <br class="clear">
+                </div>
+                ';
         }
         echo '
-				<p class="submit">
-					<input type="submit" class="button-primary" tabindex="21" name="cpt_submit" value="'
+                <p class="submit">
+                    <input type="submit" class="button-primary" tabindex="21" name="cpt_submit" value="'
                         . __('Guardar cambios', self::MDIRECTOR_LANG_DOMAIN) . '">';
 
         if ($settings['api'] && $settings['secret']) {
@@ -819,16 +831,16 @@ class MDirector_Newsletter_Admin {
 
         echo '
                 </p>
-				<input type="hidden" name="mdirector-newsletter-submit" value="Y" />
-		';
+                <input type="hidden" name="mdirector-newsletter-submit" value="Y" />
+        ';
     }
 
     function md_tab_content_debug() {
         $mdirector_daily_test_list = get_option('mdirector_daily_test_list');
         $mdirector_weekly_test_list = get_option('mdirector_weekly_test_list');
         $mdirector_use_test_lists = get_option('mdirector_use_test_lists');
-        $daily_list = get_option('mdirector_daily_list');
-        $weekly_list = get_option('mdirector_weekly_list');
+        $daily_list = $this->get_daily_list_id();
+        $weekly_list = $this->get_weekly_list_id();
 
         echo '<div class="mdirector-settings-box">
             <h4>' . __('1. Listas de test', self::MDIRECTOR_LANG_DOMAIN) . '</h4>
