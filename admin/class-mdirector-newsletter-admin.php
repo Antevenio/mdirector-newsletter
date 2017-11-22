@@ -24,6 +24,7 @@ class MDirector_Newsletter_Admin {
     const MDIRECTOR_LANG_DOMAIN = 'mdirector-newsletter';
     const SETTINGS_OPTION_ON = 'yes';
     const REQUEST_RESPONSE_SUCCESS = 'ok';
+    const NO_VALUE = '---';
 
     protected $frequency_types;
     protected $frequency_days;
@@ -89,7 +90,7 @@ class MDirector_Newsletter_Admin {
         add_action('admin_menu', [$this, 'mdirector_newsletter_menu']);
     }
 
-    function print_notices() {
+    public function print_notices() {
         if (count($this->plugin_notices)) {
             foreach($this->plugin_notices as $notice) {
                 echo $notice;
@@ -100,7 +101,7 @@ class MDirector_Newsletter_Admin {
     /**
      * Create Lists on MDirector Account
      */
-    function create_mdirector_lists() {
+    public function create_mdirector_lists() {
         $settings = get_option('mdirector_settings');
         $mdirector_active = get_option('mdirector_active');
 
@@ -216,7 +217,7 @@ class MDirector_Newsletter_Admin {
     /**
      * Create campaigns on MDirector Account
      */
-    function create_mdirector_campaigns() {
+    public function create_mdirector_campaigns() {
         $settings = get_option('mdirector_settings');
         $mdirector_active = get_option('mdirector_active');
 
@@ -313,7 +314,7 @@ class MDirector_Newsletter_Admin {
      *
      * @since    1.0.0
      */
-    function mdirector_newsletter_menu() {
+    public function mdirector_newsletter_menu() {
         $menu = add_menu_page('MDirector', 'MDirector', 'manage_options',
             'mdirector-newsletter', [$this, 'mdirector_newsletter_init'],
             MDIRECTOR_NEWSLETTER_PLUGIN_URL . '/assets/icon_mdirector.png');
@@ -334,7 +335,7 @@ class MDirector_Newsletter_Admin {
     /**
      * SAVE SETTINGS
      */
-    function mdirector_newsletter_save() {
+    public function mdirector_newsletter_save() {
         $settings = get_option('mdirector_settings');
 
         if ($_POST['mdirector-newsletter-submit'] === 'Y') {
@@ -394,6 +395,15 @@ class MDirector_Newsletter_Admin {
             $this->create_mdirector_lists();
         }
 
+        // Reset counters
+        if (isset($_POST['cpt_submit_reset_now'])) {
+            $this->Mdirector_utils->reset_deliveries_sent();
+
+            $this->plugin_notices[] = '<div class="updated md-notice">'
+                . __('Fechas de últimos envíos (diario y semanal) reiniciada.', self::MDIRECTOR_LANG_DOMAIN)
+                . '</div>';
+        }
+
         // Sending the campaigns inmediately
         if (isset($_POST['cpt_submit_test_now'])) {
             if ($settings['frequency_daily'] === self::SETTINGS_OPTION_ON) {
@@ -436,7 +446,7 @@ class MDirector_Newsletter_Admin {
         }
     }
 
-    function updateDeliveryLists($newDailyList, $newWeeklyList) {
+    public function updateDeliveryLists($newDailyList, $newWeeklyList) {
         $daily = get_option('mdirector_daily_list');
         $weekly = get_option('mdirector_weekly_list');
 
@@ -451,12 +461,12 @@ class MDirector_Newsletter_Admin {
         }
     }
 
-    function updateTestLists($dailyTest, $weeklyTest) {
+    public function updateTestLists($dailyTest, $weeklyTest) {
         update_option('mdirector_daily_list', $dailyTest);
         update_option('mdirector_weekly_list', $weeklyTest);
     }
 
-    function disableTestLists() {
+    public function disableTestLists() {
         $daily_lck = get_option('mdirector_daily_list_lck');
         $weekly_lck = get_option('mdirector_weekly_list_lck');
         update_option('mdirector_daily_list', $daily_lck);
@@ -465,7 +475,7 @@ class MDirector_Newsletter_Admin {
         update_option('mdirector_weekly_list_lck', '');
     }
 
-    function mdirector_newsletter_init() {
+    public function mdirector_newsletter_init() {
         $this->mdirector_checks();
 
         $settings = get_option('mdirector_settings');
@@ -523,7 +533,7 @@ class MDirector_Newsletter_Admin {
         echo '</form>';
     }
 
-    function md_tab_content_help() {
+    public function md_tab_content_help() {
         echo __('<h4>Pasos para configurar el plugin de Newsletter de MDirector</h4>
             <p>
             El plugin de MDirector conecta tu wordpress con MDirector, enviando los últimos posts que hayas escrito diaria o semanalmente y permite a tus usuarios suscribirse a la newsletter.
@@ -552,7 +562,7 @@ class MDirector_Newsletter_Admin {
             ', self::MDIRECTOR_LANG_DOMAIN);
     }
 
-    function md_tab_content_welcome() {
+    public function md_tab_content_welcome() {
         echo '
             <div class="mdirector-welcome-box"><a href="https://signup.mdirector.com?lang=es" target="_blank"><img src="'
             . MDIRECTOR_NEWSLETTER_PLUGIN_URL
@@ -581,7 +591,15 @@ class MDirector_Newsletter_Admin {
             : get_option('mdirector_weekly_list');
     }
 
-    function md_tab_content_settings() {
+    private function get_last_date_send($frequency) {
+        if ($last_date = get_option('mdirector_' . $frequency . '_sent')) {
+            return date('d-m-Y, H:i', strtotime($last_date));
+        }
+
+        return self::NO_VALUE;
+    }
+
+    public function md_tab_content_settings() {
         update_option('mdirector-notice', 'true', true);
         $settings = get_option('mdirector_settings');
         $options = '';
@@ -593,6 +611,8 @@ class MDirector_Newsletter_Admin {
         $mdirector_use_custom_lists = $settings['mdirector_use_custom_lists'];
         $mdirector_daily_custom_list = $settings['mdirector_daily_custom_list'];
         $mdirector_weekly_custom_list = $settings['mdirector_weekly_custom_list'];
+        $last_daily_send = $this->get_last_date_send(Mdirector_Newsletter_Utils::DAILY_FREQUENCY);
+        $last_weekly_send = $this->get_last_date_send(Mdirector_Newsletter_Utils::WEEKLY_FREQUENCY);
 
         if (empty($settings['subject_type_weekly'])) {
             $settings['subject_type_weekly'] = 'fixed';
@@ -812,6 +832,30 @@ class MDirector_Newsletter_Admin {
                 <input id="md_privacy_text" name="md_privacy_url" type="text" value="'. $settings['md_privacy_url'] . '"/> <span class="help-block"></span>
                 <br class="clear">
                 </div>
+                <div class="mdirector-settings-box">
+                <h4>' . __('8. Reiniciar fecha de último envío diario y semanal', self::MDIRECTOR_LANG_DOMAIN) . '</h4>
+                <p>'
+                . __('Ten en cuenta que para evitar envíos duplicados, el sistema comprueba que no se haya realizado un envío diario en las 
+                últimas 24 horas, o uno semanal en los últimos 7 días.', self::MDIRECTOR_LANG_DOMAIN) . '
+                </p>
+                <p>'
+                . __('Es por esto que si ya has realizado un envío y deseas volver a programar otro diario para hoy o uno semanal durante 
+                la próxima semana, debes reiniciar la fecha del último envío.', self::MDIRECTOR_LANG_DOMAIN) . '
+                </p>                
+                <br class="clear">
+                <div class="overflow">
+                <label class="block-50">' . __('Fecha último envío diario:', self::MDIRECTOR_LANG_DOMAIN) . '</label>
+                <label class="block-50">' . $last_daily_send . '</label>                
+                <br class="clear"><br class="clear">
+                <label class="block-50">' . __('Fecha último envío semanal:', self::MDIRECTOR_LANG_DOMAIN) . '</label>
+                <label class="block-50">' . $last_weekly_send . '</label>
+                <br class="clear">
+                <div class="choice-block">
+                <button type="submit" class="margin-top-20 button button-submit" name="cpt_submit_reset_now" value="reset_now">'
+                . __('Reiniciar últimas fechas de envío', self::MDIRECTOR_LANG_DOMAIN) . '</button>
+                </div>
+                </div>                
+                </div>
                 ';
         }
         echo '
@@ -835,7 +879,7 @@ class MDirector_Newsletter_Admin {
         ';
     }
 
-    function md_tab_content_debug() {
+    public function md_tab_content_debug() {
         $mdirector_daily_test_list = get_option('mdirector_daily_test_list');
         $mdirector_weekly_test_list = get_option('mdirector_weekly_test_list');
         $mdirector_use_test_lists = get_option('mdirector_use_test_lists');
@@ -875,7 +919,7 @@ class MDirector_Newsletter_Admin {
      * @param null $selected
      * @return string
      */
-    function mdirector_get_categories($selected = null) {
+    public function mdirector_get_categories($selected = null) {
         $selected = ($selected) ? unserialize($selected) : [];
 
         $cat_args = ['parent' => 0, 'hide_empty' => false];
@@ -938,7 +982,7 @@ class MDirector_Newsletter_Admin {
     /**
      * CHECK WP VERSION
      */
-    function check_version() {
+    public function check_version() {
         if (version_compare(MDIRECTOR_CURRENT_WP_VERSION,
             MDIRECTOR_MIN_WP_VERSION, '<=')) {
 
@@ -958,7 +1002,7 @@ class MDirector_Newsletter_Admin {
         return (MDIRECTOR_VERSION_OK);
     }
 
-    function check_curl() {
+    public function check_curl() {
         if (!(function_exists('curl_exec'))) {
             echo '<div class="error" style="padding: 10px; margin: 20px 0 0 2px">'
                 . __('El plugin de MDirector hace uso de php-curl, por favor instala dicha librería para continuar.',
@@ -972,7 +1016,7 @@ class MDirector_Newsletter_Admin {
         return MDIRECTOR_CURL_OK;
     }
 
-    function check_api() {
+    public function check_api() {
         $settings = get_option('mdirector_settings');
 
         if ($settings['api'] && $settings['secret']) {
@@ -1001,7 +1045,7 @@ class MDirector_Newsletter_Admin {
         }
     }
 
-    function mdirector_checks() {
+    public function mdirector_checks() {
         if ($this->check_version() && $this->check_curl() && $this->check_api()) {
             update_option('mdirector_active', self::SETTINGS_OPTION_ON);
         } else {

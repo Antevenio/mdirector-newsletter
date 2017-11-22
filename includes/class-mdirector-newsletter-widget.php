@@ -2,7 +2,7 @@
 if (!class_exists('mdirectorWidget')) {
 	class mdirectorWidget extends WP_Widget {
 		// constructor
-		function mdirectorWidget() {
+		public function mdirectorWidget() {
 			$widget_ops = array('classname' => 'mdirectorWidget',
 				'description' => __('Formulario de suscripción', 'mdirector-newsletter')
 			);
@@ -10,7 +10,7 @@ if (!class_exists('mdirectorWidget')) {
 		}
 
 		// widget form creation
-        function form($instance) {
+        public function form($instance) {
 		    $instance = wp_parse_args( (array) $instance, array( 'title' => '' ) );
 		    $title = $instance['title'];
 		    $description = $instance['description'];
@@ -26,7 +26,7 @@ if (!class_exists('mdirectorWidget')) {
 		}
 
 		// widget update
-		function update($new_instance, $old_instance) {
+		public function update($new_instance, $old_instance) {
 			$instance = $old_instance;
 		    $instance['title'] = $new_instance['title'];
 		    $instance['description'] = $new_instance['description'];
@@ -34,7 +34,7 @@ if (!class_exists('mdirectorWidget')) {
 		}
 
 		// widget display
-		function widget($args, $instance) {
+		public function widget($args, $instance) {
 			extract($args, EXTR_SKIP);
 			$settings = get_option( "mdirector_settings" );
 			$mdirector_active = get_option( "mdirector_active" );
