@@ -24,7 +24,6 @@ if (!defined('WPINC')) {
     die;
 }
 
-
 if (!defined('ABSPATH')) return;
 
 global $wp_version;

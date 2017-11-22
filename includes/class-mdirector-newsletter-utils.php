@@ -209,25 +209,33 @@ class Mdirector_Newsletter_Utils {
         return 'text/html';
     }
 
-    private function clean_newsletter_process($frequency) {
+    public function clean_newsletter_process($frequency) {
         $process = ($frequency === self::DAILY_FREQUENCY)
             ? 'mdirector_daily_sent'
             : 'mdirector_weekly_sent';
 
-        update_option($process, date('Y-m-d') );
+        update_option($process, date('Y-m-d H:i') );
+
         wp_reset_postdata();
         wp_reset_query();
+    }
+
+    public function reset_deliveries_sent() {
+        update_option('mdirector_daily_sent', '');
+        update_option('mdirector_weekly_sent', '');
     }
 
     public function md_send_daily_mails($settings) {
         $hour = ($settings['hour_daily']) ? $settings['hour_daily'] : '00:00';
         $time_exploded = explode(':', $hour);
         $actual_time = current_time('timestamp');
-        $mail_sent = get_option('mdirector_daily_sent');
+        $mail_sent = date( 'Y-m-d', strtotime(get_option('mdirector_daily_sent')));
         $can_send = ($mail_sent != date('Y-m-d')) ? 1 : 0;
 
-        $from_date = date('Y-m-d H:i:s', mktime($time_exploded[0],$time_exploded[1], 00, date('m'), date('d') - 1, date('Y')));
-        $to_date = date('Y-m-d H:i:s', mktime($time_exploded[0], $time_exploded[1], 00, date('m'), date('d'), date('Y')));
+        $from_date = date('Y-m-d H:i:s',
+            mktime($time_exploded[0],$time_exploded[1], 00, date('m'), date('d') - 1, date('Y')));
+        $to_date = date('Y-m-d H:i:s',
+            mktime($time_exploded[0], $time_exploded[1], 00, date('m'), date('d'), date('Y')));
 
         if ($_POST['cpt_submit_test_now'] || ($actual_time >= strtotime($to_date) && $can_send == 1)) {
             $args = [
@@ -270,11 +278,8 @@ class Mdirector_Newsletter_Utils {
             if (!empty($posts)) {
                 $this->md_send_mail($posts, self::DAILY_FREQUENCY);
                 $this->clean_newsletter_process(self::DAILY_FREQUENCY);
-
                 return true;
             }
-
-            $this->clean_newsletter_process(self::DAILY_FREQUENCY);
         }
 
         return false;
@@ -284,15 +289,14 @@ class Mdirector_Newsletter_Utils {
         $day = $settings['frequency_day'] ? $settings['frequency_day'] : '1'; # Default: Monday
         $hour = $settings['hour_weekly'] ? $settings['hour_weekly'] : '00:00';
         $time_exploded = explode(':', $hour);
-
-        $from_date = date('Y-m-d H:i:s', mktime($time_exploded[0],$time_exploded[1], 00, date('m'), date('d') - 7, date('Y')));
-        $to_date = date('Y-m-d H:i:s', mktime($time_exploded[0], $time_exploded[1], 00, date('m'), date('d'), date('Y')));
-
-        // We check if today is our selected day
-        $actual_time = current_time('timestamp');
-        $mail_sent = get_option('mdirector_weekly_sent');
-
+        $actual_time = time();
+        $mail_sent = date( 'Y-m-d', strtotime(get_option('mdirector_weekly_sent')));
         $can_send = ($mail_sent !== date('Y-m-d')) ? 1 : 0;
+
+        $from_date = date('Y-m-d H:i:s',
+            mktime($time_exploded[0],$time_exploded[1], 00, date('m'), date('d') - 7, date('Y')));
+        $to_date = date('Y-m-d H:i:s',
+            mktime($time_exploded[0], $time_exploded[1], 00, date('m'), date('d'), date('Y')));
 
         if ($_POST['cpt_submit_test_now'] ||
             (date('N') === $day && ($actual_time >= strtotime($to_date)) && ($can_send === 1))) {
@@ -341,8 +345,6 @@ class Mdirector_Newsletter_Utils {
 
                 return true;
             }
-
-            $this->clean_newsletter_process(self::WEEKLY_FREQUENCY);
         }
 
         return false;

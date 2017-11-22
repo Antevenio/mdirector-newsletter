@@ -18,7 +18,9 @@
  * @author     MDirector
  */
 class Mdirector_Newsletter_Public {
-	/**
+    const SETTINGS_OPTION_ON = 'yes';
+
+    /**
 	 * The ID of this plugin.
 	 *
 	 * @since    1.0.0
@@ -43,26 +45,27 @@ class Mdirector_Newsletter_Public {
 	 * @param    string    $mdirector_newsletter       The name of the plugin.
 	 * @param    string    $version    The version of this plugin.
 	 */
-	public function __construct( $mdirector_newsletter, $version ) {
-		$mdirector_active = get_option( "mdirector_active" );
-        if ($mdirector_active == 'yes') {
+	public function __construct($mdirector_newsletter, $version) {
+		$mdirector_active = get_option('mdirector_active');
+
+		if ($mdirector_active === self::SETTINGS_OPTION_ON) {
             $this->mdirector_newsletter = $mdirector_newsletter;
             $this->version = $version;
 
             // shortcode
-            add_shortcode('mdirector_subscriptionbox', array($this, 'mdirector_subscriptionbox'));
+            add_shortcode('mdirector_subscriptionbox', [$this, 'mdirector_subscriptionbox']);
 
             // Define ajaxurl for ajax calls
-            add_action('wp_head', array($this, 'mdirector_ajaxurl'));
+            add_action('wp_head', [$this, 'mdirector_ajaxurl']);
 
             // ajax calls
-            add_action('wp_ajax_md_new', array($this, 'mdirector_ajax_new'));
-            add_action('wp_ajax_nopriv_md_new', array($this, 'mdirector_ajax_new'));
+            add_action('wp_ajax_md_new', [$this, 'mdirector_ajax_new']);
+            add_action('wp_ajax_nopriv_md_new', [$this, 'mdirector_ajax_new']);
             // cron jobs
-            add_filter('cron_schedules', array($this, 'md_add_new_interval'));
-            register_activation_hook(MDIRECTOR_NEWSLETTER_PLUGIN_DIR . 'mdirector-newsletter.php', array($this, 'md_cron_activation'));
-            register_deactivation_hook(MDIRECTOR_NEWSLETTER_PLUGIN_DIR . 'mdirector-newsletter.php', array($this, 'md_cron_deactivation'));
-            add_action('md_daily_event', array($this, 'md_event_cron'));
+            add_filter('cron_schedules', [$this, 'md_add_new_interval']);
+            register_activation_hook(MDIRECTOR_NEWSLETTER_PLUGIN_DIR . 'mdirector-newsletter.php', [$this, 'md_cron_activation']);
+            register_deactivation_hook(MDIRECTOR_NEWSLETTER_PLUGIN_DIR . 'mdirector-newsletter.php', [$this, 'md_cron_deactivation']);
+            add_action('md_daily_event', [$this, 'md_event_cron']);
 
             require_once MDIRECTOR_NEWSLETTER_PLUGIN_DIR . 'includes/class-mdirector-newsletter-widget.php';
             require_once MDIRECTOR_NEWSLETTER_PLUGIN_DIR . 'includes/class-mdirector-newsletter-utils.php';
@@ -72,14 +75,14 @@ class Mdirector_Newsletter_Public {
 	/**
 	 * SHORTCODE
      */
-	function mdirector_subscriptionbox() {
-		$mdirector_active = get_option( "mdirector_active" );
+	public function mdirector_subscriptionbox() {
+		$mdirector_active = get_option('mdirector_active');
         $form = '';
 
-        if ($mdirector_active == 'yes') {
+        if ($mdirector_active === self::SETTINGS_OPTION_ON) {
 			$select_frequency 	= '<div class="mdirector_sh_field"><select id="md_sh_frequency" name="md_sh_frequency">';
-			$select_frequency 	.=  '<option value="daily">'.__('Recibir newsletter diaria', 'mdirector-newsletter').'</option>';
-			$select_frequency 	.=  '<option value="weekly">'.__('Recibir newsletter semanal', 'mdirector-newsletter').'</option>';
+			$select_frequency 	.= '<option value="daily">' . __('Recibir newsletter diaria', 'mdirector-newsletter') . '</option>';
+			$select_frequency 	.= '<option value="weekly">' . __('Recibir newsletter semanal', 'mdirector-newsletter') . '</option>';
 			$select_frequency 	.= '</select></div>';
 
             $form = '
@@ -87,14 +90,18 @@ class Mdirector_Newsletter_Public {
                     <div class="mdirector_sh_field">
                         <input type="text" name="mdirector_sh_email" id="mdirector_sh_email" placeholder="'.__('Email','mdirector-newsletter').'">
                     </div>
-                    '.$select_frequency;
-                    $settings = get_option( "mdirector_settings" );
+                    ' . $select_frequency;
+                    $settings = get_option('mdirector_settings');
 
-                    $accept = ($settings['md_privacy_text']!='')?$settings['md_privacy_text']:__("Acepto la política de privacidad",'mdirector-newsletter');
-                    $md_privacy_link = ($settings['md_privacy_url']!='')?$settings['md_privacy_url']:'#';
-                    $form.= '<p class="mdirector_sh_accept"><input type="checkbox" name="mdirector_sh-accept"/><label for="mdirector_sh_accept"> <a href="'.$md_privacy_link.'" target="_blank">'.$accept.'</a></label></p>';
+                    $accept = ($settings['md_privacy_text'] !== '')
+                        ? $settings['md_privacy_text']
+                        :__('Acepto la política de privacidad','mdirector-newsletter');
 
-                    $form.= '<div class="mdirector_sh_field">
+                    $md_privacy_link = ($settings['md_privacy_url']!== '')
+                        ? $settings['md_privacy_url'] :'#';
+
+                    $form .= '<p class="mdirector_sh_accept"><input type="checkbox" name="mdirector_sh-accept"/><label for="mdirector_sh_accept"> <a href="'.$md_privacy_link.'" target="_blank">'.$accept.'</a></label></p>';
+                    $form .= '<div class="mdirector_sh_field">
                         <button type="submit">'.__('Suscribirme', 'mdirector-newsletter').'</button>
                     </div>
                 </form>
@@ -108,7 +115,7 @@ class Mdirector_Newsletter_Public {
 	/**
      * ADD JS AJAXURL
      */
-    function mdirector_ajaxurl() {
+    public function mdirector_ajaxurl() {
     	echo '
     	<script type="text/javascript">
 		var ajaxurl = \''.admin_url('admin-ajax.php').'\';
@@ -119,23 +126,23 @@ class Mdirector_Newsletter_Public {
 	 /**
      * AJAX calls
      */
-    function mdirector_ajax_new() {
+    public function mdirector_ajax_new() {
         global $wpdb;
         $mdirector_active = get_option('mdirector_active');
         $settings = get_option( "mdirector_settings" );
 
-        if ($mdirector_active == "yes") {
+        if ($mdirector_active === self::SETTINGS_OPTION_ON) {
 			$key = $settings['api'];
 			$secret = $settings['secret'];
-	        $list = get_option('mdirector_'.$_POST['list'].'_list');
+	        $list = get_option('mdirector_' . $_POST['list'] . '_list');
 
             if ($list) {
 	        	$md_user_id = json_decode(
 	        		Mdirector_Newsletter_Api::callAPI($key,$secret,'http://www.mdirector.com/api_contact', 'POST',
-	        			array(
+	        			[
 	        				'listId' 	=> $list,
 	        				'email'		=> $_POST['email']
-	        			)
+	        			]
 	        		)
 	        	);
 	        	echo json_encode($md_user_id);
@@ -147,15 +154,15 @@ class Mdirector_Newsletter_Public {
 	/**
      * CRON JOBS
      */
-    function md_cron_activation() {
-    	wp_schedule_event( time(), 'every_five_minutes', 'md_daily_event' );
+    public function md_cron_activation() {
+    	wp_schedule_event(time(), 'every_five_minutes', 'md_daily_event');
     }
 
-    function md_cron_deactivation() {
+    public function md_cron_deactivation() {
     	wp_clear_scheduled_hook('md_daily_event');
     }
 
-    function md_add_new_interval($schedules) {
+    public function md_add_new_interval($schedules) {
     	// add weekly and monthly intervals
     	$schedules['every_five_minutes'] = [
     		'interval' => 300,
@@ -168,18 +175,16 @@ class Mdirector_Newsletter_Public {
     /**
      * On the scheduled action hook, run the function.
      */
-    function md_event_cron() {
-        $mdirector_active = get_option("mdirector_active");
-        $settings = get_option("mdirector_settings");
+    public function md_event_cron() {
+        $mdirector_active = get_option('mdirector_active');
+        $settings = get_option('mdirector_settings');
         $Mdirector_utils = new Mdirector_Newsletter_Utils();
 
-        if ($mdirector_active == "yes") {
-            if ($settings['frequency_daily'] == 'yes') {
-                // Send daily mails
+        if ($mdirector_active === self::SETTINGS_OPTION_ON) {
+            if ($settings['frequency_daily'] === self::SETTINGS_OPTION_ON) {
                 $Mdirector_utils->md_send_daily_mails($settings);
             }
-            if ($settings['frequency_weekly'] == 'yes') {
-                // Send weekly mails
+            if ($settings['frequency_weekly'] === self::SETTINGS_OPTION_ON) {
                 $Mdirector_utils->md_send_weekly_mails($settings);
             }
         }
@@ -191,7 +196,7 @@ class Mdirector_Newsletter_Public {
 	 * @since    1.0.0
 	 */
 	public function enqueue_styles() {
-		wp_enqueue_style( $this->mdirector_newsletter, plugin_dir_url( __FILE__ ) . 'css/mdirector-newsletter-public.css', array(), $this->version, 'all' );
+		wp_enqueue_style($this->mdirector_newsletter, plugin_dir_url(__FILE__) . 'css/mdirector-newsletter-public.css', [], $this->version, 'all');
 	}
 
 	/**
@@ -200,6 +205,6 @@ class Mdirector_Newsletter_Public {
 	 * @since    1.0.0
 	 */
 	public function enqueue_scripts() {
-		wp_enqueue_script( $this->mdirector_newsletter, plugin_dir_url( __FILE__ ) . 'js/mdirector-newsletter-public.js', array( 'jquery' ), $this->version, false );
+		wp_enqueue_script($this->mdirector_newsletter, plugin_dir_url(__FILE__) . 'js/mdirector-newsletter-public.js', ['jquery'], $this->version, false);
 	}
 }
