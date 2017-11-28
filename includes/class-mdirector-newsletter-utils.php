@@ -75,8 +75,10 @@ class Mdirector_Newsletter_Utils {
                 $list_content = '';
                 for ($i = 0; $i < count($posts); $i++) {
                     $row_content = file_get_contents(MDIRECTOR_NEWSLETTER_PLUGIN_DIR . '/' . self::TEMPLATES_PATH . 'list.html');
-                    $row_content = str_replace('{{title}}', '<a href="'.$posts[$i]['link'].'" style="color: #333333">'.$posts[$i]['title'].'</a>', $row_content);
+                    $row_content = str_replace('{{title}}', '<a href="'.$posts[$i]['link'].'" style="color: #333333">'
+                        . $posts[$i]['title'] . '</a>', $row_content);
                     $row_content = str_replace('{{content}}', $posts[$i]['excerpt'], $row_content);
+                    $row_content = str_replace('{{post-link}}', $posts[$i]['link'], $row_content);
 
                     $mail_content = str_replace('{{main_image}}', '', $mail_content);
                     $post_image = $this->get_main_image($posts[$i]['ID'], 'thumb');
@@ -94,6 +96,7 @@ class Mdirector_Newsletter_Utils {
                 $row_content = file_get_contents(MDIRECTOR_NEWSLETTER_PLUGIN_DIR . '/' . self::TEMPLATES_PATH . 'single.html');
                 $row_content = str_replace('{{title}}', '<a href="'.$posts[0]['link'].'" style="color: #333333; text-decoration: none">'.$posts[0]['title'].'</a>', $row_content);
                 $row_content = str_replace('{{content}}', $posts[0]['excerpt'], $row_content);
+                $row_content = str_replace('{{post-link}}', $posts[0]['link'], $row_content);
 
                 $post_image = $this->get_main_image($posts[0]['ID'], 'full');
 
