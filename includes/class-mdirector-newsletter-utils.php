@@ -12,6 +12,8 @@
 class Mdirector_Newsletter_Utils {
     const MDIRECTOR_API_ENDPOINT = 'http://www.mdirector.com/api_delivery';
     const TEMPLATES_PATH = 'templates/';
+    const MAX_IMAGE_SIZE_MDIRECTOR_TEMPLATE = 143;
+    const MAX_IMAGE_SIZE_DEFAULT_TEMPLATE = '100%';
     const DAILY_FREQUENCY = 'daily';
     const WEEKLY_FREQUENCY = 'weekly';
     const DEFAULT_DAILY_MAIL_SUBJECT = 'Daily mail';
@@ -46,11 +48,16 @@ class Mdirector_Newsletter_Utils {
         }
     }
 
+    private function get_main_image_size() {
+        return (self::TEMPLATES_PATH === 'templates-mdirector/')
+            ? self::MAX_IMAGE_SIZE_MDIRECTOR_TEMPLATE
+            : self::MAX_IMAGE_SIZE_DEFAULT_TEMPLATE;
+    }
+
     private function get_main_image($post_id, $size) {
         if ($post_id) {
             if (has_post_thumbnail($post_id)) {
                 $post_thumbnail_id = get_post_thumbnail_id($post_id);
-
                 $thumbnail = wp_get_attachment_image_src($post_thumbnail_id, $size);
 
                 return $thumbnail[0];
@@ -82,9 +89,10 @@ class Mdirector_Newsletter_Utils {
 
                     $mail_content = str_replace('{{main_image}}', '', $mail_content);
                     $post_image = $this->get_main_image($posts[$i]['ID'], 'thumb');
+                    $post_image_size = $this->get_main_image_size();
 
                     $row_content = ($post_image)
-                        ? str_replace('{{post_image}}', '<img alt="" class="headerImage" id="edit-image-trigger" src="' . $post_image . '" style="max-width: 100%"/>', $row_content)
+                        ? str_replace('{{post_image}}', '<img alt="Featured Image" class="headerImage" id="edit-image-trigger" src="' . $post_image . '" width="' . $post_image_size . '" />', $row_content)
                         : $row_content = str_replace('{{post_image}}', '', $row_content);
 
                     $list_content .= $row_content;
@@ -99,9 +107,10 @@ class Mdirector_Newsletter_Utils {
                 $row_content = str_replace('{{post-link}}', $posts[0]['link'], $row_content);
 
                 $post_image = $this->get_main_image($posts[0]['ID'], 'full');
+                $post_image_size = $this->get_main_image_size();
 
                 $mail_content = $post_image
-                    ? str_replace('{{main_image}}', '<img alt="" class="headerImage" id="edit-image-trigger" src="'.$post_image.'" style="max-width: 490px;" />', $mail_content)
+                    ? str_replace('{{main_image}}', '<img alt="Featured Image" class="headerImage" id="edit-image-trigger" src="'.$post_image.'" width="'.$post_image_size.'" />', $mail_content)
                     : str_replace('{{main_image}}', '', $mail_content);
 
                 $mail_content = str_replace('{{list}}', $row_content, $mail_content);
@@ -146,6 +155,7 @@ class Mdirector_Newsletter_Utils {
     }
 
     private function get_devilery_list_id ($frequency) {
+        // Daily
         if ($frequency === self::DAILY_FREQUENCY) {
             if (get_option('mdirector_use_test_lists')) {
                 return get_option('mdirector_daily_test_list');
@@ -154,6 +164,7 @@ class Mdirector_Newsletter_Utils {
             return get_option('mdirector_daily_list');
         }
 
+        // Weekly
         if (get_option('mdirector_use_test_lists')) {
             return get_option('mdirector_weekly_test_list');
         }
