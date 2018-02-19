@@ -362,6 +362,7 @@ class MDirector_Newsletter_Admin {
                 $settings['exclude_categories'] = $_POST['exclude_categories'];
                 $settings['md_privacy_text'] = $_POST['md_privacy_text'];
                 $settings['md_privacy_url'] = $_POST['md_privacy_url'];
+                $settings['md_template_selected'] = $_POST['md_template_selected'];
                 $settings['exclude_cats'] = ((count($_POST['exclude_cats']) > 0)
                     ? serialize($_POST['exclude_cats'])
                     : []);
@@ -599,6 +600,20 @@ class MDirector_Newsletter_Admin {
         return self::NO_VALUE;
     }
 
+    private function generate_template_options() {
+        $available_templates = $this->Mdirector_utils->get_user_templates();
+        $current_template_selected = $this->Mdirector_utils->get_current_template($available_templates);
+        $output = '';
+
+        foreach ($available_templates as $template) {
+            $template_name = basename($template);
+            $selected = ($template_name === $current_template_selected) ? ' selected="selected"' : '';
+            $output .= '<option value="' . $template_name . '"' . $selected . '>' . $template_name . '</option>';
+        }
+
+        return $output;
+    }
+
     public function md_tab_content_settings() {
         update_option('mdirector-notice', 'true', true);
         $settings = get_option('mdirector_settings');
@@ -614,12 +629,14 @@ class MDirector_Newsletter_Admin {
         $last_daily_send = $this->get_last_date_send(Mdirector_Newsletter_Utils::DAILY_FREQUENCY);
         $last_weekly_send = $this->get_last_date_send(Mdirector_Newsletter_Utils::WEEKLY_FREQUENCY);
 
-        if (empty($settings['subject_type_weekly'])) {
-            $settings['subject_type_weekly'] = 'fixed';
+        if (empty($settings['subject_type_daily'])) {
+            $settings['subject_type_daily'] =
+                Mdirector_Newsletter_Utils::DEFAULT_SUBJECT_TYPE_DAILY;
         }
 
-        if (empty($settings['subject_type_daily'])) {
-            $settings['subject_type_daily'] = 'fixed';
+        if (empty($settings['subject_type_weekly'])) {
+            $settings['subject_type_weekly'] =
+                Mdirector_Newsletter_Utils::DEFAULT_SUBJECT_TYPE_WEEKLY;
         }
 
         // frequency select
@@ -661,6 +678,8 @@ class MDirector_Newsletter_Admin {
 
         if ($settings['api'] && $settings['secret']) {
             echo '
+                <!-- STEP 2 -->
+                <!-- ------------------------------------- -->
                 <div class="mdirector-settings-box">
                     <h4>' . __('2. Listas de contactos personalizadas', self::MDIRECTOR_LANG_DOMAIN) . '</h4>
                     <p>Este plugin crea de forma automática dos listas de contactos en tu cuenta de MDirector para enviar las campañas diarias o semanales.
@@ -682,6 +701,8 @@ class MDirector_Newsletter_Admin {
                     <small>' . __('Actualmente, enviando a la lista diaria ', self::MDIRECTOR_LANG_DOMAIN) . $daily_list . ' ' . __('y a la lista semanal ', self::MDIRECTOR_LANG_DOMAIN) . $weekly_list . '.</small>
                 </div>
 
+                <!-- STEP 3 -->
+                <!-- ------------------------------------- -->
                 <div class="mdirector-settings-box">
                     <h4>' . __('3. Campo From', self::MDIRECTOR_LANG_DOMAIN) . '</h4>
                     <p>' . __('Configura el nombre que aparecerá en el campo <b>De:</b> de los correos que se envíen automáticamente desde el plugin.', self::MDIRECTOR_LANG_DOMAIN) . '</p>
@@ -691,6 +712,9 @@ class MDirector_Newsletter_Admin {
                     <input id="from_name" name="from_name" type="text" value="'. $settings['from_name'] . '"/>
                     <br class="clear">
                 </div>
+                
+                <!-- STEP 4 -->
+                <!-- ------------------------------------- -->
                 <div class="mdirector-settings-box">
                     <h4>' . __('4. Enviar mensajes semanales', self::MDIRECTOR_LANG_DOMAIN) . '</h4>
                     <p>' . __('Activa los envíos de newsletters para los usuarios para los usuarios suscritos a la información semanal. Si esta opción está activada, todas las semanas se enviará un email automático a los usuarios suscritos a la lista, con un resumen de los posts publicados cada la semana.', self::MDIRECTOR_LANG_DOMAIN) . '</p>
@@ -750,6 +774,9 @@ class MDirector_Newsletter_Admin {
                     </div>
 
                 </div>
+                
+                <!-- STEP 5 -->
+                <!-- ------------------------------------- -->
                 <div class="mdirector-settings-box">
                     <h4>' . __('5. Enviar mensajes diarios', self::MDIRECTOR_LANG_DOMAIN) . '</h4>
                     <p>'
@@ -806,6 +833,9 @@ class MDirector_Newsletter_Admin {
                     </div>
 
                 </div>
+                
+                <!-- STEP 6 -->
+                <!-- ------------------------------------- -->
                 <div class="mdirector-settings-box">
                 <h4>' . __('6. Excluir categorías de posts en los envíos', self::MDIRECTOR_LANG_DOMAIN) . '</h4>
                 <p>'
@@ -818,6 +848,9 @@ class MDirector_Newsletter_Admin {
                 . $this->mdirector_get_categories($settings['exclude_cats']) . '</div>
                 <br class="clear">
                 </div>
+                
+                <!-- STEP 7 -->
+                <!-- ------------------------------------- -->
                 <div class="mdirector-settings-box">
                 <h4>' . __('7. Configuración de widget / shortcode', self::MDIRECTOR_LANG_DOMAIN) . '</h4>
                 <p>'
@@ -832,20 +865,38 @@ class MDirector_Newsletter_Admin {
                 <input id="md_privacy_text" name="md_privacy_url" type="text" value="'. $settings['md_privacy_url'] . '"/> <span class="help-block"></span>
                 <br class="clear">
                 </div>
+                
+                <!-- STEP 8 -->
+                <!-- ------------------------------------- -->
                 <div class="mdirector-settings-box">
-                <h4>' . __('8. Reiniciar fecha de último envío diario y semanal', self::MDIRECTOR_LANG_DOMAIN) . '</h4>
+                <h4>' . __('8. Seleccionar plantilla', self::MDIRECTOR_LANG_DOMAIN) . '</h4>
                 <p>'
-                . __('Ten en cuenta que para evitar envíos duplicados, el sistema comprueba que no se haya realizado un envío diario en las 
+                . __('Si tienes varias plantillas HTML, puedes escoger cuál utilizar para generar tu Newsletter', self::MDIRECTOR_LANG_DOMAIN) . '
+                </p>                
+                <br class="clear">
+                <label class="select">' . __('Plantillas disponibles:', self::MDIRECTOR_LANG_DOMAIN) . '</label>
+                <select name="md_template_selected" id="md_template_selected">
+                ' . $this->generate_template_options() . '                    
+                </select>
+                <br class="clear">
+                </div>
+
+                <!-- STEP 9 -->
+                <!-- ------------------------------------- -->
+                <div class="mdirector-settings-box">
+                <h4>' . __('9. Reiniciar fecha de último envío diario y semanal', self::MDIRECTOR_LANG_DOMAIN) . '</h4>
+                <p>'
+                . __('Ten en cuenta que para evitar envíos duplicados, el sistema comprueba que no se haya realizado un envío diario en las
                 últimas 24 horas, o uno semanal en los últimos 7 días.', self::MDIRECTOR_LANG_DOMAIN) . '
                 </p>
                 <p>'
-                . __('Es por esto que si ya has realizado un envío y deseas volver a programar otro diario para hoy o uno semanal durante 
+                . __('Es por esto que si ya has realizado un envío y deseas volver a programar otro diario para hoy o uno semanal durante
                 la próxima semana, debes reiniciar la fecha del último envío.', self::MDIRECTOR_LANG_DOMAIN) . '
-                </p>                
+                </p>
                 <br class="clear">
                 <div class="overflow">
                 <label class="block-50">' . __('Fecha último envío diario:', self::MDIRECTOR_LANG_DOMAIN) . '</label>
-                <label class="block-50">' . $last_daily_send . '</label>                
+                <label class="block-50">' . $last_daily_send . '</label>
                 <br class="clear"><br class="clear">
                 <label class="block-50">' . __('Fecha último envío semanal:', self::MDIRECTOR_LANG_DOMAIN) . '</label>
                 <label class="block-50">' . $last_weekly_send . '</label>
@@ -854,7 +905,7 @@ class MDirector_Newsletter_Admin {
                 <button type="submit" class="margin-top-20 button button-submit" name="cpt_submit_reset_now" value="reset_now">'
                 . __('Reiniciar últimas fechas de envío', self::MDIRECTOR_LANG_DOMAIN) . '</button>
                 </div>
-                </div>                
+                </div>
                 </div>
                 ';
         }

@@ -135,6 +135,10 @@ span.help-block {
     top: 3px;
 }
 
+#md_template_selected {
+    min-width: 200px;
+}
+
 /** TIMEPICKER **/
 input.timepicker {
     background: #ffffff url('../../assets/icon_clock.png') 97% 50% no-repeat;

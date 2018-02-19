@@ -11,13 +11,17 @@
  */
 class Mdirector_Newsletter_Utils {
     const MDIRECTOR_API_ENDPOINT = 'http://www.mdirector.com/api_delivery';
-    const TEMPLATES_PATH = 'templates/';
+
+    const DEFAULT_TEMPLATE = 'default';
+    const TEMPLATES_PATH = MDIRECTOR_TEMPLATES_PATH . self::DEFAULT_TEMPLATE. '/';
     const MAX_IMAGE_SIZE_MDIRECTOR_TEMPLATE = 143;
     const MAX_IMAGE_SIZE_DEFAULT_TEMPLATE = '100%';
     const DAILY_FREQUENCY = 'daily';
     const WEEKLY_FREQUENCY = 'weekly';
     const DEFAULT_DAILY_MAIL_SUBJECT = 'Daily mail';
     const DEFAULT_WEEKLY_MAIL_SUBJECT = 'Weekly mail';
+    const DEFAULT_SUBJECT_TYPE_DAILY = 'fixed';
+    const DEFAULT_SUBJECT_TYPE_WEEKLY = 'fixed';
     const DYNAMIC_SUBJECT = 'dynamic';
     const DYNAMIC_CRITERIA_FIRST_POST = 'first_post';
     const DYNAMIC_CRITERIA_LAST_POST = 'last_post';
@@ -27,7 +31,7 @@ class Mdirector_Newsletter_Utils {
         $string = preg_replace( '|\[(.+?)\](.+?\[/\\1\])?|s', '', $string);
 
         if ( preg_match('/<!--more(.*?)?-->/', $string, $matches) ) {
-            list($main, $extended) = explode($matches[0], $string, 2);
+            list($main) = explode($matches[0], $string, 2);
 
             return $main;
         } else {
@@ -72,7 +76,9 @@ class Mdirector_Newsletter_Utils {
         add_filter( 'wp_mail_content_type', [$this, 'set_html_content_type'] );
 
         if (!empty($posts)) {
-            $html_content = file_get_contents(MDIRECTOR_NEWSLETTER_PLUGIN_DIR . '/' . self::TEMPLATES_PATH . 'template.html');
+            $templates_available = $this->get_user_templates();
+            $template_path = MDIRECTOR_TEMPLATES_PATH . $this->get_current_template($templates_available);
+            $html_content = file_get_contents($template_path . '\template.html');
 
             // Time to replace mail content
             $mail_content = str_replace('{{header_title}}', get_bloginfo('name'), $html_content);
@@ -81,7 +87,7 @@ class Mdirector_Newsletter_Utils {
             if (count($posts) > 1) {
                 $list_content = '';
                 for ($i = 0; $i < count($posts); $i++) {
-                    $row_content = file_get_contents(MDIRECTOR_NEWSLETTER_PLUGIN_DIR . '/' . self::TEMPLATES_PATH . 'list.html');
+                    $row_content = file_get_contents($template_path . '\list.html');
                     $row_content = str_replace('{{title}}', '<a href="'.$posts[$i]['link'].'" style="color: #333333">'
                         . $posts[$i]['title'] . '</a>', $row_content);
                     $row_content = str_replace('{{content}}', $posts[$i]['excerpt'], $row_content);
@@ -101,7 +107,7 @@ class Mdirector_Newsletter_Utils {
                 $mail_content = str_replace('{{list}}', $list_content, $mail_content);
             } else {
                 // Single post
-                $row_content = file_get_contents(MDIRECTOR_NEWSLETTER_PLUGIN_DIR . '/' . self::TEMPLATES_PATH . 'single.html');
+                $row_content = file_get_contents($template_path . '\single.html');
                 $row_content = str_replace('{{title}}', '<a href="'.$posts[0]['link'].'" style="color: #333333; text-decoration: none">'.$posts[0]['title'].'</a>', $row_content);
                 $row_content = str_replace('{{content}}', $posts[0]['excerpt'], $row_content);
                 $row_content = str_replace('{{post-link}}', $posts[0]['link'], $row_content);
@@ -180,11 +186,19 @@ class Mdirector_Newsletter_Utils {
         return get_option('mdirector_weekly_campaign');
     }
 
+    /**
+     * @param      $mail_content
+     * @param      $mail_subject
+     * @param null $frequency
+     *
+     * @throws MDOAuthException2
+     */
     private function send_mail_API($mail_content, $mail_subject, $frequency = null) {
         $settings = get_option('mdirector_settings');
         $mdirector_active = get_option('mdirector_active');
 
         if ($mdirector_active == 'yes') {
+            $mdirector_Newsletter_Api = new Mdirector_Newsletter_Api();
             $key = $settings['api'];
             $secret = $settings['secret'];
             $list_id = $this->get_devilery_list_id($frequency);
@@ -192,7 +206,7 @@ class Mdirector_Newsletter_Utils {
 
             $mdirector_send_resp =
                 json_decode(
-                    Mdirector_Newsletter_Api::callAPI($key, $secret, self::MDIRECTOR_API_ENDPOINT,
+                    $mdirector_Newsletter_Api->callAPI($key, $secret, self::MDIRECTOR_API_ENDPOINT,
                         'POST',
                         [
                             'type' => 'email',
@@ -211,7 +225,7 @@ class Mdirector_Newsletter_Utils {
 
             // send the campaign
             if ($env_id) {
-                Mdirector_Newsletter_Api::callAPI(
+                $mdirector_Newsletter_Api->callAPI(
                     $key, $secret, self::MDIRECTOR_API_ENDPOINT, 'PUT',
                     ['envId' => $env_id, 'date' => 'now']
                 );
@@ -221,6 +235,24 @@ class Mdirector_Newsletter_Utils {
 
     private function set_html_content_type() {
         return 'text/html';
+    }
+
+    public function get_user_templates() {
+        return $available_templates = array_map('basename',
+            glob(MDIRECTOR_TEMPLATES_PATH . '*', GLOB_ONLYDIR));
+    }
+
+    public function get_current_template($available_templates) {
+        $settings = get_option('mdirector_settings');
+        $current_template_selected = !empty($settings['md_template_selected'])
+            ? $settings['md_template_selected']
+            : Mdirector_Newsletter_Utils::DEFAULT_TEMPLATE;
+
+        if (!in_array($current_template_selected, $available_templates) ) {
+            $current_template_selected = Mdirector_Newsletter_Utils::DEFAULT_TEMPLATE;
+        }
+
+        return $current_template_selected;
     }
 
     public function clean_newsletter_process($frequency) {
