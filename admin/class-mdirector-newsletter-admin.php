@@ -347,11 +347,15 @@ class MDirector_Newsletter_Admin {
                 $settings[$key] = $value;
             }
 
+            $settings['mdirector_use_custom_lists'] = $_POST['mdirector_use_custom_lists'];
+            $settings['frequency_weekly'] = $_POST['frequency_weekly'];
+            $settings['frequency_daily'] = $_POST['frequency_daily'];
             $settings['exclude_cats'] = ((count($data['exclude_cats']) > 0)
                 ? serialize($data['exclude_cats'])
                 : []);
 
-            //echo '<pre>';die( var_dump( $settings ) );
+//            echo '<pre>';die( var_dump( $_POST ) );
+//            echo '<pre>';die( var_dump( $settings ) );
 
             update_option('mdirector_settings', $settings);
         }
