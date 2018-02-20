@@ -48,14 +48,19 @@ if (!class_exists('mdirectorWidget')) {
             if (!empty($description))
                 echo '<p class="md__newsletter--description">' . $instance['description'] . '</p>';
 
-            if ($mdirector_active == 'yes') {
+            if ($mdirector_active === 'yes') {
+                if( $settings['frequency_daily'] === 'yes' && $settings['frequency_weekly'] === 'yes'){
                 $select_frequency 	= '<div class="md__newsletter--area__select">';
                 $select_frequency 	.= '<select id="md_frequency" class="md__newsletter--select" name="md_frequency">';
 			    $select_frequency 	.= '<option value="daily">'.__('Recibir newsletter diaria', 'mdirector-newsletter').'</option>';
 			    $select_frequency 	.= '<option value="weekly">'.__('Recibir newsletter semanal', 'mdirector-newsletter').'</option>';
 			    $select_frequency 	.= '</select>';
                 $select_frequency 	.= '</div>';
-
+                } else if ($settings['frequency_daily'] === 'yes'){
+                    $select_frequency = '<input value="daily" name="md_frequency" type="hidden">';
+                } else if ($settings['frequency_weekly'] === 'yes'){
+                    $select_frequency = '<input value="weekly" name="md_frequency" type="hidden">';
+                }
                 if ($settings['api'] && $settings['secret']) {
 		    	    echo '
 		    	    <form id="mdirector_widget_form" class="md__newsletter--form">
