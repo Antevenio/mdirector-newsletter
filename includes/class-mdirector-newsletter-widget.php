@@ -39,39 +39,50 @@ if (!class_exists('mdirectorWidget')) {
 			$settings = get_option( "mdirector_settings" );
 			$mdirector_active = get_option( "mdirector_active" );
 
-		    $title = empty($instance['title']) ? ' ' : apply_filters('widget_title', $instance['title']);
+            $title = empty($instance['title']) ? ' ' : apply_filters('widget_title', $instance['title']);
 
             if (!empty($title))
                 echo $before_title . $title . $after_title;
 
             if (!empty($description))
-                echo '<p class="mdirector_widget_description">' . $instance['description'] . '</p>';
+                echo '<p class="md__newsletter--description">' . $instance['description'] . '</p>';
 
             if ($mdirector_active == 'yes') {
-			    $select_frequency 	= '<div class="widget_form_field"><select id="md_frequency" name="md_frequency">';
-			    $select_frequency 	.=  '<option value="daily">'.__('Recibir newsletter diaria', 'mdirector-newsletter').'</option>';
-			    $select_frequency 	.=  '<option value="weekly">'.__('Recibir newsletter semanal', 'mdirector-newsletter').'</option>';
-			    $select_frequency 	.= '</select></div>';
+                $select_frequency 	= '<div class="md__newsletter--area__select">';
+                $select_frequency 	.= '<select id="md_frequency" class="md__newsletter--select" name="md_frequency">';
+			    $select_frequency 	.= '<option value="daily">'.__('Recibir newsletter diaria', 'mdirector-newsletter').'</option>';
+			    $select_frequency 	.= '<option value="weekly">'.__('Recibir newsletter semanal', 'mdirector-newsletter').'</option>';
+			    $select_frequency 	.= '</select>';
+                $select_frequency 	.= '</div>';
 
                 if ($settings['api'] && $settings['secret']) {
 		    	    echo '
-		    	    <form id="mdirector_widget_form" class="mdirector_widget_form">
-		    			<div class="widget_form_field">
-		    				<input type="email" class="" placeholder="'.__('Correo electrónico', 'mdirector-newsletter').'" value="" name="mdirector_widget-email">
+		    	    <form id="mdirector_widget_form" class="md__newsletter--form">
+		    			<div class="md__newsletter--area__input">
+		    				<input type="email" class="md_newsletter--email_input" 
+		    				    placeholder="'.__('Correo electrónico', 'mdirector-newsletter').'" 
+		    				    value="" name="mdirector_widget-email">
 		    			</div>
 		    			'.$select_frequency;
-		    			echo '<div class="widget_form_field">';
+		    			echo '<div class="md__newsletter--area__suscribe">';
 
 		    			$settings = get_option( "mdirector_settings" );
 
 		    			$accept = ($settings['md_privacy_text']!='')?$settings['md_privacy_text']:__("Acepto la política de privacidad",'mdirector-newsletter');
 		    			$md_privacy_link = ($settings['md_privacy_url']!='')?$settings['md_privacy_url']:'#';
-		    			echo '<p class="mdirector_widget_accept"><input type="checkbox" name="mdirector_widget-accept"/><label for="mdirector_widget_accept"> <a href="'.$md_privacy_link.'" target="_blank">'.$accept.'</a></label></p>';
+                        echo '
+                            <p class="md__newsletter--area__accept">
+                            <input type="checkbox" name="mdirector_widget-accept"/>
+                            <label for="mdirector_widget_accept"> 
+                            <a href="'.$md_privacy_link.'" target="_blank" class="md__newsletter--accept">'.$accept.'</a>
+                            </label>
+                            </p>';
 
 
-		    			echo '<div class="widget_form_field">
-		    				<button>'.__('Suscribirme', 'mdirector-newsletter').'</button>
-		    			</div>
+                        echo '
+                            <div class="md__newsletter--area__button">
+		    				    <button class="md_newsletter--button">'.__('Suscribirme', 'mdirector-newsletter').'</button>
+		    			    </div>
 		    	    </form>
 		    	    <div class="md_ajax_loader md_widget"><img src="'.MDIRECTOR_NEWSLETTER_PLUGIN_URL.'assets/ajax-loader.gif'.'"></div>';
 			    }

@@ -15,7 +15,8 @@
     border: 2px solid #398f14;
 }
 
-.mdirector_sh_field, .widget_form_field {
+.mdirector_sh_field, .md__newsletter--area__select, .md__newsletter--area__input,
+.md__newsletter--area__suscribe, .md__newsletter--area__button {
     margin-bottom: 10px
 }
 
