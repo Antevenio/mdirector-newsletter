@@ -25,6 +25,7 @@ class MDirector_Newsletter_Admin {
     const SETTINGS_OPTION_ON = 'yes';
     const REQUEST_RESPONSE_SUCCESS = 'ok';
     const NO_VALUE = '---';
+    const DEFAULT_SETTINGS_TAB = 'settings';
 
     protected $frequency_types;
     protected $frequency_days;
@@ -51,6 +52,8 @@ class MDirector_Newsletter_Admin {
 
     private $Mdirector_utils;
 
+    private $Mdirector_Newsletter_Api;
+
     /**
      * Initialize the class and set its properties.
      *
@@ -65,6 +68,7 @@ class MDirector_Newsletter_Admin {
         $this->mdirector_newsletter = $mdirector_newsletter;
         $this->version = $version;
         $this->Mdirector_utils = new Mdirector_Newsletter_Utils();
+        $this->Mdirector_Newsletter_Api = new Mdirector_Newsletter_Api();
 
         $this->frequency_types = [
             Mdirector_Newsletter_Utils::DAILY_FREQUENCY => __('Diaria', self::MDIRECTOR_LANG_DOMAIN),
@@ -100,6 +104,7 @@ class MDirector_Newsletter_Admin {
 
     /**
      * Create Lists on MDirector Account
+     * @throws MDOAuthException2
      */
     public function create_mdirector_lists() {
         $settings = get_option('mdirector_settings');
@@ -122,7 +127,7 @@ class MDirector_Newsletter_Admin {
 
             $array_list_names = [];
             $list_of_lists =
-                json_decode(Mdirector_Newsletter_Api::callAPI($key, $secret,
+                json_decode($this->Mdirector_Newsletter_Api->callAPI($key, $secret,
                     self::MDIRECTOR_API_LIST_ENDPOINT, 'GET'));
 
             if ($list_of_lists->response === self::REQUEST_RESPONSE_SUCCESS) {
@@ -162,7 +167,7 @@ class MDirector_Newsletter_Admin {
                 } else {
                     //create weekly list
                     $mdirector_weekly_id =
-                        json_decode(Mdirector_Newsletter_Api::callAPI($key, $secret,
+                        json_decode($this->Mdirector_Newsletter_Api->callAPI($key, $secret,
                             self::MDIRECTOR_API_LIST_ENDPOINT, 'POST',
                             ['listName' => $weekly_name]));
 
@@ -193,7 +198,7 @@ class MDirector_Newsletter_Admin {
                     update_option('mdirector_settings', $settings);
                 } else {
                     $mdirector_daily_id =
-                        json_decode(Mdirector_Newsletter_Api::callAPI($key, $secret,
+                        json_decode($this->Mdirector_Newsletter_Api->callAPI($key, $secret,
                             self::MDIRECTOR_API_LIST_ENDPOINT, 'POST',
                             ['listName' => $daily_name]));
 
@@ -216,6 +221,7 @@ class MDirector_Newsletter_Admin {
 
     /**
      * Create campaigns on MDirector Account
+     * @throws MDOAuthException2
      */
     public function create_mdirector_campaigns() {
         $settings = get_option('mdirector_settings');
@@ -233,7 +239,7 @@ class MDirector_Newsletter_Admin {
             $daily_name = sanitize_title_with_dashes(get_bloginfo('name')) . '-daily';
 
             $array_campaig_names = [];
-            $list_of_campagins = json_decode(Mdirector_Newsletter_Api::callAPI(
+            $list_of_campagins = json_decode($this->Mdirector_Newsletter_Api->callAPI(
                 $key, $secret, self::MDIRECTOR_API_CAMPAIGN_ENDPOINT, 'GET')
             );
 
@@ -268,7 +274,7 @@ class MDirector_Newsletter_Admin {
 
             if (!$mdirector_weekly_campaign || !$weekly_exists) {
                 //create weekly list
-                $mdirector_weekly_id = json_decode(Mdirector_Newsletter_Api::callAPI(
+                $mdirector_weekly_id = json_decode($this->Mdirector_Newsletter_Api->callAPI(
                     $key, $secret, self::MDIRECTOR_API_CAMPAIGN_ENDPOINT, 'POST',
                     ['name' => $weekly_name])
                 );
@@ -289,7 +295,7 @@ class MDirector_Newsletter_Admin {
 
             if (!$mdirector_daily_campaign || !$daily_exists) {
                 $mdirector_daily_id =
-                    json_decode(Mdirector_Newsletter_Api::callAPI($key, $secret,
+                    json_decode($this->Mdirector_Newsletter_Api->callAPI($key, $secret,
                         self::MDIRECTOR_API_CAMPAIGN_ENDPOINT, 'POST',
                         ['name' => $daily_name]));
 
@@ -329,121 +335,127 @@ class MDirector_Newsletter_Admin {
             return $_POST['tab'];
         }
 
-        return 'settings';
+        return self::DEFAULT_SETTINGS_TAB;
+    }
+
+    private function save_settings($data) {
+        $settings = get_option('mdirector_settings');
+
+        if ($this->get_current_tab() === 'settings' ) {
+            unset($data['mdirector-newsletter-submit']);
+            foreach ($data as $key => $value) {
+                $settings[$key] = $value;
+            }
+
+            $settings['exclude_cats'] = ((count($data['exclude_cats']) > 0)
+                ? serialize($data['exclude_cats'])
+                : []);
+
+            //echo '<pre>';die( var_dump( $settings ) );
+
+            update_option('mdirector_settings', $settings);
+        }
+    }
+
+    private function save_debug_settings($data) {
+        $dailyTest = $data['mdirector_daily_test_list'];
+        $weeklyTest = $data['mdirector_weekly_test_list'];
+        update_option('mdirector_daily_test_list', $dailyTest);
+        update_option('mdirector_weekly_test_list', $weeklyTest);
+
+        $already_testing = get_option('mdirector_use_test_lists');
+
+        if ($data['mdirector_use_test_lists'] && !$already_testing) {
+            $this->updateDeliveryLists($dailyTest, $weeklyTest);
+        } else if ($data['mdirector_use_test_lists'] && $already_testing) {
+            $this->updateTestLists($dailyTest, $weeklyTest);
+        } else {
+            $this->disableTestLists();
+        }
+
+        update_option('mdirector_use_test_lists', $data['mdirector_use_test_lists']);
     }
 
     /**
-     * SAVE SETTINGS
+     * @param $data
+     *
+     * @throws MDOAuthException2
      */
-    public function mdirector_newsletter_save() {
+    private function save_custom_lists($data) {
+        $customDailyList = $data['mdirector_daily_custom_list'];
+        $customWeeklyList = $data['mdirector_weekly_custom_list'];
+
+        $this->updateDeliveryLists($customDailyList, $customWeeklyList);
+        $this->create_mdirector_lists();
+    }
+
+    private function sending_test() {
         $settings = get_option('mdirector_settings');
 
-        if ($_POST['mdirector-newsletter-submit'] === 'Y') {
-            if ($this->get_current_tab() === 'settings' ) {
-                $settings['api'] = $_POST['api'];
-                $settings['secret'] = $_POST['secret'];
-                $settings['frequency_weekly'] = $_POST['frequency_weekly'];
-                $settings['frequency_daily'] = $_POST['frequency_daily'];
-                $settings['subject_type_weekly'] = $_POST['subject_type_weekly'];
-                $settings['subject_type_daily'] = $_POST['subject_type_daily'];
-                $settings['subject_weekly'] = $_POST['subject_weekly'];
-                $settings['subject_daily'] = $_POST['subject_daily'];
-                $settings['from_name'] = $_POST['from_name'];
-                $settings['frequency_day'] = $_POST['frequency_day'];
-                $settings['subject_dynamic_prefix_weekly'] = $_POST['subject_dynamic_prefix_weekly'];
-                $settings['subject_dynamic_value_weekly'] = $_POST['subject_dynamic_value_weekly'];
-                $settings['subject_dynamic_prefix_daily'] = $_POST['subject_dynamic_prefix_daily'];
-                $settings['subject_dynamic_value_daily'] = $_POST['subject_dynamic_value_daily'];
-                $settings['mdirector_use_custom_lists'] = $_POST['mdirector_use_custom_lists'];
-                $settings['mdirector_daily_custom_list'] = $_POST['mdirector_daily_custom_list'];
-                $settings['mdirector_weekly_custom_list'] = $_POST['mdirector_weekly_custom_list'];
-                $settings['hour_weekly'] = $_POST['hour_weekly'];
-                $settings['hour_daily'] = $_POST['hour_daily'];
-                $settings['exclude_categories'] = $_POST['exclude_categories'];
-                $settings['md_privacy_text'] = $_POST['md_privacy_text'];
-                $settings['md_privacy_url'] = $_POST['md_privacy_url'];
-                $settings['md_template_selected'] = $_POST['md_template_selected'];
-                $settings['exclude_cats'] = ((count($_POST['exclude_cats']) > 0)
-                    ? serialize($_POST['exclude_cats'])
-                    : []);
-
-                update_option('mdirector_settings', $settings);
-            }
-        } else if ($_POST['mdirector-newsletter-debug-submit'] === 'Y') {
-            $dailyTest = $_POST['mdirector_daily_test_list'];
-            $weeklyTest = $_POST['mdirector_weekly_test_list'];
-            update_option('mdirector_daily_test_list', $dailyTest);
-            update_option('mdirector_weekly_test_list', $weeklyTest);
-
-            $already_testing = get_option('mdirector_use_test_lists');
-
-            if ($_POST['mdirector_use_test_lists'] && !$already_testing) {
-                $this->updateDeliveryLists($dailyTest, $weeklyTest);
-            } else if ($_POST['mdirector_use_test_lists'] && $already_testing) {
-                $this->updateTestLists($dailyTest, $weeklyTest);
+        if ($settings['frequency_daily'] === self::SETTINGS_OPTION_ON) {
+            $settings['hour_daily'] = '23:59';
+            if ($this->Mdirector_utils->md_send_daily_mails($settings)) {
+                $this->plugin_notices[] = '<div class="updated md-notice">'
+                    . __('Acabas de realizar un envío de tipo diario a la lista: <strong>', self::MDIRECTOR_LANG_DOMAIN)
+                    . get_option('mdirector_daily_list_name') . '</strong></div>';
             } else {
-                $this->disableTestLists();
+                $this->plugin_notices[] = '<div class="updated md-error">'
+                    . __('No se ha podido realizar un envío de tipo diario.', self::MDIRECTOR_LANG_DOMAIN) . ' '
+                    . __('¿Quizá no tienes nuevas entradas en el blog?', self::MDIRECTOR_LANG_DOMAIN)
+                    . '</div>';
             }
+        } else {
+            $this->plugin_notices[] = '<div class="updated md-error">'
+                . __('No se ha realizado un envío de tipo diario porque tienes la opción
+                        <strong>Enviar mensajes diarios</strong> desactivada.', self::MDIRECTOR_LANG_DOMAIN) . ' '
+                . '</div>';
+        }
 
-            update_option('mdirector_use_test_lists', $_POST['mdirector_use_test_lists']);
+        if ($settings['frequency_weekly'] === self::SETTINGS_OPTION_ON) {
+            $settings['hour_weekly'] = '23:59';
+            if ($this->Mdirector_utils->md_send_weekly_mails($settings) ) {
+                $this->plugin_notices[] = '<div class="updated md-notice">'
+                    . __('Acabas de realizar un envío de tipo semanal a la lista: <strong>', self::MDIRECTOR_LANG_DOMAIN)
+                    . get_option('mdirector_weekly_list_name') . '</strong></div>';
+            } else {
+                $this->plugin_notices[] = '<div class="updated md-error">'
+                    . __('No se ha podido realizar un envío de tipo semanal.', self::MDIRECTOR_LANG_DOMAIN) . ' '
+                    . __('¿Quizá no tienes nuevas entradas en el blog?', self::MDIRECTOR_LANG_DOMAIN)
+                    . '</div>';
+            }
+        } else {
+            $this->plugin_notices[] = '<div class="updated md-error">'
+                . __('No se ha realizado un envío de tipo semanal porque tienes la opción
+                        <strong>Enviar mensajes semanales</strong> desactivada.', self::MDIRECTOR_LANG_DOMAIN) . ' '
+                . '</div>';
+        }
+    }
+
+    /**
+     * @throws MDOAuthException2
+     */
+    public function mdirector_newsletter_save() {
+        if ($_POST['mdirector-newsletter-submit'] === 'Y') {
+            $this->save_settings($_POST);
+        } else if ($_POST['mdirector-newsletter-debug-submit'] === 'Y') {
+            $this->save_debug_settings($_POST);
         }
 
         if ($_POST['mdirector_use_custom_lists']) {
-            $customDailyList = $_POST['mdirector_daily_custom_list'];
-            $customWeeklyList = $_POST['mdirector_weekly_custom_list'];
+            $this->save_custom_lists($_POST);
+        }
 
-            $this->updateDeliveryLists($customDailyList, $customWeeklyList);
-            $this->create_mdirector_lists();
+        // Sending the campaigns inmediately
+        if (isset($_POST['cpt_submit_test_now'])) {
+            $this->sending_test();
         }
 
         // Reset counters
         if (isset($_POST['cpt_submit_reset_now'])) {
             $this->Mdirector_utils->reset_deliveries_sent();
-
             $this->plugin_notices[] = '<div class="updated md-notice">'
                 . __('Fechas de últimos envíos (diario y semanal) reiniciada.', self::MDIRECTOR_LANG_DOMAIN)
                 . '</div>';
-        }
-
-        // Sending the campaigns inmediately
-        if (isset($_POST['cpt_submit_test_now'])) {
-            if ($settings['frequency_daily'] === self::SETTINGS_OPTION_ON) {
-                $settings['hour_daily'] = '23:59';
-                if ($this->Mdirector_utils->md_send_daily_mails($settings)) {
-                    $this->plugin_notices[] = '<div class="updated md-notice">'
-                        . __('Acabas de realizar un envío de tipo diario a la lista: <strong>', self::MDIRECTOR_LANG_DOMAIN)
-                        . get_option('mdirector_daily_list_name') . '</strong></div>';
-                } else {
-                    $this->plugin_notices[] = '<div class="updated md-error">'
-                        . __('No se ha podido realizar un envío de tipo diario.', self::MDIRECTOR_LANG_DOMAIN) . ' '
-                        . __('¿Quizá no tienes nuevas entradas en el blog?', self::MDIRECTOR_LANG_DOMAIN)
-                        . '</div>';
-                }
-            } else {
-                $this->plugin_notices[] = '<div class="updated md-error">'
-                    . __('No se ha realizado un envío de tipo diario porque tienes la opción
-                        <strong>Enviar mensajes diarios</strong> desactivada.', self::MDIRECTOR_LANG_DOMAIN) . ' '
-                    . '</div>';
-            }
-
-            if ($settings['frequency_weekly'] === self::SETTINGS_OPTION_ON) {
-                $settings['hour_weekly'] = '23:59';
-                if ($this->Mdirector_utils->md_send_weekly_mails($settings) ) {
-                    $this->plugin_notices[] = '<div class="updated md-notice">'
-                        . __('Acabas de realizar un envío de tipo semanal a la lista: <strong>', self::MDIRECTOR_LANG_DOMAIN)
-                        . get_option('mdirector_weekly_list_name') . '</strong></div>';
-                } else {
-                    $this->plugin_notices[] = '<div class="updated md-error">'
-                        . __('No se ha podido realizar un envío de tipo semanal.', self::MDIRECTOR_LANG_DOMAIN) . ' '
-                        . __('¿Quizá no tienes nuevas entradas en el blog?', self::MDIRECTOR_LANG_DOMAIN)
-                        . '</div>';
-                }
-            } else {
-                $this->plugin_notices[] = '<div class="updated md-error">'
-                    . __('No se ha realizado un envío de tipo semanal porque tienes la opción
-                        <strong>Enviar mensajes semanales</strong> desactivada.', self::MDIRECTOR_LANG_DOMAIN) . ' '
-                    . '</div>';
-            }
         }
     }
 
@@ -476,6 +488,9 @@ class MDirector_Newsletter_Admin {
         update_option('mdirector_weekly_list_lck', '');
     }
 
+    /**
+     * @throws MDOAuthException2
+     */
     public function mdirector_newsletter_init() {
         $this->mdirector_checks();
 
@@ -555,7 +570,7 @@ class MDirector_Newsletter_Admin {
                 <li><p>Guarda al final de la página de configuración del plugin. Una vez hecho, automáticamente se crean dos listas en tu cuenta de MDirector, una para aquellos usuarios que se suscriban a la newsletter semanal y otra para los que se suscriban a la newsletter diaria.</p></li>
                 <li><p>Si quieres realizar una prueba para ver el aspecto de tu campaña antes de enviarla utiliza la pestaña "Pruebas". Desde ahí, puedes indicar una lista alternativa a la que realizar el envío, por ejemplo, una donde figures tú y un par de amigos.</p></li>
                 <li><p>Una vez que lo tengas todo configurado, puedes lanzar tu campaña de forma inmediata, o bien esperar al momento programado. Si no quieres esperar, solo pulsa "Enviar ahora mismo" o "Enviar prueba ahora mismo" desde su correspondiente pestaña.</p></li>
-                <li><p>Ahora ya puedes colocar el formulario / widget en tu blog. Para ello accede a Apariencia > Widgets en el panel de tu wordpress y arrastra a tu sidebar el widget de MDirector. Podrás configurar un título, una descripción / explicación para que aparezca encima de tu formulario y un enlace y checkbox para la política de privacidad o términos legales. ¡Ya está! tus usuarios pueden comenzar a suscribirse.</p></li>
+                <li><p>Ahora ya puedes colocar el formulario / widget en tu blog. Para ello, accede a Apariencia > Widgets en el panel de tu wordpress y arrastra a tu sidebar el widget de MDirector. Podrás configurar un título, una descripción / explicación para que aparezca encima de tu formulario y un enlace y checkbox para la política de privacidad o términos legales. ¡Ya está! tus usuarios pueden comenzar a suscribirse.</p></li>
                 <li><p>Además del widget, puedes usar un shortcode para colocar el formulario de suscripción en cualquier página o post de tu blog. Para ello añade [mdirector_subscriptionbox] al contenido de cualquiera de tus páginas o posts.</p></li>
                 <li><p>Puedes personalizar el aspecto de la plantilla de newsletter enviada a los usuarios modificando los ficheros de la carpeta /templates/ del directorio del plugin (Conocimientos de HTML / CSS requeridos).</p></li>
                 <li><p>El plugin hace uso de WP Cron para realizar los envíos, el sistema de programación de tareas de Wordpress. Wp Cron funciona sólo cuando se producen visitas a la página, por lo que su ejecución en la hora planificada puede no ser precisa. <a href="http://stackoverflow.com/questions/12895706/when-does-wp-cron-php-run-in-wordpress" target="_blank">Más información aquí</a></p></li>
@@ -600,15 +615,15 @@ class MDirector_Newsletter_Admin {
         return self::NO_VALUE;
     }
 
-    private function generate_template_options() {
+    private function generate_template_options($lang = null) {
         $available_templates = $this->Mdirector_utils->get_user_templates();
-        $current_template_selected = $this->Mdirector_utils->get_current_template($available_templates);
+        $current_template_selected = $this->Mdirector_utils->get_current_template($available_templates, $lang);
         $output = '';
 
         foreach ($available_templates as $template) {
             $template_name = basename($template);
             $selected = ($template_name === $current_template_selected) ? ' selected="selected"' : '';
-            $output .= '<option value="' . $template_name . '"' . $selected . '>' . $template_name . '</option>';
+            $output .= '<option value="' . $template_name . '" ' . $selected . '>' . $template_name . '</option>';
         }
 
         return $output;
@@ -871,14 +886,55 @@ class MDirector_Newsletter_Admin {
                 <div class="mdirector-settings-box">
                 <h4>' . __('8. Seleccionar plantilla', self::MDIRECTOR_LANG_DOMAIN) . '</h4>
                 <p>'
-                . __('Si tienes varias plantillas HTML, puedes escoger cuál utilizar para generar tu Newsletter', self::MDIRECTOR_LANG_DOMAIN) . '
+                . __('Si tienes varias plantillas HTML, puedes escoger cuál utilizar para generar tu Newsletter.', self::MDIRECTOR_LANG_DOMAIN) . '
                 </p>                
-                <br class="clear">
-                <label class="select">' . __('Plantillas disponibles:', self::MDIRECTOR_LANG_DOMAIN) . '</label>
-                <select name="md_template_selected" id="md_template_selected">
-                ' . $this->generate_template_options() . '                    
-                </select>
-                <br class="clear">
+                <br class="clear">';
+
+
+                // WPML Support
+                if ( !function_exists('icl_object_id') ) {
+                    echo '
+                        <label class="select">' . __('Plantillas disponibles:', self::MDIRECTOR_LANG_DOMAIN) . '</label>
+                        <select class="md_template_select" name="md_template_general" id="md_template_general">' .
+                            $this->generate_template_options() .
+                        '</select>
+                        ';
+                } else {
+                    echo '                        
+                        <div class="overflow md_newsletter--wpml-container">
+                            <h5>' . __('¡WPML Detectado!', self::MDIRECTOR_LANG_DOMAIN) . '</h5>                        
+                            <div class="md_newsletter--wpml-logo-container overflow">
+                                <img class="left" alt="wpml logo" src="'. MDIRECTOR_NEWSLETTER_PLUGIN_URL .'assets\wpml-logo-64.png">                        
+                                <p class="left">' . __('Hemos comprobado que tienes habilitado el plugin', self::MDIRECTOR_LANG_DOMAIN) . '
+                                    <a href="https://wpml.org" target="_blank" title="WPML">WPML</a> '
+                                . __('para ofrecer tu web en varios idiomas.', self::MDIRECTOR_LANG_DOMAIN) . '<br><br>'
+                                . __('Si así lo prefieres, puedes configurar una plantilla diferente para cada uno de los idiomas que tienes instalados.', self::MDIRECTOR_LANG_DOMAIN)
+                                . __('De este modo, puedes mejorar de forma signicativa la personalización de tus envíos:', self::MDIRECTOR_LANG_DOMAIN) . '</p>
+                            </div>                        
+                    ';
+
+                    $languages = apply_filters( 'wpml_active_languages', null, 'orderby=id&order=desc' );
+
+                    echo '<div class="clear md_newsletter--wpml-templates">';
+
+                    foreach ($languages as $lang) {
+                        $templateLang = 'md_template_' . $lang['code'];
+                        echo '
+                            <div class="overflow">
+                            <label class="md_newsletter--lang-name">' . $lang['translated_name'] . ':</label>
+                            <p class="md_newsletter--lang-template left">
+                            <select class="md_template_select" name="' . $templateLang . '" id="' . $templateLang . '">' .
+                                $this->generate_template_options($lang['code']) . '
+                            </select>   
+                            </p>
+                            </div>';
+                    }
+
+                    echo '</div>'; // .md_newsletter--wpml-templates
+                    echo '</div>'; // .md_newsletter--wpml-container
+                }
+
+                echo '<br class="clear">
                 </div>
 
                 <!-- STEP 9 -->
@@ -1043,7 +1099,7 @@ class MDirector_Newsletter_Admin {
 
             echo '<div class="error" style="padding: 10px; margin: 20px 0 0 2px">'
                 . __('Por favor actualiza tu versión de Wordpress para usar el plugin de MDirector. La mínima versión compatible es: ',
-                    self::MDIRECTOR_LANG_DOMAIN) . MIN_WP_VERSION . '</div>';
+                    self::MDIRECTOR_LANG_DOMAIN) . MDIRECTOR_MIN_WP_VERSION . '</div>';
 
             return false;
         }
@@ -1067,6 +1123,10 @@ class MDirector_Newsletter_Admin {
         return MDIRECTOR_CURL_OK;
     }
 
+    /**
+     * @return bool
+     * @throws MDOAuthException2
+     */
     public function check_api() {
         $settings = get_option('mdirector_settings');
 
@@ -1074,7 +1134,7 @@ class MDirector_Newsletter_Admin {
             $key = $settings['api'];
             $secret = $settings['secret'];
             $response = json_decode($response =
-                Mdirector_Newsletter_Api::callAPI($key, $secret,
+                $this->Mdirector_Newsletter_Api->callAPI($key, $secret,
                     self::MDIRECTOR_API_LIST_ENDPOINT, 'GET'));
         } else {
             echo '<div class="error" style="padding: 10px; margin: 20px 0 0 2px">'
@@ -1094,8 +1154,13 @@ class MDirector_Newsletter_Admin {
 
             return (MDIRECTOR_API_OK);
         }
+
+        return false;
     }
 
+    /**
+     * @throws MDOAuthException2
+     */
     public function mdirector_checks() {
         if ($this->check_version() && $this->check_curl() && $this->check_api()) {
             update_option('mdirector_active', self::SETTINGS_OPTION_ON);

@@ -242,10 +242,12 @@ class Mdirector_Newsletter_Utils {
             glob(MDIRECTOR_TEMPLATES_PATH . '*', GLOB_ONLYDIR));
     }
 
-    public function get_current_template($available_templates) {
+    public function get_current_template($available_templates, $lang = null) {
         $settings = get_option('mdirector_settings');
-        $current_template_selected = !empty($settings['md_template_selected'])
-            ? $settings['md_template_selected']
+        $template = 'md_template_' . (!empty($lang) ? $lang : 'general');
+
+        $current_template_selected = !empty($settings[$template])
+            ? $settings[$template]
             : Mdirector_Newsletter_Utils::DEFAULT_TEMPLATE;
 
         if (!in_array($current_template_selected, $available_templates) ) {
