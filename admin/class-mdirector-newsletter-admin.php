@@ -908,8 +908,8 @@ class MDirector_Newsletter_Admin {
                                 <p class="left">' . __('Hemos comprobado que tienes habilitado el plugin', self::MDIRECTOR_LANG_DOMAIN) . '
                                     <a href="https://wpml.org" target="_blank" title="WPML">WPML</a> '
                                 . __('para ofrecer tu web en varios idiomas.', self::MDIRECTOR_LANG_DOMAIN) . '<br><br>'
-                                . __('Si así lo prefieres, puedes configurar una plantilla diferente para cada uno de los idiomas que tienes instalados.', self::MDIRECTOR_LANG_DOMAIN)
-                                . __('De este modo, puedes mejorar de forma signicativa la personalización de tus envíos:', self::MDIRECTOR_LANG_DOMAIN) . '</p>
+                                . __('Si así lo prefieres, puedes configurar una plantilla diferente para cada uno, pudiendo así mejorar de forma signifactica la personalización de tus envíos:', self::MDIRECTOR_LANG_DOMAIN) . ' 
+                                </p>
                             </div>                        
                     ';
 

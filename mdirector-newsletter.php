@@ -61,8 +61,11 @@ register_deactivation_hook(__FILE__, 'deactivate_mdirector_newsletter');
 function mdirector_admin_notice() {
     if (!get_option('mdirector-notice')) {
         echo '<div class="updated" style="padding: 10px;margin: 20px 0 0 2px;"><p>';
-        printf(__('Has instalado tu plugin de Newsletter correctamente, estás a un sólo paso de configurarlo. <a href="admin.php?page=mdirector-newsletter&tab=welcome&mdirector_notice_ignore=0">Configurar ahora</a>'));
-        echo "</p></div>";
+        echo __('Has instalado tu plugin de Newsletter correctamente, estás a un sólo paso de configurarlo.', self::MDIRECTOR_LANG_DOMAIN);
+        echo '<a href="admin.php?page=mdirector-newsletter&tab=welcome&mdirector_notice_ignore=0">';
+        echo __('Configurar ahora', self::MDIRECTOR_LANG_DOMAIN);
+        echo '</a>';
+        echo '</p></div>';
     }
 }
 
