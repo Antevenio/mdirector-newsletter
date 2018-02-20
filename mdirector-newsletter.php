@@ -32,6 +32,7 @@ define('MDIRECTOR_MIN_WP_VERSION', '4.0.0');
 define('MDIRECTOR_NEWSLETTER', 'mdirector-newsletter');
 define('MDIRECTOR_NEWSLETTER_VERSION', '1.0.0');
 define('MDIRECTOR_NEWSLETTER_PLUGIN_DIR', plugin_dir_path(__FILE__));
+define('MDIRECTOR_TEMPLATES_PATH', plugin_dir_path(__FILE__) . 'templates/');
 define('MDIRECTOR_NEWSLETTER_PLUGIN_URL', plugins_url('/', __FILE__));
 define('MDIRECTOR_NEWSLETTER_PLUGIN_FILE', __FILE__);
 define('MDIRECTOR_CURRENT_WP_VERSION', $wp_version);

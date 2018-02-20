@@ -135,6 +135,10 @@ span.help-block {
     top: 3px;
 }
 
+.md_template_select {
+    min-width: 200px;
+}
+
 /** TIMEPICKER **/
 input.timepicker {
     background: #ffffff url('../../assets/icon_clock.png') 97% 50% no-repeat;
@@ -326,6 +330,10 @@ a.btn-blue {
     cursor: not-allowed;
 }
 
+.left {
+    float: left;
+}
+
 .overflow {
     overflow: hidden;
 }
@@ -373,4 +381,35 @@ a.btn-blue {
     background: #499C73;
     border-color: #3A7C5B;
     color: #fff;
+}
+
+.md_newsletter--wpml-container {
+    overflow: hidden;
+}
+
+.md_newsletter--wpml-container h5 {
+    margin-bottom: 0;
+}
+
+.md_newsletter--wpml-logo-container img {
+    padding-top: 20px;
+}
+
+.md_newsletter--wpml-logo-container p {
+    margin-top: 10px;
+    padding-left: 20px;
+    width: 590px;
+}
+
+.md_newsletter--lang-name {
+    float: left;
+    width: 100px;
+    display: inline-block;
+    margin: 1em 0;
+    line-height: 28px;
+    padding-left: 85px;
+}
+
+.md_newsletter--wpml-templates {
+    margin-top: 5px;
 }
