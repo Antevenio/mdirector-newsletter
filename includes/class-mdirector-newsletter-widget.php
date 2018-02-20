@@ -18,7 +18,8 @@ if (!class_exists('mdirectorWidget')) {
 		?>
 		  <p><label for="<?php echo $this->get_field_id('title'); ?>"><?php echo __('Título','mdirector-newsletter');?>: <input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo attribute_escape($title); ?>" /></label></p>
 		  <p>
-		  	<label for="<?php echo $this->get_field_id('description'); ?>"><?php echo __('Texto explicativo','mdirector-newsletter');?>:
+		  	<label for="<?php echo $this->get_field_id('description'); ?>">
+                            <?php echo __('Texto explicativo','mdirector-newsletter');?>:
 		  		<textarea class="widefat" id="<?php echo $this->get_field_id('description'); ?>" name="<?php echo $this->get_field_name('description'); ?>"><?php echo attribute_escape($description); ?></textarea>
 		  	</label>
 		  </p>
