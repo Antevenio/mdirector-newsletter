@@ -10,11 +10,7 @@ jQuery(document).ready(function ($) {
         interval: 30
     });
 
-    $("#exclude_categories").click(function () {
-        $("#categories_list").toggle($(this).is(':checked'));
-    });
-
-    $('.dynamic-choice').click(function () {
+    $('.dynamic-choice').on( 'click', function () {
         var $this = $(this),
             isChecked = $this.is(':checked');
 
@@ -27,11 +23,8 @@ jQuery(document).ready(function ($) {
             .find('input, select').prop('readonly', !isChecked);
     });
 
-    $("#frequency_weekly").click(function () {
-        $("#weekly_extra").toggle($(this).is(':checked'));
-    });
-
-    $("#frequency_daily").click(function () {
-        $("#daily_extra").toggle($(this).is(':checked'));
-    });
+    $('[data-toggle]').on('click', function() {
+        var $this = $(this);
+        $('#' + $this.data('toggle')).toggle($this.is(':checked'));
+    } );
 });

@@ -211,7 +211,7 @@ class Mdirector_Newsletter_Utils {
                         [
                             'type' => 'email',
                             'name' => $frequency . '_' . date('Y_m_d'),
-                            'fromName' => $settings['from_name'] ? $settings['from_name'] : 'from name',
+                            'fromName' => $settings['mdirector_from_name'] ? $settings['mdirector_from_name'] : 'from name',
                             'subject' => $mail_subject,
                             'campaign' => $campaign_id,
                             'language' => 'es',
@@ -244,7 +244,7 @@ class Mdirector_Newsletter_Utils {
 
     public function get_current_template($available_templates, $lang = null) {
         $settings = get_option('mdirector_settings');
-        $template = 'md_template_' . (!empty($lang) ? $lang : 'general');
+        $template = 'mdirector_template_' . (!empty($lang) ? $lang : 'general');
 
         $current_template_selected = !empty($settings[$template])
             ? $settings[$template]
