@@ -77,6 +77,10 @@ label.block {
     margin-top: 30px;
 }
 
+.margin-bottom-5 {
+    margin-bottom: 5px;
+}
+
 .margin-bottom-10 {
     margin-bottom: 10px;
 }
@@ -409,7 +413,6 @@ input.timepicker {
 }
 
 .md_newsletter--wpml-templates {
-    margin-top: 30px;
     overflow: hidden;
 }
 
@@ -419,10 +422,8 @@ input.timepicker {
     overflow: hidden;
 }
 
-.md_newsletter--panel__wrapper:first-of-type {
-    border-bottom: 1px dotted #ccc;
-    padding-bottom: 15px;
-    margin-bottom: 15px;
+.md_newsletter--panel__wrapper {
+    padding-bottom: 10px;
     border-top: 1px dotted #ccc;
     padding-top: 15px;
 }
@@ -433,6 +434,10 @@ input.timepicker {
 
 .md_newsletter--panel__right {
     float: left;
+}
+
+.md_newsletter--panel__row {
+    margin-bottom: 10px;
 }
 
 .md_newsletter--panel__row label {
@@ -456,4 +461,36 @@ input.timepicker {
     color: #999;
     font-size: 11px;
     font-style: italic;
+}
+
+.md_newsletter--panel__row-alt {
+    margin-bottom: 10px;
+    overflow: hidden;
+}
+
+.md_newsletter--panel__row-alt label {
+    color: #666;
+    display: inline-block;
+    font-size: 11px;
+    line-height: 11px;
+    margin-bottom: 5px;
+    margin-right: 5px;
+    padding-left: 20px;
+    padding-right: 8px;
+    text-align: right;
+    width: 40px;
+    float: left;
+    padding-top: 10px;
+}
+
+.md_newsletter--panel__row-alt input {
+    margin-right: 10px;
+    float: left;
+    width: 200px;
+}
+
+.help-block-alt {
+    font-size: 85%;
+    margin-left: 75px;
+    top: 4px;
 }
