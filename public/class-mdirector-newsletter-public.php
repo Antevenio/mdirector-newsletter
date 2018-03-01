@@ -18,8 +18,6 @@
  * @author     MDirector
  */
 class Mdirector_Newsletter_Public {
-    const SETTINGS_OPTION_ON = 'yes';
-
     /**
 	 * The ID of this plugin.
 	 *
@@ -38,6 +36,16 @@ class Mdirector_Newsletter_Public {
 	 */
 	private $version;
 
+    /**
+     * @var Mdirector_Newsletter_Utils
+     */
+    private $Mdirector_utils;
+
+    /**
+     * @var Mdirector_Newsletter_Api
+     */
+    private $Mdirector_Newsletter_Api;
+
 	/**
 	 * Initialize the class and set its properties.
 	 *
@@ -46,10 +54,17 @@ class Mdirector_Newsletter_Public {
 	 * @param    string    $version    The version of this plugin.
 	 */
 	public function __construct($mdirector_newsletter, $version) {
-		$mdirector_active = get_option('mdirector_active');
+        require_once MDIRECTOR_NEWSLETTER_PLUGIN_DIR .
+            'includes/class-mdirector-newsletter-widget.php';
+        require_once MDIRECTOR_NEWSLETTER_PLUGIN_DIR .
+            'includes/class-mdirector-newsletter-utils.php';
 
-		if ($mdirector_active === self::SETTINGS_OPTION_ON) {
-            $this->mdirector_newsletter = $mdirector_newsletter;
+	    $mdirector_active = get_option('mdirector_active');
+        $this->Mdirector_utils = new Mdirector_Newsletter_Utils();
+
+        if ($mdirector_active === Mdirector_Newsletter_Utils::SETTINGS_OPTION_ON) {
+		    $this->Mdirector_Newsletter_Api = new Mdirector_Newsletter_Api();
+		    $this->mdirector_newsletter = $mdirector_newsletter;
             $this->version = $version;
 
             // shortcode
@@ -61,93 +76,81 @@ class Mdirector_Newsletter_Public {
             // ajax calls
             add_action('wp_ajax_md_new', [$this, 'mdirector_ajax_new']);
             add_action('wp_ajax_nopriv_md_new', [$this, 'mdirector_ajax_new']);
+
             // cron jobs
             add_filter('cron_schedules', [$this, 'md_add_new_interval']);
-            register_activation_hook(MDIRECTOR_NEWSLETTER_PLUGIN_DIR . 'mdirector-newsletter.php', [$this, 'md_cron_activation']);
-            register_deactivation_hook(MDIRECTOR_NEWSLETTER_PLUGIN_DIR . 'mdirector-newsletter.php', [$this, 'md_cron_deactivation']);
-            add_action('md_daily_event', [$this, 'md_event_cron']);
 
-            require_once MDIRECTOR_NEWSLETTER_PLUGIN_DIR . 'includes/class-mdirector-newsletter-widget.php';
-            require_once MDIRECTOR_NEWSLETTER_PLUGIN_DIR . 'includes/class-mdirector-newsletter-utils.php';
+            // Testing cron
+            $this->md_cron_deactivation();
+            $this->md_cron_activation();
+
+
+            register_activation_hook(MDIRECTOR_NEWSLETTER_PLUGIN_DIR .
+                'mdirector-newsletter.php', [$this, 'md_cron_activation']);
+
+            register_deactivation_hook(MDIRECTOR_NEWSLETTER_PLUGIN_DIR .
+                'mdirector-newsletter.php', [$this, 'md_cron_deactivation']);
+
+            add_action('md_daily_event', [$this, 'md_event_cron']);
         }
 	}
 
-	/**
-	 * SHORTCODE
+    /**
+     * @return string
      */
 	public function mdirector_subscriptionbox() {
-		$mdirector_active = get_option('mdirector_active');
-        $form = '';
-
-        if ($mdirector_active === self::SETTINGS_OPTION_ON) {
-			$select_frequency 	= '<div class="mdirector_sh_field"><select id="md_sh_frequency" name="md_sh_frequency">';
-			$select_frequency 	.= '<option value="daily">' . __('Recibir newsletter diaria', 'mdirector-newsletter') . '</option>';
-			$select_frequency 	.= '<option value="weekly">' . __('Recibir newsletter semanal', 'mdirector-newsletter') . '</option>';
-			$select_frequency 	.= '</select></div>';
-
-            $form = '
-                <form name="mdirector_sh_suscription" class="mdirector_sh_suscription" id="mdirector_sh_suscription" method="POST">
-                    <div class="mdirector_sh_field">
-                        <input type="text" name="mdirector_sh_email" id="mdirector_sh_email" placeholder="'.__('Email','mdirector-newsletter').'">
-                    </div>
-                    ' . $select_frequency;
-                    $settings = get_option('mdirector_settings');
-
-                    $accept = ($settings['md_privacy_text'] !== '')
-                        ? $settings['md_privacy_text']
-                        :__('Acepto la política de privacidad','mdirector-newsletter');
-
-                    $md_privacy_link = ($settings['md_privacy_url']!== '')
-                        ? $settings['md_privacy_url'] :'#';
-
-                    $form .= '<p class="mdirector_sh_accept"><input type="checkbox" name="mdirector_sh-accept"/><label for="mdirector_sh_accept"> <a href="'.$md_privacy_link.'" target="_blank">'.$accept.'</a></label></p>';
-                    $form .= '<div class="mdirector_sh_field">
-                        <button type="submit">'.__('Suscribirme', 'mdirector-newsletter').'</button>
-                    </div>
-                </form>
-                <div class="md_ajax_loader md_sh"><img src="'.MDIRECTOR_NEWSLETTER_PLUGIN_URL.'assets/ajax-loader.gif'.'"></div>
-            ';
-		}
-
-		return $form;
+	    return $this->Mdirector_utils->get_register_for_html();
 	}
 
-	/**
-     * ADD JS AJAXURL
-     */
     public function mdirector_ajaxurl() {
     	echo '
     	<script type="text/javascript">
-		var ajaxurl = \''.admin_url('admin-ajax.php').'\';
+		    var ajaxurl = \''.admin_url('admin-ajax.php').'\';
 		</script>
     	';
      }
 
-	 /**
-     * AJAX calls
+    /**
+     * @throws MDOAuthException2
      */
     public function mdirector_ajax_new() {
-        global $wpdb;
         $mdirector_active = get_option('mdirector_active');
-        $settings = get_option( "mdirector_settings" );
+        $settings = get_option('mdirector_settings');
+        $current_list = 'list';
+        $current_language = $this->Mdirector_utils->get_current_lang();
 
-        if ($mdirector_active === self::SETTINGS_OPTION_ON) {
-			$key = $settings['api'];
-			$secret = $settings['secret'];
-	        $list = get_option('mdirector_' . $_POST['list'] . '_list');
+    if ($mdirector_active === Mdirector_Newsletter_Utils::SETTINGS_OPTION_ON) {
+			$key = $settings['mdirector_api'];
+			$secret = $settings['mdirector_secret'];
+	        $target_list = 'mdirector_' . $_POST['list'] . '_' .
+                $current_list . '_' . $current_language;
+			$list = $settings[$target_list];
+
+	        // Fallback to default language in case user language does not exist.
+	        if (!$list) {
+	            $target_list = 'mdirector_' . $_POST['list'] . '_' .
+                    $current_list . '_' .
+                    Mdirector_Newsletter_Utils::MDIRECTOR_DEFAULT_USER_LANG;
+	            $list = $settings[$target_list];
+            }
 
             if ($list) {
 	        	$md_user_id = json_decode(
-	        		Mdirector_Newsletter_Api::callAPI($key,$secret,'http://www.mdirector.com/api_contact', 'POST',
+                    $this->Mdirector_Newsletter_Api->callAPI(
+	        		    $key,
+                        $secret,
+                        Mdirector_Newsletter_Utils::MDIRECTOR_API_CONTACT_ENDPOINT,'POST',
 	        			[
 	        				'listId' 	=> $list,
 	        				'email'		=> $_POST['email']
 	        			]
 	        		)
 	        	);
+
 	        	echo json_encode($md_user_id);
 	        }
 	    }
+
 		wp_die();
     }
 
@@ -155,7 +158,9 @@ class Mdirector_Newsletter_Public {
      * CRON JOBS
      */
     public function md_cron_activation() {
-    	wp_schedule_event(time(), 'every_five_minutes', 'md_daily_event');
+        if (! wp_next_scheduled ( 'md_daily_event' )) {
+            wp_schedule_event(time(), 'every_five_minutes', 'md_daily_event');
+        }
     }
 
     public function md_cron_deactivation() {
@@ -163,9 +168,9 @@ class Mdirector_Newsletter_Public {
     }
 
     public function md_add_new_interval($schedules) {
-    	// add weekly and monthly intervals
+        // add weekly and monthly intervals
     	$schedules['every_five_minutes'] = [
-    		'interval' => 300,
+    		'interval' => 1,
     		'display' => __('Every Five minutes')
     	];
 
@@ -173,19 +178,21 @@ class Mdirector_Newsletter_Public {
     }
 
     /**
-     * On the scheduled action hook, run the function.
+     * @throws MDOAuthException2
      */
     public function md_event_cron() {
         $mdirector_active = get_option('mdirector_active');
         $settings = get_option('mdirector_settings');
-        $Mdirector_utils = new Mdirector_Newsletter_Utils();
 
-        if ($mdirector_active === self::SETTINGS_OPTION_ON) {
-            if ($settings['frequency_daily'] === self::SETTINGS_OPTION_ON) {
-                $Mdirector_utils->md_send_daily_mails($settings);
+        if ($mdirector_active === Mdirector_Newsletter_Utils::SETTINGS_OPTION_ON) {
+            if ($settings['mdirector_frequency_daily'] ===
+                Mdirector_Newsletter_Utils::SETTINGS_OPTION_ON) {
+                    $this->Mdirector_utils->build_daily_mails();
             }
-            if ($settings['frequency_weekly'] === self::SETTINGS_OPTION_ON) {
-                $Mdirector_utils->md_send_weekly_mails($settings);
+
+            if ($settings['mdirector_frequency_weekly'] ===
+                Mdirector_Newsletter_Utils::SETTINGS_OPTION_ON) {
+                    $this->Mdirector_utils->build_weekly_mails();
             }
         }
     }
@@ -196,7 +203,13 @@ class Mdirector_Newsletter_Public {
 	 * @since    1.0.0
 	 */
 	public function enqueue_styles() {
-		wp_enqueue_style($this->mdirector_newsletter, plugin_dir_url(__FILE__) . 'css/mdirector-newsletter-public.css', [], $this->version, 'all');
+		wp_enqueue_style(
+		    $this->mdirector_newsletter,
+            plugin_dir_url(__FILE__) . 'css/mdirector-newsletter-public.css',
+            [],
+            $this->version,
+            'all'
+        );
 	}
 
 	/**
@@ -205,6 +218,12 @@ class Mdirector_Newsletter_Public {
 	 * @since    1.0.0
 	 */
 	public function enqueue_scripts() {
-		wp_enqueue_script($this->mdirector_newsletter, plugin_dir_url(__FILE__) . 'js/mdirector-newsletter-public.js', ['jquery'], $this->version, false);
+		wp_enqueue_script(
+		    $this->mdirector_newsletter,
+            plugin_dir_url(__FILE__) . 'js/mdirector-newsletter-public.js',
+            ['jquery'],
+            $this->version,
+            false
+        );
 	}
 }

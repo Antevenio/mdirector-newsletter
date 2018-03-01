@@ -39,6 +39,18 @@
     margin-top: 20px;
 }
 
+.form-md input[type="text"] {
+    width: 230px;
+}
+
+.form-md .field-selector {
+    width: 480px !important;
+}
+
+.form-md select {
+    min-width: 230px;
+}
+
 .md_cat_checkbox {
     margin-bottom: 5px;
 }
@@ -105,6 +117,10 @@ label.block {
     color: red;
 }
 
+.text-right {
+    text-align: right;
+}
+
 #weekly_extra, #daily_extra {
     background: #F1F1F1;
     border-radius: 10px;
@@ -144,7 +160,8 @@ span.help-block {
 
 /** TIMEPICKER **/
 input.timepicker {
-    background: #ffffff url('../../assets/icon_clock.png') 97% 50% no-repeat;
+    background: #ffffff url('../../assets/icon_clock.png') 62px 50% no-repeat;
+    max-width: 85px;
 }
 
 .ui-timepicker-container {

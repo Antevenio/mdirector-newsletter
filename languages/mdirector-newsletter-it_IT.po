@@ -1,278 +1,438 @@
 msgid ""
 msgstr ""
-"Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"Project-Id-Version: it\n"
+"Project-Id-Version: \n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
 "Language: it_IT\n"
-"X-Generator: Poedit 1.8.1\n"
+"X-Generator: Poedit 2.0.6\n"
 
-msgid "Semanal"
-msgstr "Settimanale"
+msgid "WEEKDAY__MONDAY"
+msgstr "Lunes"
 
-msgid "Lunes"
-msgstr "Lunedì"
+msgid "WEEKDAY__TUESDAY"
+msgstr "Martes"
 
-msgid "Martes"
-msgstr "Martedì"
+msgid "WEEKDAY__WEDNESDAY"
+msgstr "Miércoles"
 
-msgid "Miércoles"
-msgstr "Mercoledì"
+msgid "WEEKDAY__THURSDAY"
+msgstr "Jueves"
 
-msgid "Jueves"
-msgstr "Giovedì"
+msgid "WEEKDAY__FRIDAY"
+msgstr "Viernes"
 
-msgid "Viernes"
-msgstr "Venerdì"
+msgid "WEEKDAY__SATURDAY"
+msgstr "Sábado"
 
-msgid "Sábado"
-msgstr "Sabato"
+msgid "WEEKDAY__SUNDAY"
+msgstr "Domingo"
 
-msgid "Domingo"
-msgstr "Domenica"
+msgid "SUBJECT-VALUES__FIRST-POST-TITLE"
+msgstr "Título del primer post"
 
-msgid "Se ha añadido una nueva lista semanal a tu cuenta de MDirector"
-msgstr "E' stata aggiunta una nuova lista settimanale al tuo conto MDirector"
+msgid "SUBJECT-VALUES__LAST-POST-TITLE"
+msgstr "Título del último post"
 
-msgid "Se ha añadido una nueva lista diaria a tu cuenta de MDirector"
-msgstr "E' stata aggiunta una nuova lista giornaliera al tuo conto MDirector"
+msgid "DEFAULT-LANGUAGE"
+msgstr "Lenguaje predeterminado"
 
-msgid "Configuración"
-msgstr "Configurazione"
+msgid "PLUGIN-PRESENTATION"
+msgstr "Con el plugin oficial de MDirector podrás crear formularios de suscripción y programar newsletters diarias y/o semanales a los suscriptores de tu web, usando la tecnología de MDirector"
 
-msgid "Ayuda"
-msgstr "Aiuto"
+msgid "PLUGIN-PRESENTATION__FIRST-STEP"
+msgstr "Crea tu <a href=\"https://signup.mdirector.com/\" target=\"_blank\">cuenta de MDirector</a>. Recuerda que con tu cuenta gratuíta puedes enviar hasta 5000 mensajes mensuales. Si ya tienes una puedes continuar con el paso 2"
 
-msgid "Bienvenida"
-msgstr "Benvenuto"
+msgid "PLUGIN-PRESENTATION__SECOND-STEP"
+msgstr "Inicia sesión en tu <a href=\"https://auth.mdirector.com\" target=\"_blank\">cuenta de Email Marketing en MDirector</a>, accede a Preferencias > Información API y activa el API si aún no está activado"
 
-msgid "Para comenzar a usar el plugin de MDirector Newsletter configura los datos de conexión a la API de MDirector"
-msgstr "Per iniziare ad utilizzare il plugin di MDirector Newsletter configura i dati di connessione alla API di MDirector"
+msgid "DAILY-LISTS__ERROR-NOTICE"
+msgstr "La lista (o listas) diarias que has indicado no existen. Se utilizarán las originales"
 
-msgid "Con el plugin oficial de <a href=\"http://www.mdirector.com\" target=\"_blank\">MDirector</a> podrás crear formularios de suscripción y enviar una newsletter diaria o semanal automáticamente a los suscriptores de tu wordpress, usando la tecnología de MDirector."
-msgstr "Con il plugin ufficiale di <a href=\"http://www.mdirector.com\" target=\"_blank\">MDirector</a> potrai creare moduli di sottoscrizione e inviare una newsletter giornaliera o settimanale in modo automatico agli iscritti del tuo Wordpress, utilizzando la tecnologia di MDirector."
+msgid "DAILY-LISTS__NEW-DAILY-LIST-ADDED"
+msgstr "Se ha añadido una nueva lista diaria a tu cuenta de MDirector"
 
-msgid "Datos de conexión API Mdirector"
-msgstr "Dati di connessione API MDirector"
+msgid "DAILY-LISTS__NEW-DAILY-LIST-ADDED-ERROR"
+msgstr "No se ha podido crear la lista diaria. Por favor, refresque la pantalla"
 
-msgid "consumer-key"
-msgstr "consumer-key"
+msgid "WEEKLY-LISTS__ERROR-NOTICE"
+msgstr "La lista (o listas) semanales que has indicado no existen. Se utilizarán las originales"
 
-msgid "consumer-secret"
-msgstr "consumer-secret"
+msgid "WEEKLY-LISTS__NEW-WEEKLY-LIST-ADDED"
+msgstr "Se ha añadido una nueva lista semanal a tu cuenta de MDirector"
 
-msgid "Campo From"
-msgstr "Campo From"
+msgid "WEEKLY-LISTS__NEW-WEEKLY-LIST-ADDED-ERROR"
+msgstr "No se ha podido crear la lista semanal. Por favor, refresque la pantalla"
 
-msgid "Nombre del emisor"
-msgstr "Mittente (Nome)"
+msgid "WEEKLY-CAMPAIGN__NEW-WEEKLY-CAMPAIGN-ADDED"
+msgstr "Se ha añadido una nueva campaña semanal a tu cuenta de MDirector"
 
-msgid "Enviar mensajes semanales"
-msgstr "Inviare messaggi settimanalmente"
+msgid "WEEKLY-CAMPAIGN__NEW-WEEKLY-CAMPAIGN-ADDED-ERROR"
+msgstr "No se ha podido crear la campaña semanal. Por favor, refresque la pantalla"
 
-msgid "Activa los envíos semanales"
-msgstr "Attiva i messaggi settimanali"
+msgid "DAILY-CAMPAIGN__NEW-DAILY-CAMPAIGN-ADDED"
+msgstr "Se ha añadido una nueva campaña diaria a tu cuenta de MDirector"
 
-msgid "Asunto"
-msgstr "Oggetto"
+msgid "DAILY-CAMPAIGN__NEW-DAILY-CAMPAIGN-ADDED-ERROR"
+msgstr "No se ha podido crear la campaña diaria. Por favor, refresque la pantalla"
 
-msgid "Día de la semana"
-msgstr "Giorno della settimana"
+msgid "SENDING-TEST__DAILY-SENDING"
+msgstr "Acabas de realizar un envío de tipo diario a la lista"
 
-msgid "Hora de envío"
-msgstr "Ora di invio"
+msgid "SENDING-TEST__DAILY-SENDING-ERROR"
+msgstr "No se ha podido realizar un envío de tipo diario"
 
-msgid "NOTA: la hora actual en el servidor es "
-msgstr "NOTA: l'ora attuale sul server è: "
+msgid "NO-ENTRIES-IN-BLOG"
+msgstr "Quizá no tienes nuevas entradas en el blog"
 
-msgid "Enviar mensajes diarios"
-msgstr "Inviare messaggi giornalieri"
+msgid "SENDING-TEST__DAILY-DEACTIVATED"
+msgstr "No se ha realizado un envío de tipo diario porque tienes la opción <strong>Enviar mensajes diarios</strong> desactivada"
 
-msgid "Activa los envíos diarios"
-msgstr "Attiva i messaggi giornalieri"
+msgid "SENDING-TEST__WEEKLY-SENDING"
+msgstr "Acabas de realizar un envío de tipo semanal a la lista"
 
-msgid "Excluir categorías de posts en los envíos"
-msgstr "Escludi categorie di posts negli invii"
+msgid "SENDING-TEST__WEEKLY-SENDING-ERROR"
+msgstr "No se ha podido realizar un envío de tipo semanal"
 
-msgid "Si por cualquier motivo no te interesa que los posts de una o varias categorías no sean enviados en los mensajes automáticos. Elige la/s categoría/s que deseas excluir de los envíos"
-msgstr "Se per qualche motivo non ti interessano i posts di una o varie categorie, non saranno inviati messaggi in automatico. Scegli la/le categoria/e che vuoi escludere dai tuoi invii"
+msgid "SENDING-TEST__WEEKLY-DEACTIVATED"
+msgstr "No se ha realizado un envío de tipo semanal porque tienes la opción <strong>Enviar mensajes semanales</strong> desactivada"
 
-msgid "Guardar cambios"
-msgstr "Salva le modifiche"
+msgid "LAST-SENDINGS-RESTARTED"
+msgstr "Fechas de últimos envíos (diario y semanal) reiniciada"
 
-msgid "Recibir newsletter diaria"
-msgstr "Ricevi la newsletter giornalmente"
+msgid "CONFIGURATION"
+msgstr "Configuración"
 
-msgid "Recibir newsletter semanal"
-msgstr "Ricevi la newsletter settimanale"
+msgid "TESTS"
+msgstr "Pruebas"
 
-msgid "Email"
-msgstr "Email"
-
-msgid "Suscríbete"
-msgstr "Iscriviti"
-
-msgid "Half hour"
-msgstr "Mezz'ora"
-
-msgid "Diaria"
-msgstr "Giornaliera"
+msgid "WELCOME"
+msgstr "WELCOME"
 
-msgid "Se ha añadido una nueva lista semanal a tu cuenta de MDirector: "
-msgstr "E' stata aggiunta una nuova lista settimanale al tuo conto MDirector"
+msgid "HELP"
+msgstr "Ayuda"
 
-msgid "Se ha añadido una nueva lista diaria a tu cuenta de MDirector: "
-msgstr "E' stata aggiunta una nuova lista giornaliera al tuo conto MDirector"
-
-msgid "Con el plugin oficial de <a href=\"http://www.mdirector.com\" target=\"_blank\">MDirector</a> podrás crear formularios de suscripción y programar newsletters diarias y/o semanales a los suscriptores de tu web, usando la tecnología de MDirector."
-msgstr "Con il plugin ufficiale di <a href=\"http://www.mdirector.com\" target=\"_blank\">MDirector</a> potrai creare form di iscrizione e programmare newsletter giornaliere e/o settimanali agli iscritti del tuo sito, utilizzando la tecnologia MDirector."
-
-msgid ""
-"<h3>Wordpress + MDirector = Más visitas en tu blog</h3>\n"
-"\t\t\t<p>Integra tu Wordpress con MDirector, la herramienta de envíos de email marketing y sms más avanzada y sencilla del mercado.</p>\n"
-"\n"
-"\t\t\t<p>El plugin de MDirector permite a tus visitantes suscribirse a tus publicaciones, asignándoles una lista en MDirector según deseen recibir los posts diaria o semanalmente, y ocupándonos de que se envíen automáticamente tus mensajes a través de MDirector sin que tengas que preocuparte. Además todos tus suscriptores serán también administrables desde MDirector por lo que podrás hacer envíos desde la plataforma.</p>\n"
-"\n"
-"\t\t\t<p>Configura ya tu plugin y en unos minutos podrás empezar a recibir suscriptores a tu blog.</p>\n"
-"\n"
-"\t\t\t<p>Para usarlo tienes que crear una cuenta en MDirector, recuerda que tienes 5.000 emails gratis al mes sólo por registrarte.</p>\n"
-"<br class=\"clear\">\n"
-"<p>\n"
-"\t\t\t<a class=\"btn-orange\" href=\"https://signup.mdirector.com?lang=es\" target=\"_blank\">Crear mi cuenta en MDirector</a> <a class=\"btn-blue\" href=\"admin.php?page=mdirector-newsletter&tab=settings\">Ya tengo cuenta en MDirector</a></p>\n"
-"\t\t\t<br class=\"clear\">\n"
-"\t\t\t</div>\n"
-"\t\t\t"
-msgstr ""
-"<h3>Wordpress + MDirector = Più visite al tuo blog</h3>\n"
-"\t\t\t<p>Integra il tuo Wordpress con MDirector, lo strumento di invii di email marketing e sms più avanzato e semplice del mercato.</p>\n"
-"\n"
-"\t\t\t<p>Il plugin di MDirector permette a tutti i visitatori di iscriversi ai tuoi articoli, assegnandoli ad una lista di MDirector se desiderano ricevere posts giornalmente o settimanalmente, e occupandosi di inviare in automatico i tuoi messaggi attraverso MDirector senza doverti preoccupare. Tutti i tuoi iscritti saranno gestiti dalla piattaforma MDirector in modo da poter fare gli invii.</p>\n"
-"\n"
-"\t\t\t<p>Configura il tuo plugin e in un minuto potrai iniziare a ricevere iscritti al tuo blog.</p>\n"
-"\n"
-"\t\t\t<p>Per usarlo devi creare un conto MDirector, ricorda che hai 5.000 emails gratis al mese solo per registrarti.</p>\n"
-"<br class=\"clear\">\n"
-"<p>\n"
-"\t\t\t<a class=\"btn-orange\" href=\"https://signup.mdirector.com?lang=it\" target=\"_blank\">Crea il mio account MDirector</a> <a class=\"btn-blue\" href=\"admin.php?page=mdirector-newsletter&tab=settings\">Ho già un account MDirector</a></p>\n"
-"\t\t\t<br class=\"clear\">\n"
-"\t\t\t</div>\n"
-"\t\t\t"
-
-msgid "1.-Datos de conexión API MDirector"
-msgstr "2.-Dati di connessione API MDirector"
-
-msgid "Por favor, configura tus datos de conexión con la API. Puedes encontrarlos en las preferencias de tu cuenta de MDirector, pestaña <b>Información API</b>."
-msgstr "Per favore, configura i tuoi dati di connessione API. Puoi trovarli nelle Preferenze del tuo account MDirector, sezione <b>Informazioni API</b>."
-
-msgid "2.-Campo From"
-msgstr "2.-Campo From"
-
-msgid "Configura el nombre que aparecerá en el campo <b>De:</b> de los correos que se envíen automáticamente desde el plugin."
-msgstr "Configura il nome che apparirà nel campo  <b>Da:</b> delle mail che si inviano in automatico con il plugin"
-
-msgid "3.-Enviar mensajes semanales"
-msgstr "3.-Invia messaggi settimanali"
-
-msgid "Activa los envíos de newsletters para los usuarios para los usuarios suscritos a la información semanal. Si esta opción está activada, todas las semanas se enviará un email automático a los usuarios suscritos a la lista, con un resumen de los posts publicados cada la semana."
-msgstr "Attiva gli invii di newsletter per gli utenti iscritti settimanalmente. Se questa opzione è stata attivata, tutte le settimane verrà inviata una mail in automatico agli utenti iscritti alla lista, con un sommario dei posts pubblicati ogni settimana."
-
-msgid "Por ejemplo: Newsletter semanal de TuSitio"
-msgstr "Per esempio: Newsletter settimanale TuoSito"
-
-msgid "Los usuarios suscritos a la lista semanal se almacenan en tu cuenta de MDirector, en la lista"
-msgstr "Gli utenti iscritti alla lista settimanale sono salvati nel tuo account MDirector, nella lista "
-
-msgid "4.-Enviar mensajes diarios"
-msgstr "4.-Invia messaggi giornalieri"
-
-msgid "Activa los envíos de newsletters para los usuarios suscritos a la información diaria. Si esta opción está activada, todos los días se enviará un email automático a los usuarios que hayan elegido recibir emails diarios, con un resumen de los posts publicados cada día."
-msgstr "Attiva gli invii di newsletter per gli utenti iscritti giornalmente. Se questa opzione è stata attivata, tutti i giorni verrà inviata una mail in automatico agli utenti iscritti alla lista, con un sommario dei posts pubblicati ogni giorno."
-
-msgid "Por ejemplo: Newsletter diaria de TuSitio"
-msgstr "Per esempio: Newsletter giornaliera di MioSIto"
-
-msgid "Los usuarios suscritos a la lista diaria se almacenan en tu cuenta de MDirector, en la lista"
-msgstr "Gli utenti iscritti alla lista giornaliera vengono salvati nel tuo account MDirector, nella lista "
-
-msgid "5.-Excluir categorías de posts en los envíos"
-msgstr "5.-Escludi categorie di posts dagli invii"
-
-msgid "Por favor actualiza tu versión de Wordpress para usar el plugin de MDirector. La mínima versión compatible es: "
-msgstr "Per favore aggiorna la tua versione di Wordpress per usare il plugin di MDirector. La minima versione compatibile è: "
-
-msgid "Has instalado tu plugin de Newsletter correctamente, estás a un sólo paso de configurarlo. <a href=\"admin.php?page=mdirector-newsletter&tab=welcome&mdirector_notice_ignore=0\">Configurar ahora</a>"
-msgstr "Hai installato il tuo plugin di Newsletter in modo corretto, sei ad un solo passo dalla configurazione. <a href=\"admin.php?page=mdirector-newsletter&tab=welcome&mdirector_notice_ignore=0\">Configura adesso</a>"
-
-msgid "Formulario de suscripción"
-msgstr "Form di iscrizione"
-
-msgid "Título"
-msgstr "Titolo"
-
-msgid "Texto explicativo"
-msgstr "Testo descrittivo"
-
-msgid "Correo electrónico"
-msgstr "Email"
-
-msgid "Suscribirme"
-msgstr "Iscriviti"
-
-msgid "Acepto la política de privacidad"
-msgstr "Accetto la politica di privacy"
-
-msgid "Texto de aceptación de política"
-msgstr "Testo di accettazione della politica"
-
-msgid "URL de la política"
-msgstr "URL della politica"
-
-msgid "El plugin de MDirector hace uso de php-curl, por favor instala dicha librería para continuar."
-msgstr "Il plugin di MDirector utilizza php-curl, per favore installa questa libreria per continuare."
-
-msgid "Las listas no se ha podido crear. Comprueba que su consumer-key y consumer-secret son válidos."
-msgstr "Non è stato possibile creare le liste. Verifica che i tuoi consumer-key e consumer-secret siano validi."
-
-msgid "Los envíos diarios se guardan en la campaña"
+msgid "WHAT-DO-NEWSLETTER-PLUGIN"
 msgstr ""
 
-msgid "Los envíos semanales se guardan en la campaña"
+msgid "TAB-CONTENT-HELP__TITLE"
+msgstr "Pasos para configurar el plugin de Newsletter de MDirector"
+
+msgid "TAB-CONTENT-HELP__SUBTITLE"
+msgstr "El plugin de MDirector conecta tu wordpress con MDirector, enviando los últimos posts que hayas escrito diaria o semanalmente y permite a tus usuarios suscribirse a la newsletter"
+
+msgid "TAB-CONTENT-HELP__LIST-1"
 msgstr ""
 
-msgid ""
-"<h4>Pasos para configurar el plugin de Newsletter de MDirector</h4>\n"
-"\t\t\t<p>\n"
-"\t\t\tEl plugin de MDirector conecta tu wordpress con MDirector, enviando los últimos posts que hayas escrito diaria o semanalmente y permite a tus usuarios suscribirse a la newsletter.\n"
-"\t\t\t</p>\n"
-"\t\t\t<ol style=\"max-width:90%\">\n"
-"\t\t\t\t<li><p>Crea tu <a href=\"https://signup.mdirector.com/?lang=es\" target=\"_blank\">cuenta de MDirector</a>. Recuerda que con tu cuenta gratuíta puedes enviar hasta 5000 mensajes mensuales. Si ya tienes una puedes continuar con el paso 2.</p></li>\n"
-"\t\t\t\t<li><p>Inicia sesión en tu <a href=\"https://auth.mdirector.com\" target=\"_blank\">cuenta de Email Marketing en MDirector</a>, accede a Preferencias > Información API y activa el API si aún no está activado.</p>\n"
-"\t\t\t\t"
+msgid "TAB-CONTENT-HELP__LIST-2"
 msgstr ""
 
-msgid ""
-"<li><p>Copia los valores de consumer-key y consumer-secret</p></li>\n"
-"\t\t\t\t<li><p>Accede a la pestaña de configuración del plugin, introduce tu consumer-key y consumer-secret y pincha en guardar cambios.</p></li>\n"
-"\t\t\t\t<li><p>Una vez hechos los primeros 4 pasos, automáticamente se crean dos listas en tu cuenta de MDirector, una para aquellos usuarios que se suscriban a la lista semanal y otra para los que se suscriban a la lista diaria.</p></li>\n"
-"\t\t\t\t<li><p>A continuación elige el From name (Nombre que aparecerá en el mensaje en el campo <b>De:</b>) </p></li>\n"
-"\t\t\t\t<li><p>Por defecto, están desactivados los envíos desde las listas semanales y diarias. Actívalas para activar los envíos automáticos. <br>Rellena el formulario que aparecerá con el asunto del mensaje, la hora a la que quieres programar los envíos y el día de la semana en caso de la lista semanal.<br>NOTA: A pesar de que estén desactivados los envíos, los usuarios podrán suscribirse a las listas. De esta forma podrás crear campañas directamente en MDirector y enviarlas a los suscriptores de tu blog.</p></li>\n"
-"\t\t\t\t<li><p>A continuación puedes seleccionar también las categorías que quieres excluir de los envíos automáticos.</p></li>\n"
-"\t\t\t\t<li><p>Guarda al final de la página de configuración del plugin. Una vez hecho, automáticamente se crean dos listas en tu cuenta de MDirector, una para aquellos usuarios que se suscriban a la newsletter semanal y otra para los que se suscriban a la newsletter diaria.</p></li>\n"
-"\t\t\t\t<li><p>Ahora ya puedes colocar el formulario / widget en tu blog. Para ello accede a Apariencia > Widgets en el panel de tu wordpress y arrastra a tu sidebar el widget de MDirector. Podrás configurar un título, una descripción / explicación para que aparezca encima de tu formulario y un enlace y checkbox para la política de privacidad o términos legales. ¡Ya está! tus usuarios pueden comenzar a suscribirse.</p></li>\n"
-"\t\t\t\t<li><p>Además del widget, puedes usar un shortcode para colocar el formulario de suscripción en cualquier página o post de tu blog. Para ello añade [mdirector_subscriptionbox] al contenido de cualquiera de tus páginas o posts.</p></li>\n"
-"\t\t\t\t<li><p>Puedes personalizar el aspecto de la plantilla de newsletter enviada a los usuarios modificando los ficheros de la carpeta /templates/ del directorio del plugin (Conocimientos de HTML / CSS requeridos).</p></li>\n"
-"\t\t\t\t<li><p>El plugin hace uso de WP Cron para realizar los envíos, el sistema de programación de tareas de Wordpress. Wp Cron funciona sólo cuando se producen visitas a la página, por lo que su ejecución en la hora planificada puede no ser precisa. <a href=\"http://stackoverflow.com/questions/12895706/when-does-wp-cron-php-run-in-wordpress\" target=\"_blank\">Más información aquí</a></p></li>\n"
-"\t\t\t</ol>\n"
-"\t\t\t"
-msgstr ""
+msgid "TAB-CONTENT-HELP__LIST-3"
+msgstr "Copia los valores de consumer-key y consumer-secret"
 
-msgid "6.-Configuración de widget / Shortcode"
-msgstr ""
+msgid "TAB-CONTENT-HELP__LIST-4"
+msgstr "Accede a la pestaña de configuración del plugin, introduce tu consumer-key y consumer-secret y pincha en guardar cambios"
 
-msgid "Configura el texto de aceptación y URL de la política de privacidad"
-msgstr ""
+msgid "TAB-CONTENT-HELP__LIST-5"
+msgstr "Una vez hechos los primeros 4 pasos, automáticamente se crean dos listas en tu cuenta de MDirector, una para aquellos usuarios que se suscriban a la lista semanal y otra para los que se suscriban a la lista diaria"
+
+msgid "TAB-CONTENT-HELP__LIST-6"
+msgstr "A continuación elige el From name (Nombre que aparecerá en el mensaje en el campo <b>De:</b>)"
+
+msgid "TAB-CONTENT-HELP__LIST-7"
+msgstr "Por defecto, están desactivados los envíos desde las listas semanales y diarias. Actívalas para activar los envíos automáticos. <br>Rellena el formulario que aparecerá con el asunto del mensaje, la hora a la que quieres programar los envíos y el día de la semana en caso de la lista semanal.<br>NOTA: A pesar de que estén desactivados los envíos, los usuarios podrán suscribirse a las listas. De esta forma podrás crear campañas directamente en MDirector y enviarlas a los suscriptores de tu blog"
+
+msgid "TAB-CONTENT-HELP__LIST-8"
+msgstr "A continuación puedes seleccionar también las categorías que quieres excluir de los envíos automáticos"
+
+msgid "TAB-CONTENT-HELP__LIST-9"
+msgstr "Guarda al final de la página de configuración del plugin. Una vez hecho, automáticamente se crean dos listas en tu cuenta de MDirector, una para aquellos usuarios que se suscriban a la newsletter semanal y otra para los que se suscriban a la newsletter diaria"
+
+msgid "TAB-CONTENT-HELP__LIST-10"
+msgstr "Si quieres realizar una prueba para ver el aspecto de tu campaña antes de enviarla utiliza la pestaña 'Pruebas'. Desde ahí, puedes indicar una lista alternativa a la que realizar el envío, por ejemplo, una donde figures tú y un par de amigos"
+
+msgid "TAB-CONTENT-HELP__LIST-11"
+msgstr "Una vez que lo tengas todo configurado, puedes lanzar tu campaña de forma inmediata, o bien esperar al momento programado. Si no quieres esperar, solo pulsa 'Enviar ahora mismo' o 'Enviar prueba ahora mismo' desde su correspondiente pestaña"
+
+msgid "TAB-CONTENT-HELP__LIST-12"
+msgstr "Ahora ya puedes colocar el formulario / widget en tu blog. Para ello, accede a Apariencia > Widgets en el panel de tu wordpress y arrastra a tu sidebar el widget de MDirector. Podrás configurar un título, una descripción / explicación para que aparezca encima de tu formulario y un enlace y checkbox para la política de privacidad o términos legales. ¡Ya está! tus usuarios pueden comenzar a suscribirse"
+
+msgid "TAB-CONTENT-HELP__LIST-13"
+msgstr "Además del widget, puedes usar un shortcode para colocar el formulario de suscripción en cualquier página o post de tu blog. Para ello añade [mdirector_subscriptionbox] al contenido de cualquiera de tus páginas o posts"
+
+msgid "TAB-CONTENT-HELP__LIST-14"
+msgstr "Puedes personalizar el aspecto de la plantilla de newsletter enviada a los usuarios modificando los ficheros de la carpeta /templates/ del directorio del plugin (Conocimientos de HTML / CSS requeridos)"
+
+msgid "TAB-CONTENT-HELP__LIST-15"
+msgstr "El plugin hace uso de WP Cron para realizar los envíos, el sistema de programación de tareas de Wordpress. Wp Cron funciona sólo cuando se producen visitas a la página, por lo que su ejecución en la hora planificada puede no ser precisa"
+
+msgid "MORE-INFO"
+msgstr "Más información aquí"
+
+msgid "TAB-CONTENT-WELCOME__TITLE"
+msgstr "Wordpress + MDirector = Más visitas en tu blog"
+
+msgid "TAB-CONTENT-WELCOME__TEXT-1"
+msgstr "Integra tu Wordpress con MDirector, la herramienta de envíos de email marketing y sms más avanzada y sencilla del mercado"
+
+msgid "TAB-CONTENT-WELCOME__TEXT-2"
+msgstr "El plugin de MDirector permite a tus visitantes suscribirse a tus publicaciones, asignándoles una lista en MDirector según deseen recibir los posts diaria o semanalmente, y ocupándonos de que se envíen automáticamente tus mensajes a través de MDirector sin que tengas que preocuparte. Además todos tus suscriptores serán también administrables desde MDirector por lo que podrás hacer envíos desde la plataforma"
+
+msgid "TAB-CONTENT-WELCOME__TEXT-3"
+msgstr "Configura ya tu plugin y en unos minutos podrás empezar a recibir suscriptores a tu blog"
+
+msgid "TAB-CONTENT-WELCOME__TEXT-4"
+msgstr "Para usarlo tienes que crear una cuenta en MDirector, recuerda que tienes 5.000 emails gratis al mes sólo por registrarte"
+
+msgid "CREATE-ACCOUNT"
+msgstr "Crear mi cuenta en MDirector"
+
+msgid "HAVE-ACCOUNT"
+msgstr "Ya tengo cuenta en MDirector"
+
+msgid "STEP-1__TITLE"
+msgstr "1. Datos de conexión API MDirector"
+
+msgid "STEP-1__DESCRIPTION"
+msgstr "Por favor, configura tus datos de conexión con la API. Puedes encontrarlos en las preferencias de tu cuenta de MDirector, pestaña <b>Información API</b>"
+
+msgid "STEP-2__TITLE"
+msgstr "2. Listas de contactos personalizadas"
+
+msgid "STEP-2__DESCRIPTION"
+msgstr "Este plugin crea de forma automática las listas de contactos necesarias en tu cuenta de MDirector para enviar las campañas diarias o semanales"
+
+msgid "WPLM-DETECTED"
+msgstr "WPML Detectado"
+
+msgid "STEP-2__TEXT-1"
+msgstr "Si lo prefieres, puedes indicar a continuación alguna de tus listas ya existentes para utilizarlas en su lugar"
+
+msgid "STEP-2__NOTICE-TEXT"
+msgstr "Las listas diarias y semanales que utilices deben existir y ser distintas"
+
+msgid "STEP-2__PERSONALIZATED-LISTS"
+msgstr "Utilizar listas personalizadas"
+
+msgid "STEP-2__DAILY-LIST"
+msgstr "Lista(s) para envíos diarios"
+
+msgid "CURRENT"
+msgstr "Actualmente"
+
+msgid "ORIGINAL"
+msgstr "original"
+
+msgid "STEP-2__WEEKLY-LIST"
+msgstr "Lista(s) para envíos semanales"
+
+msgid "STEP-3__TITLE"
+msgstr "3. Campo From"
+
+msgid "STEP-3__DESCRIPTION"
+msgstr "Configura el nombre que aparecerá en el campo <b>De:</b> de los correos que se envíen automáticamente desde el plugin"
+
+msgid "STEP-3__FROM-NAME"
+msgstr "Nombre del emisor"
+
+msgid "STEP-4__TITLE"
+msgstr "4. Enviar mensajes semanales"
+
+msgid "STEP-4__DESCRIPTION"
+msgstr "Activa los envíos de newsletters para los usuarios para los usuarios suscritos a la información semanal. Si esta opción está activada, todas las semanas se enviará un email automático a los usuarios suscritos a la lista, con un resumen de los posts publicados cada la semana"
+
+msgid "STEP-4__ACTIVATE-WEEKLY-DELIVERIES"
+msgstr "Activa los envíos semanales"
+
+msgid "STEP-4-5__CHOOSE-SUBJECT"
+msgstr "Escoja el tipo de asunto para sus correos"
+
+msgid "STEP-4-5__FIXED-SUBJECT"
+msgstr "Asunto fijo"
+
+msgid "STEP-4__SUBJECT-EXAMPLE"
+msgstr "Por ejemplo: Newsletter semanal de Tu Sitio"
+
+msgid "STEP-4-5__SUBJECT"
+msgstr "Asunto"
+
+msgid "STEP-4-5__DYNAMIC-SUBJECT"
+msgstr "Asunto dinámico"
+
+msgid "STEP-4-5__DYNAMIC-SUBJECT-DESCRIPTION"
+msgstr "(se forma automáticamente a partir de los siguientes campos)"
+
+msgid "STEP-4__DYNAMIC-PREFIX"
+msgstr "Prefijo"
+
+msgid "STEP-4__DYNAMIC-PREFIX-EXAMPLE"
+msgstr "Por ejemplo: Esta semana destacamos..."
+
+msgid "STEP-4-5__CHOOSE-DYNAMIC-CONTENT"
+msgstr "Selecciona el contenido dinámico"
+
+msgid "STEP-4__WEEKDAY"
+msgstr "Día de la semana"
+
+msgid "STEP-4-5__DELIVERY-TIME"
+msgstr "Hora de envío"
+
+msgid "STEP-4-5__DELIVERY-TIME-NOTE"
+msgstr "NOTA: la hora actual en el servidor es"
+
+msgid "STEP-4__WEEKLY-LIST-USERS"
+msgstr "Los usuarios suscritos a la lista semanal se almacenan en tu cuenta de MDirector, en la lista"
+
+msgid "STEP-4__WEEKLY-DELIVERIES-SAVED"
+msgstr "Los envíos semanales se guardan en la campaña"
+
+msgid "STEP-5__TITLE"
+msgstr "5. Enviar mensajes diarios"
+
+msgid "STEP-5__DESCRIPTION"
+msgstr "Activa los envíos de newsletters para los usuarios suscritos a la información diaria. Si esta opción está activada, todos los días se enviará un email automático a los usuarios que hayan elegido recibir emails diarios, con un resumen de los posts publicados cada día"
+
+msgid "STEP-5__ACTIVATE-DAILY-DELIVERIES"
+msgstr "Activa los envíos diarios"
+
+msgid "STEP-5__SUBJECT-EXAMPLE"
+msgstr "Por ejemplo: Newsletter diaria de Tu Sitio"
+
+msgid "STEP-5__DYNAMIC-PREFIX-EXAMPLE"
+msgstr "Por ejemplo: Hoy destacamos..."
+
+msgid "STEP-5__DAILY-LIST-USERS"
+msgstr "Los usuarios suscritos a la lista diaria se almacenan en tu cuenta de MDirector, en la lista"
+
+msgid "STEP-5__DAILY-DELIVERIES-SAVED"
+msgstr "Los envíos diarios se guardan en la campaña"
+
+msgid "STEP-6__TITLE"
+msgstr "6. Excluir categorías de posts en los envíos"
+
+msgid "STEP-6__DESCRIPTION"
+msgstr "Si por cualquier motivo no te interesa que los posts de una o varias categorías no sean enviados en los mensajes automáticos. Elige la/s categoría/s que deseas excluir de los envíos"
+
+msgid "STEP-7__TITLE"
+msgstr "7. Configuración de widget / shortcode"
+
+msgid "STEP-7__DESCRIPTION"
+msgstr "Configura el texto de aceptación y URL de la política de privacidad"
+
+msgid "STEP-7__ACCEPT-POLICY-TEXT"
+msgstr "Texto de aceptación de política"
+
+msgid "STEP-7__POLICY-URL"
+msgstr "URL de la política"
+
+msgid "STEP-8__TITLE"
+msgstr "8. Seleccionar plantilla"
+
+msgid "STEP-8__DESCRIPTION"
+msgstr "Si tienes varias plantillas HTML, puedes escoger cuál utilizar para generar tu Newsletter"
+
+msgid "STEP-8__AVALAIBLE-TEMPLATES"
+msgstr "Plantillas disponibles"
+
+msgid "STEP-8__PLUGIN-AVAILABLE-TEXT-1"
+msgstr "Vemos que tienes habilitado el plugin"
+
+msgid "STEP-8__PLUGIN-AVAILABLE-TEXT-2"
+msgstr "para ofrecer tu web en varios idiomas"
+
+msgid "STEP-8__PLUGIN-AVAILABLE-TEXT-3"
+msgstr "Puedes configurar una plantilla diferente para cada uno, pudiendo así mejorar de forma signifactica la personalización de tus envíos"
+
+msgid "STEP-8__PLUGIN-AVAILABLE-TEXT-4"
+msgstr "Este plugin es compatible con WPML, por lo que podrás configurar varios de sus aspectos para cada uno de los idiomas que tienes activos en tu sitio web."
+
+msgid "STEP-9__TITLE"
+msgstr "9. Reiniciar fecha de último envío diario y semanal"
+
+msgid "STEP-9__DESCRIPTION-1"
+msgstr "Ten en cuenta que para evitar envíos duplicados, el sistema comprueba que no se haya realizado un envío diario en las últimas 24 horas, o uno semanal en los últimos 7 días"
+
+msgid "STEP-9__DESCRIPTION-2"
+msgstr "Es por esto que si ya has realizado un envío y deseas volver a programar otro diario para hoy o uno semanal durante la próxima semana, debes reiniciar la fecha del último envío"
+
+msgid "STEP-9__LAST-DAILY-SENDING"
+msgstr "Fecha último envío diario"
+
+msgid "STEP-9__LAST-WEEKLY-SENDING"
+msgstr "Fecha último envío semanal"
+
+msgid "STEP-9__RESTART-LAST-DATES"
+msgstr "Reiniciar últimas fechas de envío"
+
+msgid "SAVE"
+msgstr "Guardar cambios"
+
+msgid "SEND-NOW"
+msgstr "Enviar ahora mismo"
+
+msgid "SEND-TEST-NOW"
+msgstr "Enviar prueba ahora mismo"
+
+msgid "NOTE"
+msgstr "NOTA"
+
+msgid "STEP-9__ANNOTATION"
+msgstr "Recuerda que estás utilizando listas de pruebas para tu envío"
+
+msgid "TAB-CONTENT-DEBUG__TITLE"
+msgstr "1. Listas de test"
+
+msgid "TAB-CONTENT-DEBUG__NOTICE"
+msgstr "Las listas de prueba que indiques a continuación deben existir y ser distintas"
+
+msgid "TAB-CONTENT-DEBUG__USING-TEST-LISTS"
+msgstr "Utilizar listas de prueba"
+
+msgid "TAB-CONTENT-DEBUG__DAILY-TEST"
+msgstr "Lista de Test Diaria"
+
+msgid "TAB-CONTENT-DEBUG__REAL-LIST"
+msgstr "Lista real"
+
+msgid "TAB-CONTENT-DEBUG__WEEKLY-TEST"
+msgstr "Lista de Test Semanal"
+
+msgid "CHECK-WP-VERSION"
+msgstr "Por favor actualiza tu versión de Wordpress para usar el plugin de MDirector. La mínima versión compatible es"
+
+msgid "CHECK-CURL"
+msgstr "El plugin de MDirector hace uso de php-curl, por favor instala dicha librería para continuar"
+
+msgid "CHECK-API"
+msgstr "Para comenzar a usar el plugin de MDirector Newsletter configura los datos de conexión a la API de MDirector"
+
+msgid "CHECK-API-ERROR"
+msgstr "Hay problemas de conexión con MDirector, por favor vuelve a introducir los datos de conexión API"
+
+msgid "WIDGET__TITLE"
+msgstr "Formulario de suscripción"
+
+msgid "WIDGET-FORM__TITLE"
+msgstr "Título"
+
+msgid "WIDGET-FORM__TEXT_SUPPORT"
+msgstr "Texto explicativo"
+
+msgid "WIDGET-FREQUENCY__DAILY"
+msgstr "Recibir newsletter diaria"
+
+msgid "WIDGET-FREQUENCY__WEEKLY"
+msgstr "Recibir newsletter semanal"
+
+msgid "WIDGET-EMAIL"
+msgstr "Correo electrónico"
+
+msgid "WIDGET-PRIVACY__POLICY__ACCEPTED"
+msgstr "Acepto la política de privacidad"
+
+msgid "WIDGET-SUBSCRIPTION"
+msgstr "Suscribirme"
