@@ -39,10 +39,6 @@
     margin-top: 20px;
 }
 
-.form-md input[type="text"] {
-    width: 230px;
-}
-
 .form-md .field-selector {
     width: 480px !important;
 }
@@ -321,6 +317,8 @@ input.timepicker {
 .weekly_extra_selector .help-block {
     font-size: 85%;
     margin-left: 5px;
+    margin-right: 12px;
+    position: relative;
     top: 4px;
 }
 
@@ -460,7 +458,7 @@ input.timepicker {
 .md_newsletter--panel__row label {
     color: #666;
     display: inline-block;
-    font-size: 11px;
+    font-size: 10px;
     line-height: 11px;
     margin-bottom: 5px;
     margin-right: 5px;
@@ -486,18 +484,23 @@ input.timepicker {
 }
 
 .md_newsletter--panel__row-alt label {
-    color: #666;
+    color: #888;
     display: inline-block;
-    font-size: 11px;
-    line-height: 11px;
-    margin-bottom: 5px;
-    margin-right: 5px;
-    padding-left: 20px;
-    padding-right: 8px;
-    text-align: right;
-    width: 40px;
     float: left;
-    padding-top: 10px;
+    font-size: 10px;
+    height: 34px;
+    line-height: 11px;
+    margin-right: 5px;
+    text-align: right;
+    width: 100px;
+}
+
+.md_newsletter--panel__row-alt label span {
+    display: table-cell;
+    vertical-align: middle;
+    height: 25px;
+    width: 100px;
+    padding-top: 5px;
 }
 
 .md_newsletter--panel__row-alt input {
@@ -508,6 +511,10 @@ input.timepicker {
 
 .help-block-alt {
     font-size: 85%;
-    margin-left: 75px;
-    top: 4px;
+    margin-left: 25px;
+    display: block;
+    clear: both;
+    position: relative;
+    font-style: italic;
+    top: 2px;
 }

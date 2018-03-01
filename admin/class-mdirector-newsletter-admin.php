@@ -797,7 +797,10 @@ class MDirector_Newsletter_Admin {
         $output = '';
 
         foreach ($available_templates as $template) {
-            $template_name = basename($template);
+            $base_template_name = basename($template);
+            $template_name = ($base_template_name === Mdirector_Newsletter_Utils::DEFAULT_TEMPLATE)
+                ? __(strtoupper($base_template_name), Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN)
+                : $base_template_name;
             $selected = ($template_name === $current_template_selected) ? ' selected="selected"' : '';
             $output .= '<option value="' . $template_name . '" ' . $selected . '>' . $template_name . '</option>';
         }
@@ -874,7 +877,7 @@ class MDirector_Newsletter_Admin {
 
             $output .= '
                 <div class="md_newsletter--panel__row">
-                    <label for="'. $input_name .'">' . $lang_name . ':</label>
+                    <label for="'. $input_name .'"><span>' . $lang_name . ':</span></label>
                     <input id="'. $input_name .'"
                         name="' . $input_name . '"
                         autocomlete="off"
@@ -898,7 +901,7 @@ class MDirector_Newsletter_Admin {
 
             $output .= '
                 <div class="md_newsletter--panel__row">
-                    <label for="'. $input_name .'">' . $lang_name . ':</label>                                                
+                    <label for="'. $input_name .'"><span>' . $lang_name . ':</span></label>                                                
                     <input '.
                 ($this->plugin_settings['mdirector_subject_type_' . $frequency] !==
                 Mdirector_Newsletter_Utils::FIXED_SUBJECT ? 'readonly' : '') . '
@@ -923,7 +926,7 @@ class MDirector_Newsletter_Admin {
 
             $output .= '
                 <div class="md_newsletter--panel__row-alt">
-                    <label for="'. $input_name .'">' . $lang_name . ':</label>                                            
+                    <label for="'. $input_name .'"><span>' . $lang_name . ':</span></label>                                            
                     <input ' .
                 ($this->plugin_settings['mdirector_subject_type_' . $frequency] ===
                 Mdirector_Newsletter_Utils::FIXED_SUBJECT ? 'readonly' : '') . '
@@ -932,7 +935,11 @@ class MDirector_Newsletter_Admin {
                         type="text"
                         value="' . $this->plugin_settings[$input_name] . '"
                         placeholder="' . __('STEP-4__DYNAMIC-PREFIX',
-                    Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN) . '"/>   
+                    Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN) . '"/>
+                    <span class="help-block-alt">' .
+                        __('STEP-4__DYNAMIC-PREFIX-EXAMPLE',
+                            Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN) . '
+                    </span>   
                 </div>';
         }
 
@@ -1132,11 +1139,7 @@ class MDirector_Newsletter_Admin {
                                     Mdirector_Newsletter_Utils::FIXED_SUBJECT ? 'disabled' : '') .'">
                                 <div class="block-50">';
                                     $output .= $this->get_html_dynamic_subjects(Mdirector_Newsletter_Utils::WEEKLY_FREQUENCY);
-                                    $output .= '
-                                        <span class="help-block-alt">' .
-                                            __('STEP-4__DYNAMIC-PREFIX-EXAMPLE',
-                                                Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN) . '
-                                        </span>
+                                    $output .= '                                        
                                 </div>
                                 <div class="block-50">
                                     <select '. ($this->plugin_settings['mdirector_subject_type_weekly'] ===
@@ -1251,11 +1254,7 @@ class MDirector_Newsletter_Admin {
                                 <div class="md_newsletter--panel__wrapper">
                                     <div class="block-50">';
                                         $output .= $this->get_html_dynamic_subjects(Mdirector_Newsletter_Utils::DAILY_FREQUENCY);
-                                        $output .= '
-                                        <span class="help-block-alt">' .
-                                            __('STEP-5__DYNAMIC-PREFIX-EXAMPLE',
-                                                Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN) . '
-                                        </span>
+                                        $output .= '                                        
                                     </div>
                                     <div class="block-50">
                                         <select '. ($this->plugin_settings['mdirector_subject_type_daily'] ===
@@ -1377,7 +1376,7 @@ class MDirector_Newsletter_Admin {
 
                                         $output .= '
                                             <div class="overflow">
-                                                <label class="md_newsletter--lang-name">' . $lang_name . ':</label>
+                                                <label class="md_newsletter--lang-name"><span>' . $lang_name . ':</span></label>
                                                 <p class="md_newsletter--lang-template left">
                                                 <select class="md_template_select"
                                                     name="' . $template_lang . '" id="' . $template_lang . '">' .
