@@ -38,21 +38,14 @@ class Mdirector_Newsletter_Utils {
     const SETTINGS_OPTION_OFF = 'no';
     const MIDNIGHT_HOUR = '00:00';
 
-    const FORM_PREFFIX = 'mdirector_widget-';
+    const FORM_PREFIX = 'mdirector_widget-';
     const FORM_CLASS = 'md__newsletter--form';
-    const FORM_NAME = self::FORM_PREFFIX . 'form';
+    const FORM_NAME = self::FORM_PREFIX . 'form';
 
-    /**
-     * @var array|mixed|void
-     */
-    private $plugin_settings;
+    public function __construct() {}
 
-    public function __construct() {
-        $this->update_plugin_settings();
-    }
-
-    public function update_plugin_settings() {
-        $this->plugin_settings = get_option('mdirector_settings')
+    private function get_plugin_options() {
+        return get_option('mdirector_settings')
             ? get_option('mdirector_settings') : [];
     }
 
@@ -87,8 +80,8 @@ class Mdirector_Newsletter_Utils {
 
     public function get_register_for_html($args = [], $instance = null) {
         extract($args, EXTR_SKIP);
+        $options = $this->get_plugin_options();
 
-        $settings = get_option('mdirector_settings');
         $mdirector_active = get_option('mdirector_active');
         $select_frequency = null;
         $output = '';
@@ -101,8 +94,8 @@ class Mdirector_Newsletter_Utils {
             $after_title = null;
         }
 
-        if (empty($settings['mdirector_frequency_daily'])
-            && empty($settings['mdirector_frequency_weekly'])) {
+        if (empty($options['mdirector_frequency_daily'])
+            && empty($options['mdirector_frequency_weekly'])) {
             return false;
         }
 
@@ -119,12 +112,12 @@ class Mdirector_Newsletter_Utils {
         }
 
         if ($mdirector_active === self::SETTINGS_OPTION_ON) {
-            if ($settings['mdirector_frequency_daily'] === self::SETTINGS_OPTION_ON
-                && $settings['mdirector_frequency_weekly'] === self::SETTINGS_OPTION_ON) {
+            if ($options['mdirector_frequency_daily'] === self::SETTINGS_OPTION_ON
+                && $options['mdirector_frequency_weekly'] === self::SETTINGS_OPTION_ON) {
                 $select_frequency = '
                             <div class="md__newsletter--area__select">
                                 <select class="md__newsletter--select" 
-                                    name="' . self::FORM_PREFFIX . 'frequency">
+                                    name="' . self::FORM_PREFIX . 'frequency">
                                     <option value="daily">' .
                                         __('WIDGET-FREQUENCY__DAILY',
                                             Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN) . '
@@ -135,15 +128,15 @@ class Mdirector_Newsletter_Utils {
                                     </option>
                                 </select>
                             </div>';
-            } else if ($settings['mdirector_frequency_daily'] === self::SETTINGS_OPTION_ON) {
+            } else if ($options['mdirector_frequency_daily'] === self::SETTINGS_OPTION_ON) {
                 $select_frequency = '<input class="md__newsletter--select" 
-                    value="daily" name="' . self::FORM_PREFFIX . 'frequency" type="hidden">';
-            } else if ($settings['mdirector_frequency_weekly'] === self::SETTINGS_OPTION_ON) {
+                    value="daily" name="' . self::FORM_PREFIX . 'frequency" type="hidden">';
+            } else if ($options['mdirector_frequency_weekly'] === self::SETTINGS_OPTION_ON) {
                 $select_frequency = '<input class="md__newsletter--select" 
-                    value="weekly" name="' . self::FORM_PREFFIX . 'frequency" type="hidden">';
+                    value="weekly" name="' . self::FORM_PREFIX . 'frequency" type="hidden">';
             }
 
-            if ($settings['mdirector_api'] && $settings['mdirector_secret']) {
+            if ($options['mdirector_api'] && $options['mdirector_secret']) {
                 $output .= '
 		    	    <form class="' . self::FORM_CLASS . '" name="'. self::FORM_NAME . '" method="post">
 		    			<div class="md__newsletter--area__input">
@@ -153,23 +146,23 @@ class Mdirector_Newsletter_Utils {
 		    				    placeholder="' . __('WIDGET-EMAIL',
                                     Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN) . '" 
 		    				    value="" 
-		    				    name="' . self::FORM_PREFFIX . 'email">
+		    				    name="' . self::FORM_PREFIX . 'email">
 		    			</div>' . $select_frequency . '
                         <div class="md__newsletter--area__suscribe">';
-                $accept = ($settings['mdirector_privacy_text'] != '')
-                    ? $settings['mdirector_privacy_text']
+                $accept = ($options['mdirector_privacy_text'] != '')
+                    ? $options['mdirector_privacy_text']
                     : __('WIDGET-PRIVACY__POLICY__ACCEPTED',
                         Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN);
 
-                $md_privacy_link = ($settings['mdirector_privacy_url'] != '')
-                    ? $settings['mdirector_privacy_url'] : '#';
+                $md_privacy_link = ($options['mdirector_privacy_url'] != '')
+                    ? $options['mdirector_privacy_url'] : '#';
 
                 $output .= '
                             <p class="md__newsletter--area__accept">
                                 <input 
                                     class="md_newsletter--checkbox" 
                                     type="checkbox" 
-                                    name="' . self::FORM_PREFFIX . 'accept" 
+                                    name="' . self::FORM_PREFIX . 'accept" 
                                     autocomplete="off"/>
                                 <label for="mdirector_widget_accept"> 
                                     <a 
@@ -329,23 +322,24 @@ class Mdirector_Newsletter_Utils {
     }
 
     private function compose_email_subject($posts, $frequency, $lang) {
-        $this->update_plugin_settings();
+        $options = $this->get_plugin_options();
+
         if ($frequency === self::DAILY_FREQUENCY ) {
-            $subject = ($this->plugin_settings['mdirector_subject_type_daily'] === self::DYNAMIC_SUBJECT)
-                ? $this->plugin_settings['mdirector_subject_dynamic_prefix_daily_' . $lang] . ' ' .
+            $subject = ($options['mdirector_subject_type_daily'] === self::DYNAMIC_SUBJECT)
+                ? $options['mdirector_subject_dynamic_prefix_daily_' . $lang] . ' ' .
                     $this->get_dynamic_post_title($posts,
-                        $this->plugin_settings['mdirector_subject_dynamic_value_daily'])
-                : $this->plugin_settings['mdirector_subject_daily_' . $lang];
+                        $options['mdirector_subject_dynamic_value_daily'])
+                : $options['mdirector_subject_daily_' . $lang];
 
             $subject = !empty(trim($subject))
                 ? $subject
                 : self::DEFAULT_DAILY_MAIL_SUBJECT;
         } else {
-            $subject = ($this->plugin_settings['mdirector_subject_type_weekly'] === self::DYNAMIC_SUBJECT)
-                ? $this->plugin_settings['mdirector_subject_dynamic_prefix_weekly_' . $lang] . ' ' .
+            $subject = ($options['mdirector_subject_type_weekly'] === self::DYNAMIC_SUBJECT)
+                ? $options['mdirector_subject_dynamic_prefix_weekly_' . $lang] . ' ' .
                     $this->get_dynamic_post_title($posts,
-                        $this->plugin_settings['mdirector_subject_dynamic_value_weekly'])
-                : $this->plugin_settings['mdirector_subject_weekly_' . $lang];
+                        $options['mdirector_subject_dynamic_value_weekly'])
+                : $options['mdirector_subject_weekly_' . $lang];
 
             $subject = !empty(trim($subject))
                 ? $subject
@@ -357,12 +351,13 @@ class Mdirector_Newsletter_Utils {
 
     private function get_delivery_campaign_id ($frequency,
         $lang = self::MDIRECTOR_DEFAULT_USER_LANG) {
-        $this->update_plugin_settings();
+        $options = $this->get_plugin_options();
+
         if ($frequency === self::DAILY_FREQUENCY) {
-            return $this->plugin_settings['mdirector_daily_campaign_' . $lang];
+            return $options['mdirector_daily_campaign_' . $lang];
         }
 
-        return $this->plugin_settings['mdirector_weekly_campaign_' . $lang];
+        return $options['mdirector_weekly_campaign_' . $lang];
     }
 
     /**
@@ -375,13 +370,13 @@ class Mdirector_Newsletter_Utils {
      */
     private function send_mail_API($mail_content, $mail_subject, $frequency = null,
         $lang = self::MDIRECTOR_DEFAULT_USER_LANG) {
-        $this->update_plugin_settings();
+        $options = $this->get_plugin_options();
         $mdirector_active = get_option('mdirector_active');
 
         if ($mdirector_active == self::SETTINGS_OPTION_ON) {
             $mdirector_Newsletter_Api = new Mdirector_Newsletter_Api();
-            $key = $this->plugin_settings['mdirector_api'];
-            $secret = $this->plugin_settings['mdirector_secret'];
+            $key = $options['mdirector_api'];
+            $secret = $options['mdirector_secret'];
             $list_id = $this->get_current_list_id($frequency, $lang);
             $campaign_id = $this->get_delivery_campaign_id($frequency, $lang);
 
@@ -394,8 +389,8 @@ class Mdirector_Newsletter_Utils {
                         [
                             'type' => 'email',
                             'name' => $frequency . '_' . date('Y_m_d'),
-                            'fromName' => $this->plugin_settings['mdirector_from_name']
-                                ? $this->plugin_settings['mdirector_from_name']
+                            'fromName' => $options['mdirector_from_name']
+                                ? $options['mdirector_from_name']
                                 : 'from name',
                             'subject' => $mail_subject,
                             'campaign' => $campaign_id,
@@ -430,11 +425,11 @@ class Mdirector_Newsletter_Utils {
     }
 
     public function get_current_template($available_templates, $lang = null) {
-        $this->update_plugin_settings();
+        $options = $this->get_plugin_options();
         $template = 'mdirector_template_' . (!empty($lang) ? $lang : 'general');
 
-        $current_template_selected = !empty($this->plugin_settings[$template])
-            ? $this->plugin_settings[$template]
+        $current_template_selected = !empty($options[$template])
+            ? $options[$template]
             : Mdirector_Newsletter_Utils::DEFAULT_TEMPLATE;
 
         if (!in_array($current_template_selected, $available_templates) ) {
@@ -445,26 +440,29 @@ class Mdirector_Newsletter_Utils {
     }
 
     public function clean_newsletter_process($frequency, $lang) {
+        $options = $this->get_plugin_options();
         $process = ($frequency === self::DAILY_FREQUENCY)
             ? 'mdirector_daily_sent_' . $lang
             : 'mdirector_weekly_sent_' . $lang;
 
-        $this->plugin_settings[$process] = date('Y-m-d H:i');
+        $options[$process] = date('Y-m-d H:i');
 
-        update_option('mdirector_settings', $this->plugin_settings);
+        update_option('mdirector_settings', $options);
 
         wp_reset_postdata();
         wp_reset_query();
     }
 
     public function reset_deliveries_sent() {
+        $options = $this->get_plugin_options();
+
         foreach ($this->get_current_languages() as $language) {
             $lang = $language['code'];
-            $this->plugin_settings['mdirector_daily_sent_' . $lang] = null;
-            $this->plugin_settings['mdirector_weekly_sent_' . $lang] = null;
-
-            update_option('mdirector_settings', $this->plugin_settings);
+            $options['mdirector_daily_sent_' . $lang] = null;
+            $options['mdirector_weekly_sent_' . $lang] = null;
         }
+
+        update_option('mdirector_settings', $options);
     }
 
     /**
@@ -496,20 +494,24 @@ class Mdirector_Newsletter_Utils {
     }
 
     public function get_current_list_id($type, $lang) {
-        if ($this->plugin_settings['mdirector_use_test_lists'] === self::SETTINGS_OPTION_ON) {
-            return $this->plugin_settings['mdirector_' . $type . '_test_list_' . $lang];
+        $options = $this->get_plugin_options();
+
+        if ($options['mdirector_use_test_lists'] === self::SETTINGS_OPTION_ON) {
+            return $options['mdirector_' . $type . '_test_list_' . $lang];
         }
 
-        if ($this->plugin_settings['mdirector_use_custom_lists'] === self::SETTINGS_OPTION_ON) {
-            return $this->plugin_settings['mdirector_' . $type . '_custom_list_' . $lang];
+        if ($options['mdirector_use_custom_lists'] === self::SETTINGS_OPTION_ON) {
+            return $options['mdirector_' . $type . '_custom_list_' . $lang];
         }
 
-        return $this->plugin_settings['mdirector_' . $type . '_list_' . $lang];
+        return $options['mdirector_' . $type . '_list_' . $lang];
     }
 
     private function get_exclude_cats() {
-        $exclude_cats = ($this->plugin_settings['mdirector_exclude_cats'])
-            ? unserialize($this->plugin_settings['mdirector_exclude_cats'])
+        $options = $this->get_plugin_options();
+
+        $exclude_cats = ($options['mdirector_exclude_cats'])
+            ? unserialize($options['mdirector_exclude_cats'])
             : [];
 
         if (count($exclude_cats) > 0) {
@@ -549,14 +551,19 @@ class Mdirector_Newsletter_Utils {
      * @throws MDOAuthException2
      */
     private function md_send_daily_mails($lang) {
-        $this->update_plugin_settings();
-        $hour = ($this->plugin_settings['mdirector_hour_daily'])
-            ? $this->plugin_settings['mdirector_hour_daily']
+        $options = $this->get_plugin_options();
+
+        $hour = ($options['mdirector_hour_daily'])
+            ? $options['mdirector_hour_daily']
             : self::MIDNIGHT_HOUR;
         $time_exploded = explode(':', $hour);
-        $actual_time = current_time('timestamp');
-        $mail_sent = date( 'Y-m-d', strtotime($this->plugin_settings['mdirector_daily_sent_' . $lang]));
-        $can_send = ($mail_sent != date('Y-m-d')) ? 1 : 0;
+        $actual_time = strtotime(date('Y-m-d H:i:s'));
+        $mail_sent = date( 'Y-m-d', strtotime(
+            isset($options['mdirector_daily_sent_' . $lang])
+                ? $options['mdirector_daily_sent_' . $lang]
+                : null
+        ));
+        $can_send = $mail_sent != date('Y-m-d') ? 1 : 0;
 
         $from_date = date('Y-m-d H:i:s',
             mktime($time_exploded[0],$time_exploded[1], 00,
@@ -565,8 +572,9 @@ class Mdirector_Newsletter_Utils {
             mktime($time_exploded[0], $time_exploded[1], 00,
                 date('m'), date('d'), date('Y')));
 
-        if ($_POST['cpt_submit_test_now'] ||
+        if (isset($_POST['cpt_submit_test_now']) ||
             ($actual_time >= strtotime($to_date) && $can_send == 1)) {
+
             $args = [
                 'post_type'     => 'post',
                 'post_status'   => 'publish',
@@ -593,6 +601,8 @@ class Mdirector_Newsletter_Utils {
 
                 return true;
             }
+
+            trigger_error('There are no new posts for daily mails and lang ' . $lang, E_USER_NOTICE);
         }
 
         return false;
@@ -605,16 +615,21 @@ class Mdirector_Newsletter_Utils {
      * @throws MDOAuthException2
      */
     private function md_send_weekly_mails($lang) {
-        $this->update_plugin_settings();
-        $day = $this->plugin_settings['mdirector_frequency_day']
-            ? $this->plugin_settings['mdirector_frequency_day']
+        $options = $this->get_plugin_options();
+
+        $day = $options['mdirector_frequency_day']
+            ? $options['mdirector_frequency_day']
             : '1'; # Default: Monday
-        $hour = $this->plugin_settings['mdirector_hour_weekly']
-            ? $this->plugin_settings['mdirector_hour_weekly']
+        $hour = $options['mdirector_hour_weekly']
+            ? $options['mdirector_hour_weekly']
             : self::MIDNIGHT_HOUR;
         $time_exploded = explode(':', $hour);
         $actual_time = time();
-        $mail_sent = date( 'Y-m-d', strtotime($this->plugin_settings['mdirector_weekly_sent']));
+        $mail_sent = date( 'Y-m-d', strtotime(
+            isset($options['mdirector_weekly_sent_' . $lang])
+                ? $options['mdirector_weekly_sent_' . $lang]
+                : null
+        ));
         $can_send = ($mail_sent !== date('Y-m-d')) ? 1 : 0;
 
         $from_date = date('Y-m-d H:i:s',
@@ -624,7 +639,7 @@ class Mdirector_Newsletter_Utils {
             mktime($time_exploded[0], $time_exploded[1], 00,
                 date('m'), date('d'), date('Y')));
 
-        if ($_POST['cpt_submit_test_now'] ||
+        if (isset($_POST['cpt_submit_test_now']) ||
             (date('N') === $day && ($actual_time >= strtotime($to_date)) && ($can_send === 1))) {
 
             $args = [
@@ -653,6 +668,8 @@ class Mdirector_Newsletter_Utils {
 
                 return true;
             }
+
+            trigger_error('There are no new posts for weekly mails and lang ' . $lang, E_USER_NOTICE);
         }
 
         return false;

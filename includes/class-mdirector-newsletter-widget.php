@@ -5,14 +5,15 @@ if (!class_exists('mdirectorWidget')) {
      * Class mdirectorWidget
      */
     class mdirectorWidget extends WP_Widget {
-        public function mdirectorWidget() {
+
+        public function __construct() {
             $widget_ops = array(
                 'classname' => 'mdirectorWidget',
                 'description' => __('WIDGET__TITLE',
                     Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN)
             );
 
-            $this->WP_Widget('mdirectorWidget', 'MDirector Widget', $widget_ops);
+            parent::__construct('mdirectorWidget', 'MDirector Widget', $widget_ops);
         }
 
         // widget form creation

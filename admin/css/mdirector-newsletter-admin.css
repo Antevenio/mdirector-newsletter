@@ -421,10 +421,10 @@ input.timepicker {
     float: left;
     font-size: 11px;
     line-height: 28px;
-    margin: 15px 0 1em 85px;
+    margin: 15px 0 1em 0;
     padding-right: 10px;
-    text-align: right;
-    width: 85px;
+    text-align: left;
+    width: 55px;
 }
 
 .md_newsletter--wpml-templates {

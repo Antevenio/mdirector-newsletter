@@ -80,11 +80,6 @@ class Mdirector_Newsletter_Public {
             // cron jobs
             add_filter('cron_schedules', [$this, 'md_add_new_interval']);
 
-            // Testing cron
-            $this->md_cron_deactivation();
-            $this->md_cron_activation();
-
-
             register_activation_hook(MDIRECTOR_NEWSLETTER_PLUGIN_DIR .
                 'mdirector-newsletter.php', [$this, 'md_cron_activation']);
 
@@ -170,7 +165,7 @@ class Mdirector_Newsletter_Public {
     public function md_add_new_interval($schedules) {
         // add weekly and monthly intervals
     	$schedules['every_five_minutes'] = [
-    		'interval' => 1,
+    		'interval' => 3000,
     		'display' => __('Every Five minutes')
     	];
 
@@ -185,14 +180,15 @@ class Mdirector_Newsletter_Public {
         $settings = get_option('mdirector_settings');
 
         if ($mdirector_active === Mdirector_Newsletter_Utils::SETTINGS_OPTION_ON) {
+            $utils_instance = new Mdirector_Newsletter_Utils();
             if ($settings['mdirector_frequency_daily'] ===
                 Mdirector_Newsletter_Utils::SETTINGS_OPTION_ON) {
-                    $this->Mdirector_utils->build_daily_mails();
+                    $utils_instance->build_daily_mails();
             }
 
             if ($settings['mdirector_frequency_weekly'] ===
                 Mdirector_Newsletter_Utils::SETTINGS_OPTION_ON) {
-                    $this->Mdirector_utils->build_weekly_mails();
+                    $utils_instance->build_weekly_mails();
             }
         }
     }
