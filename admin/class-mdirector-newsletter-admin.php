@@ -118,6 +118,11 @@ class MDirector_Newsletter_Admin {
 
     private function is_plugin_configured() {
         $options = $this->get_plugin_options();
+
+        if (!isset($options['mdirector_api']) || !isset($options['mdirector_secret'])) {
+            return false;
+        }
+
         $this->api_key || ($this->api_key = $options['mdirector_api']);
         $this->api_secret || ($this->api_secret = $options['mdirector_secret']);
 
@@ -258,14 +263,16 @@ class MDirector_Newsletter_Admin {
     private function get_user_lists($type) {
         $options = $this->get_plugin_options();
         $lists = [];
+
         foreach($this->current_languages as $language) {
             $lang = $language['code'];
-            $lists[$lang] = $options[
-                (($type === Mdirector_Newsletter_Utils::DAILY_FREQUENCY)
+            $list = (
+                ($type === Mdirector_Newsletter_Utils::DAILY_FREQUENCY)
                     ? 'mdirector_daily_list'
-                    : 'mdirector_weekly_list')
-                . '_' . $lang
-            ];
+                    : 'mdirector_weekly_list'
+                ) . '_' . $lang;
+
+            $lists[$lang] = isset($options[$list]) ? $options[$list] : null;
         }
 
         return $lists;
@@ -413,12 +420,15 @@ class MDirector_Newsletter_Admin {
 
         foreach ($this->current_languages as $language) {
             $lang = $language['code'];
-            $campaigns[$lang] = $options[
-                (($type === Mdirector_Newsletter_Utils::DAILY_FREQUENCY)
+            $campaign = (
+                ($type === Mdirector_Newsletter_Utils::DAILY_FREQUENCY)
                     ? 'mdirector_daily_campaign'
-                    : 'mdirector_weekly_campaign')
-                . '_' . $lang
-            ];
+                    : 'mdirector_weekly_campaign'
+                ) . '_' . $lang;
+
+            $campaigns[$lang] = isset($options[$campaign])
+                ? $options[$campaign]
+                : null;
         }
 
         return $campaigns;
@@ -570,15 +580,15 @@ class MDirector_Newsletter_Admin {
                                 . ': <strong>'
                                 . $list_name
                                 . '</strong></div>';
+                        } else {
+                            $this->plugin_notices[] = '<div class="updated md_newsletter--error-notice">'
+                                . __('SENDING-TEST__DAILY-SENDING-ERROR',
+                                    Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN) . ': ' . $list_name . ' '
+                                . __('NO-ENTRIES-IN-BLOG',
+                                    Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN) . '?'
+                                . '</div>';
                         }
                     }
-                } else {
-                    $this->plugin_notices[] = '<div class="updated md_newsletter--error-notice">'
-                        . __('SENDING-TEST__DAILY-SENDING-ERROR',
-                            Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN) . ' '
-                        . __('NO-ENTRIES-IN-BLOG',
-                            Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN) . '?'
-                        . '</div>';
                 }
         } else {
             $this->plugin_notices[] = '<div class="updated md_newsletter--error-notice">'
@@ -603,15 +613,15 @@ class MDirector_Newsletter_Admin {
                                 . ': <strong>'
                                 . $list_name
                                 . '</strong></div>';
+                        } else {
+                            $this->plugin_notices[] = '<div class="updated md_newsletter--error-notice">'
+                                . __('SENDING-TEST__WEEKLY-SENDING-ERROR',
+                                    Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN) . ': ' . $list_name . ' '
+                                . __('NO-ENTRIES-IN-BLOG',
+                                    Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN) . '?'
+                                . '</div>';
                         }
                     }
-                } else {
-                    $this->plugin_notices[] = '<div class="updated md_newsletter--error-notice">'
-                        . __('SENDING-TEST__WEEKLY-SENDING-ERROR',
-                            Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN) . ' '
-                        . __('NO-ENTRIES-IN-BLOG',
-                            Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN) . '?'
-                        . '</div>';
                 }
         } else {
             $this->plugin_notices[] = '<div class="updated md_newsletter--error-notice">'
@@ -685,11 +695,10 @@ class MDirector_Newsletter_Admin {
      * @throws MDOAuthException2
      */
     public function mdirector_newsletter_init() {
-        $options = $this->get_plugin_options();
         $this->mdirector_checks();
         $this->set_current_languages();
         $this->set_translations_strings();
-//        echo '<pre>';die( var_dump( $options ) );
+        // echo '<pre>';$options = $this->get_plugin_options(); die( var_dump( $options ) );
 
         $tabs = [
             'settings' => __('CONFIGURATION', Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN)
@@ -813,7 +822,9 @@ class MDirector_Newsletter_Admin {
             $lang = $language['code'];
             $lists[$lang] = [
                 'translated_name' => $language['translated_name'],
-                'value' => $options[$prefix . $lang]
+                'value' => isset($options[$prefix . $lang])
+                    ? $options[$prefix . $lang]
+                    : null
             ];
         }
 
@@ -823,8 +834,11 @@ class MDirector_Newsletter_Admin {
     private function get_last_date_send($frequency) {
         $options = $this->get_plugin_options();
         $current_lang = $this->Mdirector_utils->get_current_lang();
+        $date_sent = isset($options['mdirector_' . $frequency . '_sent_' . $current_lang])
+            ? $options['mdirector_' . $frequency . '_sent_' . $current_lang]
+            : null;
 
-        if ($last_date = $options['mdirector_' . $frequency . '_sent_' . $current_lang]) {
+        if ($last_date = $date_sent) {
             return date('d-m-Y, H:i', strtotime($last_date));
         }
 
@@ -851,10 +865,13 @@ class MDirector_Newsletter_Admin {
     private function build_options_for_days() {
         $options = $this->get_plugin_options();
         $options_days = '';
+        $day = isset($options['mdirector_frequency_day'])
+            ? $options['mdirector_frequency_day']
+            : null;
 
         foreach ($this->frequency_days as $key => $value) {
             $options_days .= '<option value="' . $key . '" '
-                . (($options['mdirector_frequency_day'] === strval($key)) ? 'selected' : '') . '>'
+                . (($day === strval($key)) ? 'selected' : '') . '>'
                 . $value . '</option>';
         }
 
@@ -864,10 +881,13 @@ class MDirector_Newsletter_Admin {
     private function build_subject_weekly_dynamic() {
         $options = $this->get_plugin_options();
         $options_subject_weekly_dynamic = '';
+        $subject_weekly = isset($options['mdirector_subject_dynamic_value_weekly'])
+            ? $options['mdirector_subject_dynamic_value_weekly']
+            : null;
 
         foreach ($this->dynamic_subject_values as $key => $value) {
             $options_subject_weekly_dynamic .= '<option value="' . $key . '" '
-                . (($options['mdirector_subject_dynamic_value_weekly'] === $key) ? 'selected' : '') . '>'
+                . (($subject_weekly === $key) ? 'selected' : '') . '>'
                 . $value . '</option>';
         }
 
@@ -877,11 +897,13 @@ class MDirector_Newsletter_Admin {
     private function build_subject_daily_dynamic() {
         $options = $this->get_plugin_options();
         $options_subject_daily_dynamic = '';
+        $subject_value = isset($options['mdirector_subject_dynamic_value_daily'])
+            ? $options['mdirector_subject_dynamic_value_daily']
+            : null;
 
         foreach ($this->dynamic_subject_values as $key => $value) {
             $options_subject_daily_dynamic .= '<option value="' . $key . '" '
-                . (($options['mdirector_subject_dynamic_value_daily']
-                    === $key) ? 'selected' : '') . '>'
+                . (($subject_value === $key) ? 'selected' : '') . '>'
                 . $value . '</option>';
         }
 
@@ -943,19 +965,24 @@ class MDirector_Newsletter_Admin {
         foreach($this->current_languages as $lang => $data) {
             $lang_name = $data['translated_name'];
             $input_name = 'mdirector_subject_' . $frequency . '_' . $lang;
+            $subject = isset($options['mdirector_subject_type_' . $frequency])
+                ? $options['mdirector_subject_type_' . $frequency]
+                : null;
+            $subject_value = isset($options[$input_name])
+                ? $options[$input_name]
+                : null;
 
             $output .= '
                 <div class="md_newsletter--panel__row">
                     <label for="'. $input_name .'"><span>' . $lang_name . ':</span></label>                                                
                     <input '.
-                ($options['mdirector_subject_type_' . $frequency] !==
-                Mdirector_Newsletter_Utils::FIXED_SUBJECT ? 'readonly' : '') . '
+                ($subject !== Mdirector_Newsletter_Utils::FIXED_SUBJECT ? 'readonly' : '') . '
                         id="' . $input_name . '"
                         name="' . $input_name . '"
                         class="field-selector"
                         placeholder="' . __('STEP-4-5__SUBJECT',
                     Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN) . '"
-                        type="text" value="'. $options[$input_name] . '"/>
+                        type="text" value="'. $subject_value . '"/>
                 </div>';
         }
 
@@ -969,23 +996,25 @@ class MDirector_Newsletter_Admin {
         foreach($this->current_languages as $lang => $data) {
             $lang_name = $data['translated_name'];
             $input_name = 'mdirector_subject_dynamic_prefix_' . $frequency .'_' . $lang;
+            $subject_type = isset($options['mdirector_subject_type_' . $frequency])
+                ? $options['mdirector_subject_type_' . $frequency]
+                : null;
+            $subject_value = isset($options[$input_name])
+                ? $options[$input_name]
+                : null;
 
             $output .= '
                 <div class="md_newsletter--panel__row-alt">
                     <label for="'. $input_name .'"><span>' . $lang_name . ':</span></label>                                            
                     <input ' .
-                ($options['mdirector_subject_type_' . $frequency] ===
+                ($subject_type ===
                 Mdirector_Newsletter_Utils::FIXED_SUBJECT ? 'readonly' : '') . '
                         id="' . $input_name . '"
                         name="' . $input_name . '"
                         type="text"
-                        value="' . $options[$input_name] . '"
+                        value="' . $subject_value . '"
                         placeholder="' . __('STEP-4__DYNAMIC-PREFIX',
-                    Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN) . '"/>
-                    <span class="help-block-alt">' .
-                        __('STEP-4__DYNAMIC-PREFIX-EXAMPLE',
-                            Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN) . '
-                    </span>   
+                    Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN) . '"/>                       
                 </div>';
         }
 
@@ -1088,6 +1117,9 @@ class MDirector_Newsletter_Admin {
 
     private function get_html_step_3() {
         $options = $this->get_plugin_options();
+        $from_name = isset($options['mdirector_from_name'])
+            ? $options['mdirector_from_name']
+            : null;
 
         $output = '
             <div class="mdirector-settings-box">
@@ -1102,7 +1134,7 @@ class MDirector_Newsletter_Admin {
                         <input id="mdirector_from_name" 
                             name="mdirector_from_name" 
                             type="text" 
-                            value="'. $options['mdirector_from_name'] . '"/>
+                            value="'. $from_name . '"/>
                     </div>
                 </div>
             </div>';
@@ -1114,6 +1146,12 @@ class MDirector_Newsletter_Admin {
         $options = $this->get_plugin_options();
         $options_days = $this->build_options_for_days();
         $options_subject_weekly_dynamic = $this->build_subject_weekly_dynamic();
+        $type_weekly = isset($options['mdirector_subject_type_weekly']) ?
+            $options['mdirector_subject_type_weekly']
+            : null;
+        $hour_weekly = isset($options['mdirector_hour_weekly'])
+            ? $options['mdirector_hour_weekly']
+            : null;
 
         $output = '
             <div class="mdirector-settings-box">
@@ -1140,8 +1178,7 @@ class MDirector_Newsletter_Admin {
                         <legend>' . __('STEP-4-5__CHOOSE-SUBJECT',
                             Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN) . '</legend>
                         <div class="choice-block">
-                            <input ' . ($options['mdirector_subject_type_weekly'] ===
-                                Mdirector_Newsletter_Utils::FIXED_SUBJECT ? 'checked' : '') . '
+                            <input ' . ($type_weekly === Mdirector_Newsletter_Utils::FIXED_SUBJECT ? 'checked' : '') . '
                                 type="radio"
                                 name="mdirector_subject_type_weekly"
                                 class="dynamic-choice"
@@ -1154,8 +1191,7 @@ class MDirector_Newsletter_Admin {
                             <br>
 
                             <div class="subject-block subset ' .
-                                ($options['mdirector_subject_type_weekly'] !==
-                                    Mdirector_Newsletter_Utils::FIXED_SUBJECT ? 'disabled' : '') .'">
+                                ($type_weekly !== Mdirector_Newsletter_Utils::FIXED_SUBJECT ? 'disabled' : '') .'">
 
                                 <div class="md_newsletter--panel__wrapper">
                                     <div class="select text-right">';
@@ -1171,8 +1207,7 @@ class MDirector_Newsletter_Admin {
                         </div>
                         <div class="choice-block">
                             <input ' .
-                                ($options['mdirector_subject_type_weekly'] ===
-                                Mdirector_Newsletter_Utils::DYNAMIC_SUBJECT ? 'checked' : '') . '
+                                ($type_weekly === Mdirector_Newsletter_Utils::DYNAMIC_SUBJECT ? 'checked' : '') . '
                                 type="radio"
                                 name="mdirector_subject_type_weekly"
                                 class="dynamic-choice"
@@ -1187,14 +1222,13 @@ class MDirector_Newsletter_Admin {
                             <br>
 
                             <div class="subject-block subset md_newsletter--panel__wrapper ' .
-                                ($options['mdirector_subject_type_weekly'] ===
-                                    Mdirector_Newsletter_Utils::FIXED_SUBJECT ? 'disabled' : '') .'">
+                                ($type_weekly === Mdirector_Newsletter_Utils::FIXED_SUBJECT ? 'disabled' : '') .'">
                                 <div class="block-50">';
                                     $output .= $this->get_html_dynamic_subjects(Mdirector_Newsletter_Utils::WEEKLY_FREQUENCY);
                                     $output .= '                                        
                                 </div>
                                 <div class="block-50">
-                                    <select '. ($options['mdirector_subject_type_weekly'] ===
+                                    <select '. ($type_weekly ===
                                         Mdirector_Newsletter_Utils::FIXED_SUBJECT ? 'readonly' : '') . ' 
                                         name="mdirector_subject_dynamic_value_weekly">' .
                                         $options_subject_weekly_dynamic . '
@@ -1221,7 +1255,7 @@ class MDirector_Newsletter_Admin {
                         type="text"
                         class="timepicker"
                         readonly
-                        value="'. $options['mdirector_hour_weekly'] . '"/>
+                        value="'. $hour_weekly . '"/>
                     <span class="help-block">' . __('STEP-4-5__DELIVERY-TIME-NOTE',
                         Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN) .
                         ' ' . date('H:i', current_time('timestamp', 0)) . '</span>                      
@@ -1234,6 +1268,12 @@ class MDirector_Newsletter_Admin {
     private function get_html_step_5() {
         $options = $this->get_plugin_options();
         $options_subject_daily_dynamic = $this->build_subject_daily_dynamic();
+        $subject_type = isset($options['mdirector_subject_type_daily'])
+            ? $options['mdirector_subject_type_daily']
+            : null;
+        $hour = isset($options['mdirector_hour_daily'])
+            ? $options['mdirector_hour_daily']
+            : null;
 
         $output = '
             <div class="mdirector-settings-box">
@@ -1260,7 +1300,7 @@ class MDirector_Newsletter_Admin {
                         <legend>' . __('STEP-4-5__CHOOSE-SUBJECT',
                             Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN) . '</legend>
                         <div class="choice-block">
-                            <input ' . ($options['mdirector_subject_type_daily'] ===
+                            <input ' . ($subject_type ===
                                 Mdirector_Newsletter_Utils::FIXED_SUBJECT ? 'checked' : '') . '
                                 type="radio"
                                 name="mdirector_subject_type_daily"
@@ -1270,7 +1310,7 @@ class MDirector_Newsletter_Admin {
                                 Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN) .':</label><br>
 
                             <div class="subject-block subset ' .
-                                ($options['mdirector_subject_type_daily'] !==
+                                ($subject_type !==
                                 Mdirector_Newsletter_Utils::FIXED_SUBJECT ? 'disabled' : '') .'">
 
                                 <div class="md_newsletter--panel__wrapper">
@@ -1286,7 +1326,7 @@ class MDirector_Newsletter_Admin {
                             </div>
                         </div>
                         <div class="choice-block">
-                            <input ' . ($options['mdirector_subject_type_daily'] === 'dynamic' ? 'checked' : '') . '
+                            <input ' . ($subject_type === 'dynamic' ? 'checked' : '') . '
                                 type="radio"
                                 name="mdirector_subject_type_daily"
                                 class="dynamic-choice"
@@ -1301,16 +1341,16 @@ class MDirector_Newsletter_Admin {
                             <br>
 
                             <div class="subject-block subset ' .
-                                ($options['mdirector_subject_type_daily'] ===
+                                ($subject_type ===
                                     Mdirector_Newsletter_Utils::FIXED_SUBJECT ? 'disabled' : '') .'">
 
                                 <div class="md_newsletter--panel__wrapper">
                                     <div class="block-50">';
                                         $output .= $this->get_html_dynamic_subjects(Mdirector_Newsletter_Utils::DAILY_FREQUENCY);
                                         $output .= '                                        
-                                    </div>
+                                    </div>                                    
                                     <div class="block-50">
-                                        <select '. ($options['mdirector_subject_type_daily'] ===
+                                        <select '. ($subject_type ===
                                             Mdirector_Newsletter_Utils::FIXED_SUBJECT ? 'readonly' : '') . '
                                             name="mdirector_subject_dynamic_value_daily">' .
                                                 $options_subject_daily_dynamic . '
@@ -1334,7 +1374,7 @@ class MDirector_Newsletter_Admin {
                         type="text"
                         class="timepicker"
                         readonly
-                        value="' . $options['mdirector_hour_daily'] . '"/>
+                        value="' . $hour . '"/>
                     <span class="help-block">'. __('STEP-4-5__DELIVERY-TIME-NOTE',
                         Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN) . ' ' .
                         date('H:i', current_time('timestamp', 0)) . '</span>
@@ -1367,6 +1407,12 @@ class MDirector_Newsletter_Admin {
 
     private function get_html_step_7() {
         $options = $this->get_plugin_options();
+        $privacy_text = isset($options['mdirector_privacy_text'])
+            ? $options['mdirector_privacy_text']
+            : null;
+        $privacy_url = isset($options['mdirector_privacy_url'])
+            ? $options['mdirector_privacy_url']
+            : null;
 
         $output =
             '<div class="mdirector-settings-box">
@@ -1381,7 +1427,7 @@ class MDirector_Newsletter_Admin {
                         <input id="mdirector_privacy_text"
                             name="mdirector_privacy_text"
                             type="text"
-                            value="' . $options['mdirector_privacy_text'] . '"/>
+                            value="' . $privacy_text . '"/>
                             <span class="help-block"></span>
                     </div>
                     <div class="md_newsletter--panel__wrapper">
@@ -1389,7 +1435,7 @@ class MDirector_Newsletter_Admin {
                             Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN) . ':</label>
                         <input id="mdirector_privacy_text"
                             name="mdirector_privacy_url"
-                            type="text" value="' . $options['mdirector_privacy_url'] . '"/>
+                            type="text" value="' . $privacy_url . '"/>
                             <span class="help-block"></span>
                     </div>
                 </div>
@@ -1499,6 +1545,10 @@ class MDirector_Newsletter_Admin {
         $options = $this->get_plugin_options();
         update_option('mdirector-notice', 'true', true);
 
+        $test_lists = isset($options['mdirector_use_test_lists'])
+            ? $options['mdirector_use_test_lists']
+            : null;
+
         if ($this->is_plugin_configured()) {
             if (empty($options['mdirector_subject_type_daily'])) {
                 $options['mdirector_subject_type_daily'] =
@@ -1542,7 +1592,7 @@ class MDirector_Newsletter_Admin {
                 value="test_now">' .
                     __('SEND-NOW', Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN) . '</button>';
 
-            if (!empty($options['mdirector_use_test_lists'])) {
+            if (!empty($test_lists)) {
                 echo '<small class="margin-left-15 text-red"><strong>' .
                     __('NOTE', Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN) . ':</strong> ' .
                     __('STEP-9__ANNOTATION', Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN) .

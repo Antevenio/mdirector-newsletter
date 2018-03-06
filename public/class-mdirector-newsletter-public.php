@@ -86,7 +86,7 @@ class Mdirector_Newsletter_Public {
             register_deactivation_hook(MDIRECTOR_NEWSLETTER_PLUGIN_DIR .
                 'mdirector-newsletter.php', [$this, 'md_cron_deactivation']);
 
-            add_action('md_daily_event', [$this, 'md_event_cron']);
+            add_action('md_newsletter_build', [$this, 'md_event_cron']);
         }
 	}
 
@@ -114,7 +114,7 @@ class Mdirector_Newsletter_Public {
         $current_list = 'list';
         $current_language = $this->Mdirector_utils->get_current_lang();
 
-    if ($mdirector_active === Mdirector_Newsletter_Utils::SETTINGS_OPTION_ON) {
+        if ($mdirector_active === Mdirector_Newsletter_Utils::SETTINGS_OPTION_ON) {
 			$key = $settings['mdirector_api'];
 			$secret = $settings['mdirector_secret'];
 	        $target_list = 'mdirector_' . $_POST['list'] . '_' .
@@ -153,20 +153,20 @@ class Mdirector_Newsletter_Public {
      * CRON JOBS
      */
     public function md_cron_activation() {
-        if (! wp_next_scheduled ( 'md_daily_event' )) {
-            wp_schedule_event(time(), 'every_five_minutes', 'md_daily_event');
+        if (! wp_next_scheduled ( 'md_newsletter_build' )) {
+            wp_schedule_event(time(), 'every_thirty_minutes', 'md_newsletter_build');
         }
     }
 
     public function md_cron_deactivation() {
-    	wp_clear_scheduled_hook('md_daily_event');
+    	wp_clear_scheduled_hook('md_newsletter_build');
     }
 
     public function md_add_new_interval($schedules) {
         // add weekly and monthly intervals
-    	$schedules['every_five_minutes'] = [
-    		'interval' => 3000,
-    		'display' => __('Every Five minutes')
+    	$schedules['every_thirty_minutes'] = [
+    		'interval' => 1800,
+    		'display' => __('Every 30 minutes')
     	];
 
     	return $schedules;

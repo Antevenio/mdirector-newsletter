@@ -47,7 +47,7 @@ msgstr "Lenguaje predeterminado"
 msgid "PLUGIN-INSTALLED"
 msgstr "Has instalado tu plugin de Newsletter correctamente, estás a un sólo paso de configurarlo."
 
-msgid "PLUGIN-CONFIGURED"
+msgid "PLUGIN-CONFIGURE"
 msgstr "Configurar ahora"
 
 msgid "PLUGIN-PRESENTATION"
@@ -90,22 +90,22 @@ msgid "DAILY-CAMPAIGN__NEW-DAILY-CAMPAIGN-ADDED-ERROR"
 msgstr "No se ha podido crear la campaña diaria. Por favor, refresque la pantalla."
 
 msgid "SENDING-TEST__DAILY-SENDING"
-msgstr "Acabas de realizar un envío de tipo diario a la lista."
+msgstr "Acabas de realizar un envío de tipo diario a la lista"
 
 msgid "SENDING-TEST__DAILY-SENDING-ERROR"
-msgstr "No se ha podido realizar un envío de tipo diario."
+msgstr "No se ha podido realizar un envío de tipo diario a la lista"
 
 msgid "NO-ENTRIES-IN-BLOG"
-msgstr "Quizá no tienes nuevas entradas en el blog."
+msgstr "¿Quizá no tienes nuevas entradas en el blog?"
 
 msgid "SENDING-TEST__DAILY-DEACTIVATED"
 msgstr "No se ha realizado un envío de tipo diario porque tienes la opción <strong>Enviar mensajes diarios</strong> desactivada."
 
 msgid "SENDING-TEST__WEEKLY-SENDING"
-msgstr "Acabas de realizar un envío de tipo semanal a la lista."
+msgstr "Acabas de realizar un envío de tipo semanal a la lista"
 
 msgid "SENDING-TEST__WEEKLY-SENDING-ERROR"
-msgstr "No se ha podido realizar un envío de tipo semanal."
+msgstr "No se ha podido realizar un envío de tipo semanal a la lista"
 
 msgid "SENDING-TEST__WEEKLY-DEACTIVATED"
 msgstr "No se ha realizado un envío de tipo semanal porque tienes la opción <strong>Enviar mensajes semanales</strong> desactivada."
@@ -120,7 +120,7 @@ msgid "TESTS"
 msgstr "Pruebas"
 
 msgid "WELCOME"
-msgstr "WELCOME"
+msgstr "Bienvenido"
 
 msgid "HELP"
 msgstr "Ayuda"
@@ -351,7 +351,7 @@ msgid "STEP-8__PLUGIN-AVAILABLE-TEXT-1"
 msgstr "Vemos que tienes habilitado el plugin"
 
 msgid "STEP-8__PLUGIN-AVAILABLE-TEXT-2"
-msgstr "para ofrecer tu web en varios idiomas"
+msgstr "para ofrecer tu web en varios idiomas."
 
 msgid "STEP-8__PLUGIN-AVAILABLE-TEXT-3"
 msgstr "Puedes configurar una plantilla diferente para cada uno, pudiendo así mejorar de forma signifactica la personalización de tus envíos."

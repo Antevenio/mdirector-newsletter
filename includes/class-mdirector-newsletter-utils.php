@@ -246,7 +246,7 @@ class Mdirector_Newsletter_Utils {
         if (!empty($posts)) {
             $templates_available = $this->get_user_templates();
             $template_path = MDIRECTOR_TEMPLATES_PATH . $this->get_current_template($templates_available, $lang);
-            $html_content = file_get_contents($template_path . '\template.html');
+            $html_content = file_get_contents($template_path . DIRECTORY_SEPARATOR . 'template.html');
 
             // Time to replace mail content
             $mail_content = str_replace('{{header_title}}', get_bloginfo('name'), $html_content);
@@ -255,7 +255,7 @@ class Mdirector_Newsletter_Utils {
             if (count($posts) > 1) {
                 $list_content = '';
                 for ($i = 0; $i < count($posts); $i++) {
-                    $row_content = file_get_contents($template_path . '\list.html');
+                    $row_content = file_get_contents($template_path . DIRECTORY_SEPARATOR .'list.html');
                     $row_content = str_replace('{{title}}', '
                         <a href="'.$posts[$i]['link'].'" style="color: #333333">' .
                             $posts[$i]['title'] . '
@@ -282,7 +282,7 @@ class Mdirector_Newsletter_Utils {
                 $mail_content = str_replace('{{list}}', $list_content, $mail_content);
             } else {
                 // Single post
-                $row_content = file_get_contents($template_path . '\single.html');
+                $row_content = file_get_contents($template_path . DIRECTORY_SEPARATOR . 'single.html');
                 $row_content = str_replace('{{title}}', '
                         <a href="'.$posts[0]['link'].'" 
                             style="color: #333333; text-decoration: none">' .
@@ -496,11 +496,13 @@ class Mdirector_Newsletter_Utils {
     public function get_current_list_id($type, $lang) {
         $options = $this->get_plugin_options();
 
-        if ($options['mdirector_use_test_lists'] === self::SETTINGS_OPTION_ON) {
+        if (isset($options['mdirector_use_test_lists']) &&
+            $options['mdirector_use_test_lists'] === self::SETTINGS_OPTION_ON) {
             return $options['mdirector_' . $type . '_test_list_' . $lang];
         }
 
-        if ($options['mdirector_use_custom_lists'] === self::SETTINGS_OPTION_ON) {
+        if (isset($options['mdirector_use_custom_lists']) &&
+            $options['mdirector_use_custom_lists'] === self::SETTINGS_OPTION_ON) {
             return $options['mdirector_' . $type . '_custom_list_' . $lang];
         }
 
@@ -579,10 +581,10 @@ class Mdirector_Newsletter_Utils {
                 'post_type'     => 'post',
                 'post_status'   => 'publish',
                 'date_query'    => [
-                    'column'    => 'post_date',
                     'after'     => $from_date,
                     'before'    => $to_date
-                ]
+                ],
+                'nopaging '     => true
             ];
 
             if (!empty($exclude_cats = $this->get_exclude_cats())) {
@@ -602,7 +604,8 @@ class Mdirector_Newsletter_Utils {
                 return true;
             }
 
-            trigger_error('There are no new posts for daily mails and lang ' . $lang, E_USER_NOTICE);
+            trigger_error('There are no new posts for daily mails and lang ' .
+                $lang . print_r($args, true), E_USER_NOTICE);
         }
 
         return false;
@@ -646,10 +649,10 @@ class Mdirector_Newsletter_Utils {
                 'post_type'     => 'post',
                 'post_status'   => 'publish',
                 'date_query'    => [
-                    'column'    => 'post_date',
                     'after'     => $from_date,
                     'before'    => $to_date
-                ]
+                ],
+                'nopaging '     => true
             ];
 
             if (!empty($exclude_cats = $this->get_exclude_cats())) {
@@ -669,7 +672,8 @@ class Mdirector_Newsletter_Utils {
                 return true;
             }
 
-            trigger_error('There are no new posts for weekly mails and lang ' . $lang, E_USER_NOTICE);
+            trigger_error('There are no new posts for weekly mails and lang ' .
+                $lang . print_r($args, true), E_USER_NOTICE);
         }
 
         return false;

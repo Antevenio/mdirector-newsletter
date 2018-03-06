@@ -65,7 +65,7 @@ function mdirector_admin_notice() {
         echo '<div class="updated" style="padding: 10px;margin: 20px 0 0 2px;"><p>';
         echo __('PLUGIN-INSTALLED',
             Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN);
-        echo '<a href="admin.php?page=mdirector-newsletter&tab=welcome&mdirector_notice_ignore=0">';
+        echo ' <a href="admin.php?page=mdirector-newsletter&tab=welcome&mdirector_notice_ignore=0">';
         echo __('PLUGIN-CONFIGURE',
             Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN);
         echo '</a>';
