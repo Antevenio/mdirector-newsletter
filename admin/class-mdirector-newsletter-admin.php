@@ -248,8 +248,8 @@ class MDirector_Newsletter_Admin {
 
                 $this->plugin_notices[] =
                     '<div class="updated md_newsletter--info-notice">'
-                    . __('WEEKLY-LISTS__NEW-WEEKLY-LIST-ADDED' . ': ',
-                        Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN) . $weekly_name
+                    . __('WEEKLY-LISTS__NEW-WEEKLY-LIST-ADDED',
+                        Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN) . ': ' . $weekly_name
                     . '</div>';
             } else {
                 $this->plugin_notices[] =
@@ -353,8 +353,8 @@ class MDirector_Newsletter_Admin {
                 update_option('mdirector_settings', $options);
 
                 $this->plugin_notices[] = '<div class="updated md_newsletter--info-notice">'
-                    . __('WEEKLY-CAMPAIGN__NEW-WEEKLY-CAMPAIGN-ADDED' . ': ',
-                        Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN) . $weekly_name . '</div>';
+                    . __('WEEKLY-CAMPAIGN__NEW-WEEKLY-CAMPAIGN-ADDED',
+                        Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN) . ': ' . $weekly_name . '</div>';
             } else {
                 $this->plugin_notices[] = '<div class="updated md_newsletter--error-notice">'
                     . __('WEEKLY-CAMPAIGN__NEW-WEEKLY-CAMPAIGN-ADDED-ERROR',
@@ -403,8 +403,8 @@ class MDirector_Newsletter_Admin {
 
                 $this->plugin_notices[] =
                     '<div class="updated md_newsletter--info-notice">'
-                    . __('DAILY-CAMPAIGN__NEW-DAILY-CAMPAIGN-ADDED' . ': ',
-                        Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN) . $daily_name . '</div>';
+                    . __('DAILY-CAMPAIGN__NEW-DAILY-CAMPAIGN-ADDED',
+                        Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN) . ': ' . $daily_name . '</div>';
             } else {
                 $this->plugin_notices[] =
                     '<div class="updated md_newsletter--error-notice">'
