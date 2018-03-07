@@ -10,7 +10,7 @@
  * Plugin Name:       MDirector Newsletter
  * Plugin URI:        http://www.mdirector.com/
  * Description:       Official MDirector plugin for wordpress. Add MDirector sign-up forms to your WordPress site.
- * Version:           1.0.0
+ * Version:           2.0.3
  * Author:            MDirector
  * Author URI:        http://mdirector.com/
  * License:           GPL-2.0+
@@ -59,10 +59,17 @@ register_activation_hook(__FILE__, 'activate_mdirector_newsletter');
 register_deactivation_hook(__FILE__, 'deactivate_mdirector_newsletter');
 
 function mdirector_admin_notice() {
+    require_once MDIRECTOR_NEWSLETTER_PLUGIN_DIR . 'includes/class-mdirector-newsletter-utils.php';
+
     if (!get_option('mdirector-notice')) {
         echo '<div class="updated" style="padding: 10px;margin: 20px 0 0 2px;"><p>';
-        printf(__('Has instalado tu plugin de Newsletter correctamente, estás a un sólo paso de configurarlo. <a href="admin.php?page=mdirector-newsletter&tab=welcome&mdirector_notice_ignore=0">Configurar ahora</a>'));
-        echo "</p></div>";
+        echo __('PLUGIN-INSTALLED',
+            Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN);
+        echo ' <a href="admin.php?page=mdirector-newsletter&tab=welcome&mdirector_notice_ignore=0">';
+        echo __('PLUGIN-CONFIGURE',
+            Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN);
+        echo '</a>';
+        echo '</p></div>';
     }
 }
 

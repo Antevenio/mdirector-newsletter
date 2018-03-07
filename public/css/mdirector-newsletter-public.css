@@ -1,5 +1,8 @@
 .md_ajax_loader {
     display: none;
+    float: right;
+    margin-left: 10px;
+    margin-top: -1px;
 }
 
 .md_handling {
@@ -22,9 +25,9 @@
 
 .mdirector_sh_field input[type="text"],
 .mdirector_sh_field select {
+    border: 2px solid #ccc;
+    margin: 0px 0px 10px 0px;
+    max-width: 380px;
     padding: 5px;
     width: 90%;
-    max-width: 380px;
-    margin: 0px 0px 10px 0px;
-    border: 2px solid #ccc;
 }

@@ -1,3 +1,7 @@
+.md_newsletter--text-center {
+    text-align: center !important;
+}
+
 .mdirector.nav-tab-wrapper a:before {
     -webkit-font-smoothing: antialiased;
     display: inline-block;
@@ -39,6 +43,14 @@
     margin-top: 20px;
 }
 
+.form-md .field-selector {
+    width: 480px !important;
+}
+
+.form-md select {
+    min-width: 230px;
+}
+
 .md_cat_checkbox {
     margin-bottom: 5px;
 }
@@ -56,10 +68,9 @@
 }
 
 label.checkbox, label.select, label.textinput {
-    background-color: transparent;
     display: inline-block;
-    margin: 10px 0 5px;
-    width: 180px;
+    margin: 0 0 5px;
+    width: 200px;
 }
 
 label.block {
@@ -76,6 +87,10 @@ label.block {
 
 .margin-top-30 {
     margin-top: 30px;
+}
+
+.margin-bottom-5 {
+    margin-bottom: 5px;
 }
 
 .margin-bottom-10 {
@@ -100,6 +115,10 @@ label.block {
 
 .text-red {
     color: red;
+}
+
+.text-right {
+    text-align: right;
 }
 
 #weekly_extra, #daily_extra {
@@ -141,7 +160,8 @@ span.help-block {
 
 /** TIMEPICKER **/
 input.timepicker {
-    background: #ffffff url('../../assets/icon_clock.png') 97% 50% no-repeat;
+    background: #ffffff url('../../assets/icon_clock.png') 62px 50% no-repeat;
+    max-width: 85px;
 }
 
 .ui-timepicker-container {
@@ -233,7 +253,6 @@ input.timepicker {
     height: 80px;
     margin-right: 20px;
     margin-top: 20px;
-    width: 100%;
 }
 
 .mdirector-text {
@@ -260,28 +279,26 @@ input.timepicker {
     padding: 5px 40px;
 }
 
-a.btn-orange {
-    background-color: #ff9d2a;
-    border-bottom: 4px solid #3a2300;
+.btn-orange,
+.btn-blue {
     color: #fff;
     font-size: 16px;
     font-weight: bold;
-    margin: 20px;
-    padding: 20px;
+    margin: 5px;
+    padding: 40px;
     text-decoration: none !important;
     text-transform: uppercase;
+    display: inline-block;
 }
 
-a.btn-blue {
+.btn-blue {
     background-color: #25b0e0;
     border-bottom: 4px solid #3a2300;
-    color: #fff;
-    font-size: 16px;
-    font-weight: bold;
-    margin: 40px;
-    padding: 20px;
-    text-decoration: none !important;
-    text-transform: uppercase;
+}
+
+.btn-orange {
+    background-color: #ff9d2a;
+    border-bottom: 4px solid #3a2300;
 }
 
 .weekly_extra_selector fieldset {
@@ -304,6 +321,8 @@ a.btn-blue {
 .weekly_extra_selector .help-block {
     font-size: 85%;
     margin-left: 5px;
+    margin-right: 12px;
+    position: relative;
     top: 4px;
 }
 
@@ -354,19 +373,19 @@ a.btn-blue {
     width: 100%;
 }
 
-.md-notice,
-.md-error {
-    margin: 20px 0 0 2px !important;
+.md_newsletter--info-notice,
+.md_newsletter--error-notice {
+    margin: 20px 25px 0 2px !important;
     padding: 11px 15px !important;
 }
 
-.md-error {
+.md_newsletter--error-notice {
     border-left-color: red !important;
     background-color: #fcc !important;
 }
 
 .wp-core-ui .button-submit {
-    box-shadow: inset 0px -3px 0px 0px rgba(0, 0, 0, 0.1);
+    box-shadow: inset 0 -3px 0 0 rgba(0, 0, 0, 0.1);
     background-color: #59B285;
     border-radius: 3px;
     border: none;
@@ -402,14 +421,144 @@ a.btn-blue {
 }
 
 .md_newsletter--lang-name {
-    float: left;
-    width: 100px;
     display: inline-block;
-    margin: 1em 0;
+    float: left;
+    font-size: 11px;
     line-height: 28px;
-    padding-left: 85px;
+    margin: 15px 0 1em 0;
+    padding-right: 10px;
+    text-align: left;
+    width: 55px;
 }
 
 .md_newsletter--wpml-templates {
-    margin-top: 5px;
+    overflow: hidden;
+}
+
+.md_newsletter--panel__wrapper {
+    clear: both;
+    margin-top: 10px;
+    overflow: hidden;
+}
+
+.md_newsletter--panel__wrapper {
+    padding-bottom: 10px;
+    border-top: 1px dotted #ccc;
+    padding-top: 15px;
+}
+
+.md_newsletter--panel__left {
+    float: left;
+}
+
+.md_newsletter--panel__right {
+    float: left;
+}
+
+.md_newsletter--panel__row {
+    margin-bottom: 10px;
+}
+
+.md_newsletter--panel__row label {
+    color: #666;
+    display: inline-block;
+    font-size: 10px;
+    line-height: 11px;
+    margin-bottom: 5px;
+    margin-right: 5px;
+    padding-left: 20px;
+    padding-right: 8px;
+    text-align: right;
+    width: 100px;
+}
+
+.md_newsletter--panel__row input {
+    margin-right: 10px;
+}
+
+.md_newsletter--panel__row small {
+    color: #999;
+    font-size: 11px;
+    font-style: italic;
+}
+
+.md_newsletter--panel__row-alt {
+    margin-bottom: 10px;
+    overflow: hidden;
+}
+
+.md_newsletter--panel__row-alt label {
+    color: #888;
+    display: inline-block;
+    float: left;
+    font-size: 10px;
+    height: 34px;
+    line-height: 11px;
+    margin-right: 5px;
+    text-align: right;
+    width: 100px;
+}
+
+.md_newsletter--panel__row-alt label span {
+    display: table-cell;
+    vertical-align: middle;
+    height: 25px;
+    width: 100px;
+    padding-top: 5px;
+}
+
+.md_newsletter--panel__row-alt input {
+    margin-right: 10px;
+    float: left;
+    width: 200px;
+}
+
+.help-block-alt {
+    font-size: 85%;
+    margin-left: 25px;
+    display: block;
+    clear: both;
+    position: relative;
+    font-style: italic;
+    top: 2px;
+}
+
+.md_newsletter--table {
+    margin: 15px 0;
+    display: table;
+}
+
+.md_newsletter--table-header {
+    background-color: #F1F1F1;
+    padding: 6px 5px;
+}
+
+.md_newsletter--table-row {
+    margin: 3px 0;
+    border-bottom: 1px dotted #ccc;
+    padding: 10px 5px;
+}
+
+.md_newsletter--table-row:last-of-type {
+    border-bottom: 0 none;
+}
+
+.md_newsletter--table-cell {
+    display: table-cell;
+    font-size: 11px;
+    min-width: 200px;
+    padding-right: 10px;
+    text-align: left;
+    vertical-align: middle;
+}
+
+.md_newsletter--table-cell:last-of-type {
+    min-width: 50px;
+    text-align: center;
+}
+
+.md_newsletter--table-cell input[type="checkbox"] {
+    position: relative;
+    top: 1px;
+    left: 5px;
 }
