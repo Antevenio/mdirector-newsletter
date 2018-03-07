@@ -14,6 +14,12 @@ msgstr ""
 msgid "DEFAULT"
 msgstr "Predeterminada"
 
+msgid "LANGUAGE"
+msgstr "Idioma"
+
+msgid "ACTIVE"
+msgstr "Activo"
+
 msgid "WEEKDAY__MONDAY"
 msgstr "Lunes"
 
@@ -214,6 +220,12 @@ msgstr "2. Listas de contactos personalizadas."
 
 msgid "STEP-2__DESCRIPTION"
 msgstr "Este plugin crea de forma automática las listas de contactos necesarias en tu cuenta de MDirector para enviar las campañas diarias o semanales."
+
+msgid "STEP-2__ID-LIST"
+msgstr "ID de lista personalizada"
+
+msgid "STEP-2__ID-LIST-DEFAULT"
+msgstr "ID predefinido"
 
 msgid "WPLM-DETECTED"
 msgstr "WPML Detectado"

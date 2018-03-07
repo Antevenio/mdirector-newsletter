@@ -516,23 +516,45 @@ class MDirector_Newsletter_Admin {
             $form_fields = $this->preg_grep_keys('/^mdirector_/', $data);
             $options = array_merge(
                 $options,
-                $form_fields);
-
-            // Need to override some values...
-            $options['mdirector_use_custom_lists'] = isset($data['mdirector_use_custom_lists'])
-                ? $data['mdirector_use_custom_lists'] : null;
-            $options['mdirector_frequency_weekly'] = isset($data['mdirector_frequency_weekly'])
-                ? $data['mdirector_frequency_weekly'] : null;
-            $options['mdirector_frequency_daily'] = isset($data['mdirector_frequency_daily'])
-                ? $data['mdirector_frequency_daily'] : null;
-
-            $options['mdirector_exclude_cats'] =
-                ((isset($data['mdirector_exclude_cats']) && count($data['mdirector_exclude_cats']) > 0)
-                    ? serialize($data['mdirector_exclude_cats'])
-                    : []);
+                $form_fields,
+                $this->check_checkboxes_values_for_save($data));
 
             update_option('mdirector_settings', $options);
         }
+    }
+
+    private function check_checkboxes_values_for_save($data) {
+        $options = [];
+
+        $options['mdirector_use_custom_lists'] = isset($data['mdirector_use_custom_lists'])
+            ? $data['mdirector_use_custom_lists'] : null;
+        $options['mdirector_frequency_weekly'] = isset($data['mdirector_frequency_weekly'])
+            ? $data['mdirector_frequency_weekly'] : null;
+        $options['mdirector_frequency_daily'] = isset($data['mdirector_frequency_daily'])
+            ? $data['mdirector_frequency_daily'] : null;
+
+        $options['mdirector_exclude_cats'] =
+            ((isset($data['mdirector_exclude_cats']) && count($data['mdirector_exclude_cats']) > 0)
+                ? serialize($data['mdirector_exclude_cats'])
+                : []);
+
+        foreach ($this->Mdirector_utils->get_current_languages() as $language) {
+            $lang = $language['code'];
+            $prefix = 'mdirector_';
+            $suffix = '_custom_list_' . $lang . '_active';
+            $active_daily_list = $prefix . Mdirector_Newsletter_Utils::DAILY_FREQUENCY . $suffix;
+            $active_weekly_list = $prefix . Mdirector_Newsletter_Utils::WEEKLY_FREQUENCY . $suffix;
+
+            $options[$active_daily_list] = isset($data[$active_daily_list])
+                ? $data[$active_daily_list]
+                : null;
+
+            $options[$active_weekly_list] = isset($data[$active_weekly_list])
+                ? $data[$active_weekly_list]
+                : null;
+        }
+
+        return $options;
     }
 
     private function preg_grep_keys($pattern, $input, $flags = 0) {
@@ -698,7 +720,8 @@ class MDirector_Newsletter_Admin {
         $this->mdirector_checks();
         $this->set_current_languages();
         $this->set_translations_strings();
-        // echo '<pre>';$options = $this->get_plugin_options(); die( var_dump( $options ) );
+
+        //echo '<pre>';$options = $this->get_plugin_options(); die( var_dump( $options ) );
 
         $tabs = [
             'settings' => __('CONFIGURATION', Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN)
@@ -934,24 +957,44 @@ class MDirector_Newsletter_Admin {
 
     private function get_html_used_lists($lists, $default_lists, $type) {
         $output = '';
+        $options = $this->get_plugin_options();
 
         foreach ($lists as $lang => $data) {
             $id = $data['value'];
             $lang_name = $data['translated_name'];
-            $selectedId = ($id ? $id : $default_lists[$lang]['value']);
+            $selected_id = ($id ? $id : $default_lists[$lang]['value']);
             $input_name = 'mdirector_' . $type . '_list_'. $lang;
+            $active_field = $input_name . '_active';
+            $active_field_value = isset($options[$active_field])
+                ? $options[$active_field]
+                : null;
 
             $output .= '
-                <div class="md_newsletter--panel__row">
-                    <label for="'. $input_name .'"><span>' . $lang_name . ':</span></label>
-                    <input id="'. $input_name .'"
-                        name="' . $input_name . '"
-                        autocomlete="off"
-                        type="text" value="' . $selectedId . '"/>
-                    <small>' .
-                __('CURRENT', Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN) . ': ' . $selectedId . ' (' .
-                __('ORIGINAL', Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN) . ': ' . $default_lists[$lang]['value'] . ')' . '
-                    </small>
+                <div class="md_newsletter--table-row">
+                    <div class="md_newsletter--table-cell">
+                        <label for="'. $input_name .'"><span>' . $lang_name . ':</span></label>
+                    </div>
+                    <div class="md_newsletter--table-cell">
+                        <input id="'. $input_name .'"
+                            name="' . $input_name . '"
+                            autocomlete="off"
+                            placeholder="' . $selected_id . '"
+                            type="text" value="' . $selected_id . '"/>
+                    </div>
+                    <div class="md_newsletter--table-cell md_newsletter--text-center">
+                        <span>' . $default_lists[$lang]['value'] . '</span>
+                    </div>
+                    <div class="md_newsletter--table-cell">
+                        <label for="' . $active_field . '">
+                            <input id="' . $active_field . '" 
+                                type="checkbox" 
+                                name="' . $active_field . '"
+                                autocomplete="off"
+                                value="' . Mdirector_Newsletter_Utils:: SETTINGS_OPTION_ON . '" '
+                                    . (( $active_field_value ===
+                                        Mdirector_Newsletter_Utils::SETTINGS_OPTION_ON) ? 'checked' : '') . '>                                                                
+                        </label>
+                    </div>
                 </div>';
         }
 
@@ -1069,6 +1112,23 @@ class MDirector_Newsletter_Admin {
         $weekly_lists = $this->get_lists_ids(Mdirector_Newsletter_Utils::WEEKLY_FREQUENCY,
             ($use_custom_lists) ? 'custom' : null);
 
+        $header_table = '
+            <div class="md_newsletter--table-header">
+                <div class="md_newsletter--table-cell">' .
+                    __('LANGUAGE', Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN) . '
+                </div>
+                <div class="md_newsletter--table-cell">' .
+                    __('STEP-2__ID-LIST', Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN) . '
+                </div>
+                <div class="md_newsletter--table-cell md_newsletter--text-center">' .
+                    __('STEP-2__ID-LIST-DEFAULT', Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN) . '
+                </div>
+                <div class="md_newsletter--table-cell">' .
+                    __('ACTIVE', Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN) . '
+                </div>
+            </div>
+        ';
+
         $output = '
             <div class="mdirector-settings-box">
                 <h4>' . __('STEP-2__TITLE', Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN) . '</h4>
@@ -1076,34 +1136,29 @@ class MDirector_Newsletter_Admin {
                 <p>'. __('STEP-2__TEXT-1', Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN) .'</p>
                 <p class="notice-block">' . __('STEP-2__NOTICE-TEXT',
                     Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN) . '</p>
-                <br class="clear">
-                <div class="md_cat_checkbox">
-                    <input type="checkbox"
-                        autocomplete="off"
-                        data-toggle="mdirector-custom-lists"
+                                              
+                <div id="mdirector-custom-lists" class="md_newsletter--wpml-templates">
+                    <input type="hidden"
                         name="mdirector_use_custom_lists"
                         id="mdirector_use_custom_lists"
-                        value="' . Mdirector_Newsletter_Utils:: SETTINGS_OPTION_ON . '" '
-                    . (($use_custom_lists === Mdirector_Newsletter_Utils::SETTINGS_OPTION_ON) ? 'checked' : '') . '>' .
-                        __('STEP-2__PERSONALIZATED-LISTS', Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN) . '
-                </div>
-                <div id="mdirector-custom-lists" class="md_newsletter--wpml-templates" ' .
-                    ($use_custom_lists !== Mdirector_Newsletter_Utils::SETTINGS_OPTION_ON ? 'style="display:none;" ' : '') .'>
+                        value="' . Mdirector_Newsletter_Utils:: SETTINGS_OPTION_ON . '">
                     <div class="md_newsletter--panel__wrapper">
-                        <label 
-                            class="select">' .
+                        <span class="select">' .
                             __('STEP-2__DAILY-LIST', Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN) . ':
-                        </label>
-                        <div class="text-right">';
+                        </span>
+                        <div class="md_newsletter--table">                            
+                        ';
+                            $output .= $header_table;
                             $output .= $this->get_html_used_lists($daily_lists, $default_daily_lists,
                                 'daily_custom');
                             $output .= '
                         </div>                            
                     </div>
                     <div class="md_newsletter--panel__wrapper">
-                        <label class="select">' . __('STEP-2__WEEKLY-LIST',
-                                Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN) . ':</label>
-                        <div class="text-right">';
+                        <span class="select">' . __('STEP-2__WEEKLY-LIST',
+                                Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN) . ':</span>
+                        <div class="md_newsletter--table">';
+                            $output .= $header_table;
                             $output .= $this->get_html_used_lists($weekly_lists, $default_weekly_lists,
                                 'weekly_custom');
                             $output .= '

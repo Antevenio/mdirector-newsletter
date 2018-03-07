@@ -44,11 +44,6 @@ class Mdirector_Newsletter_Utils {
 
     public function __construct() {}
 
-    private function get_plugin_options() {
-        return get_option('mdirector_settings')
-            ? get_option('mdirector_settings') : [];
-    }
-
     public function is_wpml() {
         return function_exists('icl_object_id');
     }
@@ -186,6 +181,57 @@ class Mdirector_Newsletter_Utils {
         }
 
         return $output;
+    }
+
+    public function get_user_templates() {
+        return $available_templates = array_map('basename',
+            glob(MDIRECTOR_TEMPLATES_PATH . '*', GLOB_ONLYDIR));
+    }
+
+    public function get_current_template($available_templates, $lang = null) {
+        $options = $this->get_plugin_options();
+        $template = 'mdirector_template_' . (!empty($lang) ? $lang : 'general');
+
+        $current_template_selected = !empty($options[$template])
+            ? $options[$template]
+            : Mdirector_Newsletter_Utils::DEFAULT_TEMPLATE;
+
+        if (!in_array($current_template_selected, $available_templates) ) {
+            $current_template_selected = Mdirector_Newsletter_Utils::DEFAULT_TEMPLATE;
+        }
+
+        return $current_template_selected;
+    }
+
+    public function clean_newsletter_process($frequency, $lang) {
+        $options = $this->get_plugin_options();
+        $process = ($frequency === self::DAILY_FREQUENCY)
+            ? 'mdirector_daily_sent_' . $lang
+            : 'mdirector_weekly_sent_' . $lang;
+
+        $options[$process] = date('Y-m-d H:i');
+
+        update_option('mdirector_settings', $options);
+
+        wp_reset_postdata();
+        wp_reset_query();
+    }
+
+    public function reset_deliveries_sent() {
+        $options = $this->get_plugin_options();
+
+        foreach ($this->get_current_languages() as $language) {
+            $lang = $language['code'];
+            $options['mdirector_daily_sent_' . $lang] = null;
+            $options['mdirector_weekly_sent_' . $lang] = null;
+        }
+
+        update_option('mdirector_settings', $options);
+    }
+
+    private function get_plugin_options() {
+        return get_option('mdirector_settings')
+            ? get_option('mdirector_settings') : [];
     }
 
     private function text_truncate($string) {
@@ -421,94 +467,13 @@ class Mdirector_Newsletter_Utils {
         return 'text/html';
     }
 
-    public function get_user_templates() {
-        return $available_templates = array_map('basename',
-            glob(MDIRECTOR_TEMPLATES_PATH . '*', GLOB_ONLYDIR));
-    }
-
-    public function get_current_template($available_templates, $lang = null) {
+    private function is_delivery_active($lang, $type) {
         $options = $this->get_plugin_options();
-        $template = 'mdirector_template_' . (!empty($lang) ? $lang : 'general');
+        $delivery = 'mdirector_' . $type . '_custom_list_' . $lang . '_active';
 
-        $current_template_selected = !empty($options[$template])
-            ? $options[$template]
-            : Mdirector_Newsletter_Utils::DEFAULT_TEMPLATE;
-
-        if (!in_array($current_template_selected, $available_templates) ) {
-            $current_template_selected = Mdirector_Newsletter_Utils::DEFAULT_TEMPLATE;
-        }
-
-        return $current_template_selected;
-    }
-
-    public function clean_newsletter_process($frequency, $lang) {
-        $options = $this->get_plugin_options();
-        $process = ($frequency === self::DAILY_FREQUENCY)
-            ? 'mdirector_daily_sent_' . $lang
-            : 'mdirector_weekly_sent_' . $lang;
-
-        $options[$process] = date('Y-m-d H:i');
-
-        update_option('mdirector_settings', $options);
-
-        wp_reset_postdata();
-        wp_reset_query();
-    }
-
-    public function reset_deliveries_sent() {
-        $options = $this->get_plugin_options();
-
-        foreach ($this->get_current_languages() as $language) {
-            $lang = $language['code'];
-            $options['mdirector_daily_sent_' . $lang] = null;
-            $options['mdirector_weekly_sent_' . $lang] = null;
-        }
-
-        update_option('mdirector_settings', $options);
-    }
-
-    /**
-     * @return array
-     * @throws MDOAuthException2
-     */
-    public function build_daily_mails() {
-        $response = [];
-
-        foreach( $this->get_current_languages() as $lang) {
-            $response[$lang['code']] = $this->md_send_daily_mails($lang['code']);
-        }
-
-        return $response;
-    }
-
-    /**
-     * @return array
-     * @throws MDOAuthException2
-     */
-    public function build_weekly_mails() {
-        $response = [];
-
-        foreach ($this->get_current_languages() as $lang) {
-            $response[$lang['code']] = $this->md_send_weekly_mails($lang['code']);
-        }
-
-        return $response;
-    }
-
-    public function get_current_list_id($type, $lang) {
-        $options = $this->get_plugin_options();
-
-        if (isset($options['mdirector_use_test_lists']) &&
-            $options['mdirector_use_test_lists'] === self::SETTINGS_OPTION_ON) {
-            return $options['mdirector_' . $type . '_test_list_' . $lang];
-        }
-
-        if (isset($options['mdirector_use_custom_lists']) &&
-            $options['mdirector_use_custom_lists'] === self::SETTINGS_OPTION_ON) {
-            return $options['mdirector_' . $type . '_custom_list_' . $lang];
-        }
-
-        return $options['mdirector_' . $type . '_list_' . $lang];
+        return isset($options[$delivery])
+            ? $options[$delivery] === self::SETTINGS_OPTION_ON
+            : false;
     }
 
     private function get_exclude_cats() {
@@ -679,5 +644,57 @@ class Mdirector_Newsletter_Utils {
         }
 
         return false;
+    }
+
+    /**
+     * @return array
+     * @throws MDOAuthException2
+     */
+    public function build_daily_mails() {
+        $response = [];
+
+        foreach( $this->get_current_languages() as $language) {
+            $lang = $language['code'];
+
+            if ($this->is_delivery_active($lang, self::DAILY_FREQUENCY)) {
+                $response[$lang] = $this->md_send_daily_mails($lang);
+            }
+        }
+
+        return $response;
+    }
+
+    /**
+     * @return array
+     * @throws MDOAuthException2
+     */
+    public function build_weekly_mails() {
+        $response = [];
+
+        foreach ($this->get_current_languages() as $lang) {
+            $lang = $lang['code'];
+
+            if ($this->is_delivery_active($lang, self::WEEKLY_FREQUENCY)) {
+                $response[$lang] = $this->md_send_weekly_mails($lang);
+            }
+        }
+
+        return $response;
+    }
+
+    public function get_current_list_id($type, $lang) {
+        $options = $this->get_plugin_options();
+
+        if (isset($options['mdirector_use_test_lists']) &&
+            $options['mdirector_use_test_lists'] === self::SETTINGS_OPTION_ON) {
+            return $options['mdirector_' . $type . '_test_list_' . $lang];
+        }
+
+        if (isset($options['mdirector_use_custom_lists']) &&
+            $options['mdirector_use_custom_lists'] === self::SETTINGS_OPTION_ON) {
+            return $options['mdirector_' . $type . '_custom_list_' . $lang];
+        }
+
+        return $options['mdirector_' . $type . '_list_' . $lang];
     }
 }

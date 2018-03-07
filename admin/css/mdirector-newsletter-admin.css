@@ -1,3 +1,7 @@
+.md_newsletter--text-center {
+    text-align: center !important;
+}
+
 .mdirector.nav-tab-wrapper a:before {
     -webkit-font-smoothing: antialiased;
     display: inline-block;
@@ -517,4 +521,44 @@ input.timepicker {
     position: relative;
     font-style: italic;
     top: 2px;
+}
+
+.md_newsletter--table {
+    margin: 15px 0;
+    display: table;
+}
+
+.md_newsletter--table-header {
+    background-color: #F1F1F1;
+    padding: 6px 5px;
+}
+
+.md_newsletter--table-row {
+    margin: 3px 0;
+    border-bottom: 1px dotted #ccc;
+    padding: 10px 5px;
+}
+
+.md_newsletter--table-row:last-of-type {
+    border-bottom: 0 none;
+}
+
+.md_newsletter--table-cell {
+    display: table-cell;
+    font-size: 11px;
+    min-width: 200px;
+    padding-right: 10px;
+    text-align: left;
+    vertical-align: middle;
+}
+
+.md_newsletter--table-cell:last-of-type {
+    min-width: 50px;
+    text-align: center;
+}
+
+.md_newsletter--table-cell input[type="checkbox"] {
+    position: relative;
+    top: 1px;
+    left: 5px;
 }
