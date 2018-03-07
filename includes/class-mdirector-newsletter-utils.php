@@ -401,7 +401,9 @@ class Mdirector_Newsletter_Utils {
                     )
                 );
 
-            $env_id = $mdirector_send_resp->data->envId;
+            $env_id = isset($mdirector_send_resp->data)
+                ? $mdirector_send_resp->data->envId
+                : null;
 
             // send the campaign
             if ($env_id) {

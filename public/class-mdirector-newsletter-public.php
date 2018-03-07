@@ -80,13 +80,16 @@ class Mdirector_Newsletter_Public {
             // cron jobs
             add_filter('cron_schedules', [$this, 'md_add_new_interval']);
 
-            register_activation_hook(MDIRECTOR_NEWSLETTER_PLUGIN_DIR .
-                'mdirector-newsletter.php', [$this, 'md_cron_activation']);
+            if (! wp_next_scheduled ( 'md_newsletter_build' )) {
+                wp_schedule_event(time(), 'every_thirty_minutes', 'md_newsletter_build');
+            }
+
+            add_action('md_newsletter_build', [$this, 'md_event_cron']);
 
             register_deactivation_hook(MDIRECTOR_NEWSLETTER_PLUGIN_DIR .
                 'mdirector-newsletter.php', [$this, 'md_cron_deactivation']);
 
-            add_action('md_newsletter_build', [$this, 'md_event_cron']);
+
         }
 	}
 
@@ -151,13 +154,9 @@ class Mdirector_Newsletter_Public {
 
 	/**
      * CRON JOBS
+     * The scheduled hook is assigned in the constructor because
+     * it has given problems in the register_activation_hook.
      */
-    public function md_cron_activation() {
-        if (! wp_next_scheduled ( 'md_newsletter_build' )) {
-            wp_schedule_event(time(), 'every_thirty_minutes', 'md_newsletter_build');
-        }
-    }
-
     public function md_cron_deactivation() {
     	wp_clear_scheduled_hook('md_newsletter_build');
     }

@@ -585,7 +585,7 @@ class MDirector_Newsletter_Admin {
                                 . __('SENDING-TEST__DAILY-SENDING-ERROR',
                                     Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN) . ': ' . $list_name . ' '
                                 . __('NO-ENTRIES-IN-BLOG',
-                                    Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN) . '?'
+                                    Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN)
                                 . '</div>';
                         }
                     }
@@ -618,7 +618,7 @@ class MDirector_Newsletter_Admin {
                                 . __('SENDING-TEST__WEEKLY-SENDING-ERROR',
                                     Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN) . ': ' . $list_name . ' '
                                 . __('NO-ENTRIES-IN-BLOG',
-                                    Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN) . '?'
+                                    Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN)
                                 . '</div>';
                         }
                     }
