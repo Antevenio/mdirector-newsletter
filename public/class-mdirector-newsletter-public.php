@@ -109,44 +109,35 @@ class Mdirector_Newsletter_Public {
      }
 
     /**
+     * Saving a contact from AJAX request (widget)
+     *
      * @throws MDOAuthException2
      */
     public function mdirector_ajax_new() {
         $mdirector_active = get_option('mdirector_active');
         $settings = get_option('mdirector_settings');
-        $current_list = 'list';
         $current_language = $this->Mdirector_utils->get_current_lang();
 
         if ($mdirector_active === Mdirector_Newsletter_Utils::SETTINGS_OPTION_ON) {
 			$key = $settings['mdirector_api'];
 			$secret = $settings['mdirector_secret'];
-	        $target_list = 'mdirector_' . $_POST['list'] . '_' .
-                $current_list . '_' . $current_language;
-			$list = $settings[$target_list];
 
-	        // Fallback to default language in case user language does not exist.
-	        if (!$list) {
-	            $target_list = 'mdirector_' . $_POST['list'] . '_' .
-                    $current_list . '_' .
-                    Mdirector_Newsletter_Utils::MDIRECTOR_DEFAULT_USER_LANG;
-	            $list = $settings[$target_list];
-            }
+			$type = $_POST['list'];
+	        $list = $this->Mdirector_utils->get_current_list_id($type, $current_language);
 
-            if ($list) {
-	        	$md_user_id = json_decode(
-                    $this->Mdirector_Newsletter_Api->callAPI(
-	        		    $key,
-                        $secret,
-                        Mdirector_Newsletter_Utils::MDIRECTOR_API_CONTACT_ENDPOINT,'POST',
-	        			[
-	        				'listId' 	=> $list,
-	        				'email'		=> $_POST['email']
-	        			]
-	        		)
-	        	);
+            $md_user_id = json_decode(
+                $this->Mdirector_Newsletter_Api->callAPI(
+                    $key,
+                    $secret,
+                    Mdirector_Newsletter_Utils::MDIRECTOR_API_CONTACT_ENDPOINT,'POST',
+                    [
+                        'listId' 	=> $list,
+                        'email'		=> $_POST['email']
+                    ]
+                )
+            );
 
-	        	echo json_encode($md_user_id);
-	        }
+            echo json_encode($md_user_id);
 	    }
 
 		wp_die();

@@ -687,14 +687,23 @@ class Mdirector_Newsletter_Utils {
 
         if (isset($options['mdirector_use_test_lists']) &&
             $options['mdirector_use_test_lists'] === self::SETTINGS_OPTION_ON) {
-            return $options['mdirector_' . $type . '_test_list_' . $lang];
+            $target = 'mdirector_' . $type . '_test_list_';
+            return isset($options[$target . $lang])
+                ? $options[$target . $lang]
+                : $options[$target . self::MDIRECTOR_DEFAULT_USER_LANG];
         }
 
         if (isset($options['mdirector_use_custom_lists']) &&
             $options['mdirector_use_custom_lists'] === self::SETTINGS_OPTION_ON) {
-            return $options['mdirector_' . $type . '_custom_list_' . $lang];
+            $target = 'mdirector_' . $type . '_custom_list_';
+            return isset($options[$target . $lang])
+                ? $options[$target . $lang]
+                : $options[$target . self::MDIRECTOR_DEFAULT_USER_LANG];
         }
 
-        return $options['mdirector_' . $type . '_list_' . $lang];
+        $target = 'mdirector_' . $type . '_list_';
+        return isset($target)
+            ? $options[$target . $lang]
+            : $options[$target . self::MDIRECTOR_DEFAULT_USER_LANG];
     }
 }
