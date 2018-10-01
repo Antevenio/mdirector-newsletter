@@ -10,7 +10,7 @@
  * Plugin Name:       MDirector Newsletter
  * Plugin URI:        http://www.mdirector.com/
  * Description:       Official MDirector plugin for wordpress. Add MDirector sign-up forms to your WordPress site.
- * Version:           2.0.10
+ * Version:           2.0.11
  * Author:            MDirector
  * Author URI:        http://mdirector.com/
  * License:           GPL-2.0+
