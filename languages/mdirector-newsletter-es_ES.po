@@ -65,11 +65,14 @@ msgstr "Crea tu <a href=\"https://signup.mdirector.com/\" target=\"_blank\">cuen
 msgid "PLUGIN-PRESENTATION__SECOND-STEP"
 msgstr "Inicia sesión en tu <a href=\"https://auth.mdirector.com\" target=\"_blank\">cuenta de Email Marketing en MDirector</a>, accede a Preferencias > Información API y activa el API si aún no está activado."
 
+msgid "NEW-LISTS__NEW-ID"
+msgstr "con el ID:"
+
 msgid "DAILY-LISTS__ERROR-NOTICE"
 msgstr "La lista (o listas) diarias que has indicado no existen. Se utilizarán las originales."
 
 msgid "DAILY-LISTS__NEW-DAILY-LIST-ADDED"
-msgstr "Se ha añadido una nueva lista diaria a tu cuenta de MDirector."
+msgstr "Se ha añadido una nueva lista diaria a tu cuenta de MDirector:"
 
 msgid "DAILY-LISTS__NEW-DAILY-LIST-ADDED-ERROR"
 msgstr "No se ha podido crear la lista diaria. Por favor, refresque la pantalla."
@@ -78,19 +81,19 @@ msgid "WEEKLY-LISTS__ERROR-NOTICE"
 msgstr "La lista (o listas) semanales que has indicado no existen. Se utilizarán las originales."
 
 msgid "WEEKLY-LISTS__NEW-WEEKLY-LIST-ADDED"
-msgstr "Se ha añadido una nueva lista semanal a tu cuenta de MDirector."
+msgstr "Se ha añadido una nueva lista semanal a tu cuenta de MDirector:"
 
 msgid "WEEKLY-LISTS__NEW-WEEKLY-LIST-ADDED-ERROR"
 msgstr "No se ha podido crear la lista semanal. Por favor, refresque la pantalla."
 
 msgid "WEEKLY-CAMPAIGN__NEW-WEEKLY-CAMPAIGN-ADDED"
-msgstr "Se ha añadido una nueva campaña semanal a tu cuenta de MDirector."
+msgstr "Se ha añadido una nueva campaña semanal a tu cuenta de MDirector: "
 
 msgid "WEEKLY-CAMPAIGN__NEW-WEEKLY-CAMPAIGN-ADDED-ERROR"
 msgstr "No se ha podido crear la campaña semanal. Por favor, refresque la pantalla."
 
 msgid "DAILY-CAMPAIGN__NEW-DAILY-CAMPAIGN-ADDED"
-msgstr "Se ha añadido una nueva campaña diaria a tu cuenta de MDirector."
+msgstr "Se ha añadido una nueva campaña diaria a tu cuenta de MDirector: "
 
 msgid "DAILY-CAMPAIGN__NEW-DAILY-CAMPAIGN-ADDED-ERROR"
 msgstr "No se ha podido crear la campaña diaria. Por favor, refresque la pantalla."
@@ -101,8 +104,11 @@ msgstr "Acabas de realizar un envío de tipo diario a la lista"
 msgid "SENDING-TEST__DAILY-SENDING-ERROR"
 msgstr "No se ha podido realizar un envío de tipo diario a la lista"
 
+msgid "SENDING-TEST__DAILY-GENERAL-SENDING-ERROR-NO-ACTIVES"
+msgstr "No se ha realizado ningún envío de tipo diario porque no hay ninguna lista activa en el Paso 2."
+
 msgid "NO-ENTRIES-IN-BLOG"
-msgstr "¿Quizá no tienes nuevas entradas en el blog?"
+msgstr "Quizá no tienes nuevas entradas en el blog o la lista seleccionada no existe."
 
 msgid "SENDING-TEST__DAILY-DEACTIVATED"
 msgstr "No se ha realizado un envío de tipo diario porque tienes la opción <strong>Enviar mensajes diarios</strong> desactivada."
@@ -112,6 +118,9 @@ msgstr "Acabas de realizar un envío de tipo semanal a la lista"
 
 msgid "SENDING-TEST__WEEKLY-SENDING-ERROR"
 msgstr "No se ha podido realizar un envío de tipo semanal a la lista"
+
+msgid "SENDING-TEST__WEEKLY-GENERAL-SENDING-ERROR-NO-ACTIVES"
+msgstr "No se ha realizado ningún envío de tipo semanal porque no hay ninguna lista activa en el Paso 2."
 
 msgid "SENDING-TEST__WEEKLY-DEACTIVATED"
 msgstr "No se ha realizado un envío de tipo semanal porque tienes la opción <strong>Enviar mensajes semanales</strong> desactivada."
@@ -219,7 +228,7 @@ msgid "STEP-2__TITLE"
 msgstr "2. Listas de contactos personalizadas."
 
 msgid "STEP-2__DESCRIPTION"
-msgstr "Este plugin crea de forma automática las listas de contactos necesarias en tu cuenta de MDirector para enviar las campañas diarias o semanales."
+msgstr "Este plugin utiliza tus las listas de contactos en MDirector para enviar las campañas diarias o semanales."
 
 msgid "STEP-2__ID-LIST"
 msgstr "ID de lista personalizada"
@@ -227,14 +236,20 @@ msgstr "ID de lista personalizada"
 msgid "STEP-2__ID-LIST-DEFAULT"
 msgstr "ID predefinido"
 
+msgid "STEP-2__CREATE-LISTS"
+msgstr "¡Crear Listas Ahora!"
+
 msgid "WPLM-DETECTED"
 msgstr "WPML Detectado"
 
 msgid "STEP-2__TEXT-1"
-msgstr "Si lo prefieres, puedes indicar a continuación alguna de tus listas ya existentes para utilizarlas en su lugar."
+msgstr "O si lo prefieres, indica a continuación qué listas deseas asociar:"
 
 msgid "STEP-2__NOTICE-TEXT"
 msgstr "Las listas diarias y semanales que utilices deben existir y ser distintas."
+
+msgid "STEP-2__ADVISE-TEXT"
+msgstr "Si no quieres utilizar ninguna de tus listas actuales para los envíos, pulsa \"<strong>Crear Listas Ahora</strong>\" para que el sistema genere unas nuevas y las asocie a tus campañas automáticamente:"
 
 msgid "STEP-2__PERSONALIZATED-LISTS"
 msgstr "Utilizar listas personalizadas."
@@ -339,16 +354,16 @@ msgid "STEP-6__DESCRIPTION"
 msgstr "Si por cualquier motivo no te interesa que los posts de una o varias categorías no sean enviados en los mensajes automáticos. Elige la/s categoría/s que deseas excluir de los envíos."
 
 msgid "STEP-7__TITLE"
-msgstr "7. Configuración de widget / shortcode."
+msgstr "7. Configuración sobre la Política de Privacidad"
 
 msgid "STEP-7__DESCRIPTION"
-msgstr "Configura el texto de aceptación y URL de la política de privacidad."
+msgstr "Configura el texto de aceptación y URL de la política de privacidad. Estos campos aparecen en el Widget y le permiten añadir tanto un campo obligatorio de Aceptación de Política de Privacidad como un enlace directo a su contenido."
 
 msgid "STEP-7__ACCEPT-POLICY-TEXT"
-msgstr "Texto de aceptación de política"
+msgstr "Texto de aceptación"
 
 msgid "STEP-7__POLICY-URL"
-msgstr "URL de la política"
+msgstr "URL"
 
 msgid "STEP-8__TITLE"
 msgstr "8. Seleccionar plantilla."
@@ -457,3 +472,18 @@ msgstr "Acepto la política de privacidad"
 
 msgid "WIDGET-SUBSCRIPTION"
 msgstr "Suscribirme"
+
+msgid "WIDGET-SCRIPT-SUCCESS"
+msgstr "Te has suscrito correctamente a la lista. Gracias por tu interés."
+
+msgid "WIDGET-SCRIPT-EMAIL-VALIDATION"
+msgstr "Por favor, introduce un correo electrónico válido."
+
+msgid "WIDGET-SCRIPT-EMAIL-TEXT"
+msgstr "Por favor, introduce tu correo electrónico."
+
+msgid "WIDGET-SCRIPT-POLICY-VALIDATION"
+msgstr "Por favor, acepta la política de privacidad."
+
+msgid "WIDGET-SCRIPT-EMAIL-ALREADY-REGISTERED"
+msgstr "El correo introducido ya estaba suscrito a la lista."

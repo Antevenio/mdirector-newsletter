@@ -1,4 +1,6 @@
 jQuery(document).ready(function ($) {
+    /* global LOCALES */
+
     // Subscription via form (widget or shortcode)
     var $widgetForm = $('.md__newsletter--form');
 
@@ -10,7 +12,7 @@ jQuery(document).ready(function ($) {
             email = $this.find('.md_newsletter--email_input').val(),
             $privacyCheckbox = $this.find('.md_newsletter--checkbox');
 
-        if ($privacyCheckbox.is(':checked')) {
+        if (!$privacyCheckbox.length || $privacyCheckbox.is(':checked')) {
             if (email) {
                 if (validEmail(email)) {
                     $ajaxLoader.show();
@@ -34,22 +36,22 @@ jQuery(document).ready(function ($) {
                                 md_error_handling($this, response.code);
                             } else {
                                 md_success_handling($this,
-                                    'Te has suscrito correctamente a la lista. Gracias por tu interés.');
+                                    LOCALES.WIDGET_SCRIPT_SUCCESS);
                             }
                             $ajaxLoader.hide();
                         }
                     );
                 } else {
                     md_error_handling($this, 0,
-                        'Por favor, introduce un correo electrónico válido.');
+                        LOCALES.WIDGET_SCRIPT_EMAIL_VALIDATION);
                 }
             } else {
                 md_error_handling($this, 0,
-                    'Por favor, introduce tu correo electrónico.');
+                    LOCALES.WIDGET_SCRIPT_EMAIL_TEXT);
             }
         } else {
             md_error_handling($this, 0,
-                'Por favor, acepta la política de privacidad.');
+                LOCALES.WIDGET_SCRIPT_POLICY_VALIDATION);
         }
     });
 
@@ -65,7 +67,7 @@ jQuery(document).ready(function ($) {
 
         switch (error_code) {
             case 1145:
-                msg = 'El correo introducido ya estaba suscrito a la lista.';
+                msg = LOCALES.WIDGET_SCRIPT_EMAIL_ALREADY_REGISTERED;
                 break;
 
             default:
@@ -74,7 +76,6 @@ jQuery(document).ready(function ($) {
 
         $target.after('<p class="md_handling md_error_handling">' + msg + '</p>');
     }
-
 
     function validEmail(email) {
         return (/(.+)@(.+){2,}\.(.+){2,}/.test(email));
