@@ -128,7 +128,7 @@ class Mdirector_Newsletter_Public {
 	        if (!$list) {
 	            $target_list = 'mdirector_' . $_POST['list'] . '_' .
                     $current_list . '_' .
-                    Mdirector_Newsletter_Utils::MDIRECTOR_DEFAULT_USER_LANG;
+                    $this->Mdirector_utils->get_wp_current_lang();
 	            $list = $settings[$target_list];
             }
 
@@ -213,12 +213,25 @@ class Mdirector_Newsletter_Public {
 	 * @since    1.0.0
 	 */
 	public function enqueue_scripts() {
-		wp_enqueue_script(
-		    $this->mdirector_newsletter,
-            plugin_dir_url(__FILE__) . 'js/mdirector-newsletter-public.js',
-            ['jquery'],
-            $this->version,
-            false
-        );
+        wp_register_script('mdirector-public',
+            MDIRECTOR_NEWSLETTER_PLUGIN_URL .
+            'public/js/mdirector-newsletter-public.js', ['jquery']);
+
+	    // Localize the script with new data
+        $translated_strings = [
+            'WIDGET_SCRIPT_SUCCESS' =>
+                __( 'WIDGET-SCRIPT-SUCCESS', Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN),
+            'WIDGET_SCRIPT_EMAIL_VALIDATION' =>
+                __( 'WIDGET-SCRIPT-EMAIL-VALIDATION', Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN),
+            'WIDGET_SCRIPT_EMAIL_TEXT' =>
+                __( 'WIDGET-SCRIPT-EMAIL-TEXT', Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN),
+            'WIDGET_SCRIPT_POLICY_VALIDATION' =>
+                __( 'WIDGET-SCRIPT-POLICY-VALIDATION', Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN),
+            'WIDGET_SCRIPT_EMAIL_ALREADY_REGISTERED' =>
+                __( 'WIDGET-SCRIPT-EMAIL-ALREADY-REGISTERED', Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN)
+        ];
+
+        wp_localize_script( 'mdirector-public', 'LOCALES', $translated_strings );
+        wp_enqueue_script('mdirector-public');
 	}
 }
