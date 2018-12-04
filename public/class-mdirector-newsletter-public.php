@@ -1,4 +1,6 @@
 <?php
+//'public' is a reserved keyword, which you can't use for namespacing :_(
+//namespace MDirectorNewsletter\public;
 
 /**
  *
@@ -9,6 +11,9 @@
  * @subpackage Mdirector_Newsletter/public
  */
 
+use MDirectorNewsletter\includes\Mdirector_Newsletter_Api;
+use MDirectorNewsletter\includes\Mdirector_Newsletter_Utils;
+
 /**
  * The public-facing functionality of the plugin.
  *
@@ -17,137 +22,152 @@
  * @subpackage Mdirector_Newsletter/public
  * @author     MDirector
  */
-class Mdirector_Newsletter_Public {
+class Mdirector_Newsletter_Public
+{
 
     /**
      * The ID of this plugin.
      *
      * @since    1.0.0
      * @access   private
-     * @var      string    $mdirector_newsletter    The ID of this plugin.
+     * @var      string $mdirectorNewsletter The ID of this plugin.
      */
-    private $mdirector_newsletter;
+    private $mdirectorNewsletter;
 
     /**
      * The version of this plugin.
      *
      * @since    1.0.0
      * @access   private
-     * @var      string    $version    The current version of this plugin.
+     * @var      string $version The current version of this plugin.
      */
     private $version;
 
     /**
      * @var Mdirector_Newsletter_Utils
      */
-    private $Mdirector_utils;
+    private $MdirectorUtils;
 
     /**
      * @var Mdirector_Newsletter_Api
      */
-    private $Mdirector_Newsletter_Api;
+    private $MdirectorNewsletterApi;
 
     /**
-     * Initialize the class and set its properties.
+     * Mdirector_Newsletter_Public constructor.
      *
-     * @since    1.0.0
-     * @param    string    $mdirector_newsletter       The name of the plugin.
-     * @param    string    $version    The version of this plugin.
+     * @param $mdirectorNewsletter
+     * @param $version
+     *
+     * @throws Twig_Error_Loader
+     * @throws Twig_Error_Runtime
+     * @throws Twig_Error_Syntax
      */
-    public function __construct($mdirector_newsletter, $version) {
+    public function __construct($mdirectorNewsletter, $version)
+    {
         require_once MDIRECTOR_NEWSLETTER_PLUGIN_DIR .
-                'includes/class-mdirector-newsletter-widget.php';
+            'includes/class-mdirector-newsletter-widget.php';
         require_once MDIRECTOR_NEWSLETTER_PLUGIN_DIR .
-                'includes/class-mdirector-newsletter-utils.php';
+            'includes/class-mdirector-newsletter-utils.php';
 
-        $mdirector_active = get_option('mdirector_active');
-        $this->Mdirector_utils = new Mdirector_Newsletter_Utils();
+        $mdirectorActive = get_option('mdirector_active');
+        $this->MdirectorUtils = new Mdirector_Newsletter_Utils();
 
-        if ($mdirector_active === Mdirector_Newsletter_Utils::SETTINGS_OPTION_ON) {
-            $this->Mdirector_Newsletter_Api = new Mdirector_Newsletter_Api();
-            $this->mdirector_newsletter = $mdirector_newsletter;
+        if ($mdirectorActive
+            === Mdirector_Newsletter_Utils::SETTINGS_OPTION_ON) {
+            $this->MdirectorNewsletterApi = new Mdirector_Newsletter_Api();
+            $this->mdirectorNewsletter = $mdirectorNewsletter;
             $this->version = $version;
 
             // shortcode
-            add_shortcode('mdirector_subscriptionbox', [$this, 'mdirector_subscriptionbox']);
+            add_shortcode('mdirectorSubscriptionBox', [
+                $this,
+                'mdirectorSubscriptionBox'
+            ]);
 
             // Define ajaxurl for ajax calls
-            add_action('wp_head', [$this, 'mdirector_ajaxurl']);
+            add_action('wp_head', [$this, 'mdirectorAjaxUrl']);
 
             // ajax calls
-            add_action('wp_ajax_md_new', [$this, 'mdirector_ajax_new']);
-            add_action('wp_ajax_nopriv_md_new', [$this, 'mdirector_ajax_new']);
+            add_action('wp_ajax_md_new', [$this, 'mdirectorAjaxNew']);
+            add_action('wp_ajax_nopriv_md_new', [$this, 'mdirectorAjaxNew']);
 
             // cron jobs
-            add_filter('cron_schedules', [$this, 'md_add_new_interval']);
+            add_filter('cron_schedules', [$this, 'mdAddNewInterval']);
 
             if (!wp_next_scheduled('md_newsletter_build')) {
-                wp_schedule_event(time(), 'every_thirty_minutes', 'md_newsletter_build');
+                wp_schedule_event(time(), 'every_thirty_minutes',
+                    'md_newsletter_build');
             }
 
-            add_action('md_newsletter_build', [$this, 'md_event_cron']);
+            add_action('md_newsletter_build', [$this, 'mdEventCron']);
 
             register_deactivation_hook(MDIRECTOR_NEWSLETTER_PLUGIN_DIR .
-                    'mdirector-newsletter.php', [$this, 'md_cron_deactivation']);
+                'mdirector-newsletter.php', [$this, 'mdCronDeactivation']);
         }
     }
 
     /**
-     * @return string
+     * @return bool|string
+     * @throws Throwable
      */
-    public function mdirector_subscriptionbox() {
-        return $this->Mdirector_utils->get_register_for_html();
+    public function mdirectorSubscriptionBox()
+    {
+        return $this->MdirectorUtils->getRegisterFormHTML();
     }
 
-    public function mdirector_ajaxurl() {
-        echo '
-    	<script type="text/javascript">
-		    var ajaxurl = \'' . admin_url('admin-ajax.php') . '\';
-		</script>
-    	';
+    public function mdirectorAjaxUrl()
+    {
+        echo '<script type="text/javascript">' .
+            'var ajaxurl = "' . admin_url('admin-ajax.php') . '";' .
+            '</script>';
     }
 
     /**
      * @throws MDOAuthException2
      */
-    public function mdirector_ajax_new() {
-        $mdirector_active = get_option('mdirector_active');
+    public function mdirectorAjaxNew()
+    {
+        $mdirectorActive = get_option('mdirector_active');
         $settings = get_option('mdirector_settings');
-        $current_list = 'list';
-        $current_language = $this->Mdirector_utils->get_current_lang();
+        $currentList = 'list';
+        $currentLanguage = $this->MdirectorUtils->getCurrentLang();
 
-        if ($mdirector_active === Mdirector_Newsletter_Utils::SETTINGS_OPTION_ON) {
+        if ($mdirectorActive
+            === Mdirector_Newsletter_Utils::SETTINGS_OPTION_ON) {
             $key = $settings['mdirector_api'];
             $secret = $settings['mdirector_secret'];
-            $target_list = 'mdirector_' . $_POST['list'] . '_' .
-                   'custom_' . $current_list . '_' . $current_language;
-            
-            if (empty($settings[$target_list])) {
-                $target_list = 'mdirector_' . $_POST['list'] . '_' .
-                   $current_list . '_' . $current_language;
+            $targetList = 'mdirector_' . $_POST['list'] . '_' .
+                'custom_' . $currentList . '_' . $currentLanguage;
+
+            if (empty($settings[$targetList])) {
+                $targetList = 'mdirector_' . $_POST['list'] . '_' .
+                    $currentList . '_' . $currentLanguage;
             }
-            
-            $list = $settings[$target_list];
-                        
+
+            $list = $settings[$targetList];
+
             // Fallback to default language in case user language does not exist.
             if (!$list) {
-                $target_list = 'mdirector_' . $_POST['list'] . '_' .
-                        $current_list . '_' .
-                        $this->Mdirector_utils->get_wp_current_lang();
-                $list = $settings[$target_list];
+                $targetList = 'mdirector_' . $_POST['list'] . '_' .
+                    $currentList . '_' .
+                    $this->MdirectorUtils->getCurrentLang();
+                $list = $settings[$targetList];
             }
 
             if ($list) {
-                $md_user_id = json_decode(
-                        $this->Mdirector_Newsletter_Api->callAPI(
-                                $key, $secret, Mdirector_Newsletter_Utils::MDIRECTOR_API_CONTACT_ENDPOINT, 'POST', [
+                $mdUserId = json_decode(
+                    $this->MdirectorNewsletterApi->callAPI(
+                        $key, $secret,
+                        Mdirector_Newsletter_Utils::MDIRECTOR_API_CONTACT_ENDPOINT,
+                        'POST', [
                             'listId' => $list,
                             'email' => $_POST['email']
-                                ]
-                        )
+                        ]
+                    )
                 );
 
-                echo json_encode($md_user_id);
+                echo json_encode($mdUserId);
             }
         }
 
@@ -159,12 +179,13 @@ class Mdirector_Newsletter_Public {
      * The scheduled hook is assigned in the constructor because
      * it has given problems in the register_activation_hook.
      */
-    public function md_cron_deactivation() {
+    public function mdCronDeactivation()
+    {
         wp_clear_scheduled_hook('md_newsletter_build');
     }
 
-    public function md_add_new_interval($schedules) {
-        // add weekly and monthly intervals
+    public function mdAddNewInterval($schedules)
+    {
         $schedules['every_thirty_minutes'] = [
             'interval' => 1800,
             'display' => __('Every 30 minutes')
@@ -175,19 +196,26 @@ class Mdirector_Newsletter_Public {
 
     /**
      * @throws MDOAuthException2
+     * @throws Twig_Error_Loader
+     * @throws Twig_Error_Runtime
+     * @throws Twig_Error_Syntax
      */
-    public function md_event_cron() {
-        $mdirector_active = get_option('mdirector_active');
+    public function mdEventCron()
+    {
+        $mdirectorActive = get_option('mdirector_active');
         $settings = get_option('mdirector_settings');
 
-        if ($mdirector_active === Mdirector_Newsletter_Utils::SETTINGS_OPTION_ON) {
-            $utils_instance = new Mdirector_Newsletter_Utils();
-            if ($settings['mdirector_frequency_daily'] === Mdirector_Newsletter_Utils::SETTINGS_OPTION_ON) {
-                $utils_instance->build_daily_mails();
+        if ($mdirectorActive
+            === Mdirector_Newsletter_Utils::SETTINGS_OPTION_ON) {
+            $utilsInstance = new Mdirector_Newsletter_Utils();
+            if ($settings['mdirector_frequency_daily']
+                === Mdirector_Newsletter_Utils::SETTINGS_OPTION_ON) {
+                $utilsInstance->buildDailyMails();
             }
 
-            if ($settings['mdirector_frequency_weekly'] === Mdirector_Newsletter_Utils::SETTINGS_OPTION_ON) {
-                $utils_instance->build_weekly_mails();
+            if ($settings['mdirector_frequency_weekly']
+                === Mdirector_Newsletter_Utils::SETTINGS_OPTION_ON) {
+                $utilsInstance->buildWeeklyMails();
             }
         }
     }
@@ -197,9 +225,11 @@ class Mdirector_Newsletter_Public {
      *
      * @since    1.0.0
      */
-    public function enqueue_styles() {
+    public function enqueueStyles()
+    {
         wp_enqueue_style(
-                $this->mdirector_newsletter, plugin_dir_url(__FILE__) . 'css/mdirector-newsletter-public.css', [], $this->version, 'all'
+            $this->mdirectorNewsletter, plugin_dir_url(__FILE__)
+            . 'css/mdirector-newsletter-public.css', [], $this->version, 'all'
         );
     }
 
@@ -208,26 +238,38 @@ class Mdirector_Newsletter_Public {
      *
      * @since    1.0.0
      */
-    public function enqueue_scripts() {
+    public function enqueueScripts()
+    {
         wp_register_script('mdirector-public', MDIRECTOR_NEWSLETTER_PLUGIN_URL .
-                'public/js/mdirector-newsletter-public.js', ['jquery']);
+            'public/js/mdirector-newsletter-public.js', ['jquery']);
 
-        // Localize the script with new data
-        $translated_strings = [
+        $translatedStrings = [
             'WIDGET_SCRIPT_SUCCESS' =>
-            __('WIDGET-SCRIPT-SUCCESS', Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN),
+                $this->t('WIDGET-SCRIPT-SUCCESS'),
             'WIDGET_SCRIPT_EMAIL_VALIDATION' =>
-            __('WIDGET-SCRIPT-EMAIL-VALIDATION', Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN),
+                $this->t('WIDGET-SCRIPT-EMAIL-VALIDATION'),
             'WIDGET_SCRIPT_EMAIL_TEXT' =>
-            __('WIDGET-SCRIPT-EMAIL-TEXT', Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN),
+                $this->t('WIDGET-SCRIPT-EMAIL-TEXT'),
             'WIDGET_SCRIPT_POLICY_VALIDATION' =>
-            __('WIDGET-SCRIPT-POLICY-VALIDATION', Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN),
+                $this->t('WIDGET-SCRIPT-POLICY-VALIDATION'),
             'WIDGET_SCRIPT_EMAIL_ALREADY_REGISTERED' =>
-            __('WIDGET-SCRIPT-EMAIL-ALREADY-REGISTERED', Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN)
+                $this->t('WIDGET-SCRIPT-EMAIL-ALREADY-REGISTERED'),
+            'WIDGET_SCRIPT_GENERAL_ERROR' =>
+                $this->t('WIDGET-SCRIPT-GENERAL-ERROR')
         ];
 
-        wp_localize_script('mdirector-public', 'LOCALES', $translated_strings);
+        wp_localize_script('mdirector-public', 'LOCALES', $translatedStrings);
         wp_enqueue_script('mdirector-public');
     }
 
+    /**
+     * Translate a string using land domain
+     * @param $string
+     *
+     * @return string|void
+     */
+    private function t($string)
+    {
+        return __($string, Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN);
+    }
 }

@@ -1,4 +1,8 @@
 <?php
+namespace MDirectorNewsletter\includes;
+
+use WP_Widget;
+
 if (!class_exists('mdirectorWidget')) {
 
     /**
@@ -8,7 +12,7 @@ if (!class_exists('mdirectorWidget')) {
 
         public function __construct() {
             $widget_ops = array(
-                'classname' => 'mdirectorWidget',
+                'classname' => 'MDirectorNewsletter\includes\mdirectorWidget',
                 'description' => __('WIDGET__TITLE',
                     Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN)
             );
@@ -64,11 +68,14 @@ if (!class_exists('mdirectorWidget')) {
          * @param array $args
          * @param array $instance
          *
-         * @return bool|void
+         * @throws \Throwable
+         * @throws \Twig_Error_Loader
+         * @throws \Twig_Error_Runtime
+         * @throws \Twig_Error_Syntax
          */
         public function widget($args, $instance) {
             $Mdirector_utils = new Mdirector_Newsletter_Utils();
-            $output = $Mdirector_utils->get_register_for_html($args, $instance);
+            $output = $Mdirector_utils->getRegisterFormHTML($args, $instance);
 
             echo $output;
             return;
@@ -77,5 +84,5 @@ if (!class_exists('mdirectorWidget')) {
 
     // register widget
     add_action('widgets_init',
-        create_function('', 'return register_widget("mdirectorWidget");'));
+        create_function('', 'return register_widget("MDirectorNewsletter\includes\mdirectorWidget");'));
 }

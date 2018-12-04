@@ -1,4 +1,8 @@
 <?php
+use MDirectorNewsletter\includes\Mdirector_Newsletter;
+use MDirectorNewsletter\includes\Mdirector_Newsletter_Activator;
+use MDirectorNewsletter\includes\Mdirector_Newsletter_Deactivator;
+use MDirectorNewsletter\includes\Mdirector_Newsletter_Utils;
 
 /**
  *
@@ -9,8 +13,8 @@
  * @wordpress-plugin
  * Plugin Name:       MDirector Newsletter
  * Plugin URI:        http://www.mdirector.com/
- * Description:       Official MDirector plugin for wordpress. Add MDirector sign-up forms to your WordPress site.
- * Version:           2.0.11
+ * Description:       Official MDirector plugin for WordPress. Add MDirector sign-up forms to your WordPress site.
+ * Version:           3.0.0
  * Author:            MDirector
  * Author URI:        http://mdirector.com/
  * License:           GPL-2.0+
@@ -36,6 +40,12 @@ define('MDIRECTOR_TEMPLATES_PATH', plugin_dir_path(__FILE__) . 'templates/');
 define('MDIRECTOR_NEWSLETTER_PLUGIN_URL', plugins_url('/', __FILE__));
 define('MDIRECTOR_NEWSLETTER_PLUGIN_FILE', __FILE__);
 define('MDIRECTOR_CURRENT_WP_VERSION', $wp_version);
+
+/**
+ * The core plugin class that is used to define internationalization,
+ * admin-specific hooks, and public-facing site hooks.
+ */
+require MDIRECTOR_NEWSLETTER_PLUGIN_DIR . 'includes/class-mdirector-newsletter.php';
 
 /**
  * The code that runs during plugin activation.
@@ -75,19 +85,13 @@ function mdirector_admin_notice() {
 
 
 function mdirector_notice_ignore() {
-    if (isset($_GET['mdirector_notice_ignore']) && '0' == $_GET['mdirector_notice_ignore']) {
+    if (isset($_GET['mdirector_notice_ignore']) && $_GET['mdirector_notice_ignore'] == '0') {
         update_option('mdirector-notice', 'true', true);
     }
 }
 
 add_action('admin_notices', 'mdirector_admin_notice');
 add_action('admin_init', 'mdirector_notice_ignore');
-
-/**
- * The core plugin class that is used to define internationalization,
- * admin-specific hooks, and public-facing site hooks.
- */
-require MDIRECTOR_NEWSLETTER_PLUGIN_DIR . 'includes/class-mdirector-newsletter.php';
 
 /**
  * Begins execution of the plugin.
@@ -97,6 +101,9 @@ require MDIRECTOR_NEWSLETTER_PLUGIN_DIR . 'includes/class-mdirector-newsletter.p
  * not affect the page life cycle.
  *
  * @since    1.0.0
+ * @throws Twig_Error_Loader
+ * @throws Twig_Error_Runtime
+ * @throws Twig_Error_Syntax
  */
 function run_mdirector_newsletter() {
     $plugin = new Mdirector_Newsletter();

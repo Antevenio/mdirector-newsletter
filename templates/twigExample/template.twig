@@ -1,0 +1,66 @@
+{% extends "base.twig" %}
+
+{% block content %}
+    <table width="100%">
+        <tbody>
+            <tr>
+                <td style="text-align: right">
+                    <img class="social" src="{{ templateURL }}/img/facebook.png" alt="Facebook">
+                    <img class="social" src="{{ templateURL }}/img/twitter.png" alt="Twitter">
+                    <img class="social" src="{{ templateURL }}/img/pinterest.png" alt="Pinterest">
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table width="100%" class="entry">
+        <tbody>
+            <tr>
+                <td>
+                    <h1>Issue #256 - November 30th 2018</h1>
+                    <p>If you have anything you want to share with our community please let me know by sending an email to <a href="mailto:example@example.com" style="font-size:12px">example@example.com</a>.
+                        I'm also open for related sponsorship opportunities and job listings.</p>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table width="100%">
+        <tbody>
+        <tr>
+            {% for post in posts|slice(0, 3) %}
+                {{ block('entryPost') }}
+            {% endfor %}
+        </tr>
+        <tr>
+            {% for post in posts|slice(3, 3) %}
+                {{ block('entryPost') }}
+            {% endfor %}
+        </tr>
+        </tbody>
+    </table>
+
+    {% if posts|length > 6 %}
+        <table width="100%" style="border-top: 4px dashed #dde4f0;margin-bottom: 30px;">
+            <tbody>
+            <tr>
+                <td>
+                    <h2>LAST BUT NOT LEAST…</h2>
+                    {% for post in posts|slice(6, 4) %}
+                        » <a title="{{ post.title }}" href="{{ post.link }}">{{ post.title }}</a><br>
+                    {% endfor %}
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    {% endif %}
+{% endblock %}
+
+{% block entryPost %}
+    <td width="33%">
+        {% if post.post_image %}
+            <img alt="{{ post.title }}" src="{{ post.post_image }}" width="{{ post.post_image_size }}">
+        {% endif %}
+
+        <h1 class="post-title">{{ post.title }}</h1>
+        <p>{{ post.excerpt }}</p>
+    </td>
+{% endblock %}

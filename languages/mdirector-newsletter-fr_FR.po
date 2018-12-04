@@ -41,6 +41,27 @@ msgstr "Samedi"
 msgid "WEEKDAY__SUNDAY"
 msgstr "Dimanche"
 
+msgid "WEEKDAY__MONDAY-SHORT"
+msgstr "L"
+
+msgid "WEEKDAY__TUESDAY-SHORT"
+msgstr "M"
+
+msgid "WEEKDAY__WEDNESDAY-SHORT"
+msgstr "X"
+
+msgid "WEEKDAY__THURSDAY-SHORT"
+msgstr "J"
+
+msgid "WEEKDAY__FRIDAY-SHORT"
+msgstr "V"
+
+msgid "WEEKDAY__SATURDAY-SHORT"
+msgstr "S"
+
+msgid "WEEKDAY__SUNDAY-SHORT"
+msgstr "D"
+
 msgid "SUBJECT-VALUES__FIRST-POST-TITLE"
 msgstr "Titre premier post"
 
@@ -67,6 +88,12 @@ msgstr "Connectez-vous sur <a href=\"https://auth.mdirector.com\" target=\"_blan
 
 msgid "NEW-LISTS__NEW-ID"
 msgstr "con el ID:"
+
+msgid "MAIN-FORM__SAVE-SUCCESS"
+msgstr "Les options de configuration enregistrées correctement."
+
+msgid "DEBUG-FORM__SAVE-SUCCESS"
+msgstr "Options de test enregistrées correctement."
 
 msgid "DAILY-LISTS__ERROR-NOTICE"
 msgstr "La liste (ou les listes) quotidiens que vous avez indiqué n'existent pas. Les originaux seront utilisés."
@@ -186,7 +213,7 @@ msgid "TAB-CONTENT-HELP__LIST-12"
 msgstr "Maintenant, vous pouvez placer le formulaire / widget sur votre blog. Pour cela, allez dans Apparence> Widgets dans le panneau de votre wordpress et faites glisser le widget MDirector dans votre barre latérale. Vous pouvez configurer un titre, une description / explication à afficher au-dessus de votre formulaire et un lien et une case à cocher pour la politique de confidentialité ou les termes juridiques. C'est fait! vos utilisateurs peuvent commencer à s'abonner."
 
 msgid "TAB-CONTENT-HELP__LIST-13"
-msgstr "En plus du widget, vous pouvez utiliser un shortcode pour placer le formulaire d'inscription sur n'importe quelle page ou post de votre blog. Pour cela, ajoutez [mdirector_subscriptionbox] au contenu de vos pages ou publications."
+msgstr "En plus du widget, vous pouvez utiliser un shortcode pour placer le formulaire d'inscription sur n'importe quelle page ou post de votre blog. Pour cela, ajoutez [mdirectorSubscriptionBox] au contenu de vos pages ou publications."
 
 msgid "TAB-CONTENT-HELP__LIST-14"
 msgstr "Vous pouvez personnaliser l'apparence du modèle de newsletter envoyé aux utilisateurs en modifiant les fichiers dans le répertoire / templates / du répertoire plugin (Connaissance de HTML / CSS requise)."
@@ -386,6 +413,15 @@ msgstr "Vous pouvez configurer un modèle différent pour chacun d'entre eux, ce
 msgid "STEP-8__PLUGIN-AVAILABLE-TEXT-4"
 msgstr "Ce plugin est compatible avec WPML, vous pouvez donc configurer plusieurs de ses aspects pour chacune des langues que vous avez actives sur votre site web."
 
+msgid "STEP-8__PLUGIN-MIN-ENTRIES-TITLE"
+msgstr "Noticias necesarias para completar un envío:"
+
+msgid "STEP-8__PLUGIN-MIN-ENTRIES-DESCRIPTION"
+msgstr "Este plugin reúne por defecto las últimas entradas publicadas en tu blog para crear un envío. Sin embargo, puedes especificar un número mínimo para que en caso de que no haya suficientes entradas nuevas en el momento de enviar la newsletter, se cojan otras más antiguas hasta completar dicho número."
+
+msgid "STEP-8__PLUGIN-MIN-ENTRIES-LABEL"
+msgstr "Indica el número mínimo de entradas:"
+
 msgid "STEP-9__TITLE"
 msgstr "9. Redémarrez la date du dernier envoi quotidien et hebdomadaire."
 
@@ -487,3 +523,6 @@ msgstr "S'il vous plaît, veilleuz accepter la politique de privacité"
 
 msgid "WIDGET-SCRIPT-EMAIL-ALREADY-REGISTERED"
 msgstr "Le courrier entré était déjà abonné à la liste."
+
+msgid "WIDGET-SCRIPT-GENERAL-ERROR"
+msgstr "Nous avons eu un problème pour enregistrer votre contact. Veuillez réessayer plus tard."

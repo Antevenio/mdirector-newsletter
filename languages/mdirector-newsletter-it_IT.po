@@ -9,7 +9,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: it_IT\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 2.2\n"
 
 msgid "DEFAULT"
 msgstr "Default"
@@ -41,6 +41,27 @@ msgstr "Sabato"
 msgid "WEEKDAY__SUNDAY"
 msgstr "Domenica"
 
+msgid "WEEKDAY__MONDAY-SHORT"
+msgstr "L"
+
+msgid "WEEKDAY__TUESDAY-SHORT"
+msgstr "M"
+
+msgid "WEEKDAY__WEDNESDAY-SHORT"
+msgstr "X"
+
+msgid "WEEKDAY__THURSDAY-SHORT"
+msgstr "G"
+
+msgid "WEEKDAY__FRIDAY-SHORT"
+msgstr "V"
+
+msgid "WEEKDAY__SATURDAY-SHORT"
+msgstr "S"
+
+msgid "WEEKDAY__SUNDAY-SHORT"
+msgstr "D"
+
 msgid "SUBJECT-VALUES__FIRST-POST-TITLE"
 msgstr "Titolo del primo post"
 
@@ -67,6 +88,12 @@ msgstr "Effettua il login <a href=\"https://auth.mdirector.com\" target=\"_blank
 
 msgid "NEW-LISTS__NEW-ID"
 msgstr "con el ID:"
+
+msgid "MAIN-FORM__SAVE-SUCCESS"
+msgstr "Opzioni di configurazione salvate correttamente."
+
+msgid "DEBUG-FORM__SAVE-SUCCESS"
+msgstr "Opzioni di test salvate correttamente."
 
 msgid "DAILY-LISTS__ERROR-NOTICE"
 msgstr "La lista (o le liste) giornaliere che hai indicato non esistono. Si utilizzeranno quelle originali."
@@ -108,7 +135,7 @@ msgid "SENDING-TEST__DAILY-GENERAL-SENDING-ERROR-NO-ACTIVES"
 msgstr "No se ha realizado ningún envío de tipo diario porque no hay ninguna lista activa en el Paso 2."
 
 msgid "NO-ENTRIES-IN-BLOG"
-msgstr "Quizá no tienes nuevas entradas en el blog o la lista seleccionada no existe."
+msgstr "Non hai nuovi post di blog, l'elenco selezionato non esiste o il modello non è corretto."
 
 msgid "SENDING-TEST__DAILY-DEACTIVATED"
 msgstr "Non si è realizzato un invio giornaliero perché hai l'opzione <strong>Inviare messaggi giornalieri </strong> disattivata."
@@ -186,16 +213,16 @@ msgid "TAB-CONTENT-HELP__LIST-12"
 msgstr "Ora puoi inserire il modulo / widget sul tuo blog. Per fare ciò, vai a  Aspetto> Widget nel pannello di wordpress e trascina il widget MDirector nella barra laterale. È possibile configurare un titolo, una descrizione / spiegazione da visualizzare sopra il modulo e un link e la casella di controllo per l'informativa sulla privacy o i termini legali. È fatto! i tuoi utenti possono iniziare a iscriversi"
 
 msgid "TAB-CONTENT-HELP__LIST-13"
-msgstr "Oltre al widget, puoi utilizzare uno shortcode per posizionare il modulo di iscrizione su qualsiasi pagina o post del tuo blog. Per fare ciò aggiungi [mdirector_subscriptionbox] al contenuto di una qualsiasi delle tue pagine o post."
+msgstr "Oltre al widget, puoi utilizzare uno shortcode per posizionare il modulo di iscrizione su qualsiasi pagina o post del tuo blog. Per fare ciò aggiungi [mdirectorSubscriptionBox] al contenuto di una qualsiasi delle tue pagine o post."
 
 msgid "TAB-CONTENT-HELP__LIST-14"
-msgstr "È possibile personalizzare l'aspetto del modello della newsletter inviata agli utenti modificando i file nella/templates/cartella della directory plugin (necessaria la conoscenza HTML/CSS)."
+msgstr "La newsletter che s'invia all'utenti usa un modello HTML che puoi personalizare, modificando l'aspetto oppure la sua struttura. Per questo, solo devi copiare ed editare qualsiasi delle due temi per defetto che sono inclusi nel plugin ( entrambi sono nella cartella wp-content/plugins/mdirecotr-newsletter/templates ). Ogni nuovo modello, si aggiungerà alla lista selezionable del passo 8 della Configurazione. Per le modifiche, devi avere conoscenza di HTML/CSS basico."
 
 msgid "TAB-CONTENT-HELP__LIST-15"
-msgstr "Il plugin fa uso di wp cron per fare gli invii, il sistema di programmazione di Wordpress. Wp Cron funziona solo quando vengono prodotte visite di pagina, quindi la loro esecuzione all'ora programmata potrebbe non essere accurata."
+msgstr "Il plugin fa uso di wp cron per fare gli invii, il sistema di programmazione di Wordpress. Wp Cron funziona solo quando vengono prodotte visite di pagina, quindi la loro esecuzione all'ora programmata potrebbe non essere accurata. "
 
 msgid "MORE-INFO"
-msgstr "Per maggiori informazioni:"
+msgstr "Per maggiori informazioni."
 
 msgid "TAB-CONTENT-WELCOME__TITLE"
 msgstr "Wordpress + MDirector = Più visite verso il tuo blog."
@@ -386,6 +413,15 @@ msgstr "È possibile configurare un template diverso per ciascuno, migliorando c
 msgid "STEP-8__PLUGIN-AVAILABLE-TEXT-4"
 msgstr "Questo plugin è compatibile con il WPML, così sarete in grado di configurare molti dei suoi aspetti per ciascuna delle lingue che avete attive sul vostro sito Web."
 
+msgid "STEP-8__PLUGIN-MIN-ENTRIES-TITLE"
+msgstr "Noticias necesarias para completar un envío:"
+
+msgid "STEP-8__PLUGIN-MIN-ENTRIES-DESCRIPTION"
+msgstr "Este plugin reúne por defecto las últimas entradas publicadas en tu blog para crear un envío. Sin embargo, puedes especificar un número mínimo para que en caso de que no haya suficientes entradas nuevas en el momento de enviar la newsletter, se cojan otras más antiguas hasta completar dicho número."
+
+msgid "STEP-8__PLUGIN-MIN-ENTRIES-LABEL"
+msgstr "Indica el número mínimo de entradas:"
+
 msgid "STEP-9__TITLE"
 msgstr "9. riavviare l'ultima data di presentazione giornaliera e settimanale."
 
@@ -487,3 +523,6 @@ msgstr "Per favore, accettare la politica della privacy"
 
 msgid "WIDGET-SCRIPT-EMAIL-ALREADY-REGISTERED"
 msgstr "La mail inserita era già stata inserita."
+
+msgid "WIDGET-SCRIPT-GENERAL-ERROR"
+msgstr "Abbiamo avuto un problema nel registrare il tuo contatto. Si prega di riprovare più tardi."

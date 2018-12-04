@@ -1,5 +1,7 @@
 <?php
 
+namespace MDirectorNewsletter\includes;
+
 /**
  * Define the internationalization functionality.
  *
@@ -11,34 +13,39 @@
  * @subpackage Mdirector_Newsletter/includes
  * @author     MDirector
  */
-class Mdirector_Newsletter_i18n {
+class Mdirector_Newsletter_i18n
+{
 
-	/**
-	 * The domain specified for this plugin.
-	 *
-	 * @since    1.0.0
-	 * @access   private
-	 * @var      string    $domain    The domain identifier for this plugin.
-	 */
-	private $domain;
+    /**
+     * The domain specified for this plugin.
+     *
+     * @since    1.0.0
+     * @access   private
+     * @var      string $domain The domain identifier for this plugin.
+     */
+    private $domain;
 
-	/**
-	 * Load the plugin text domain for translation.
-	 *
-	 * @since    1.0.0
-	 */
-	public function load_plugin_textdomain() {
-		$mo_file = MDIRECTOR_NEWSLETTER_PLUGIN_DIR . '/languages/' . $this->domain . '-' . get_locale() . '.mo';
-        load_textdomain($this->domain, $mo_file);
-	}
+    /**
+     * Load the plugin text domain for translation.
+     *
+     * @since    1.0.0
+     */
+    public function loadPluginTextDomain()
+    {
+        $moFile = MDIRECTOR_NEWSLETTER_PLUGIN_DIR
+            . 'languages/' . $this->domain . '-' . get_locale() . '.mo';
+        load_textdomain($this->domain, $moFile);
+    }
 
-	/**
-	 * Set the domain equal to that of the specified domain.
-	 *
-	 * @since    1.0.0
-	 * @param    string    $domain    The domain that represents the locale of this plugin.
-	 */
-	public function set_domain( $domain ) {
-		$this->domain = $domain;
-	}
+    /**
+     * Set the domain equal to that of the specified domain.
+     *
+     * @since    1.0.0
+     *
+     * @param    string $domain The domain that represents the locale of this plugin.
+     */
+    public function setDomain($domain)
+    {
+        $this->domain = $domain;
+    }
 }

@@ -1,5 +1,9 @@
 <?php
 
+namespace MDirectorNewsletter\includes;
+
+require_once(plugin_dir_path(__FILE__) . '../vendor/autoload.php');
+
 /**
  * Fired during plugin activation.
  *
@@ -9,14 +13,21 @@
  * @subpackage Mdirector_Newsletter/includes
  * @author     MDirector
  */
-class Mdirector_Newsletter_Utils {
+class Mdirector_Newsletter_Utils
+{
     // Paths
     const MDIRECTOR_MAIN_URL = 'http://www.mdirector.com';
-    const MDIRECTOR_API_DELIVERY_ENDPOINT = self::MDIRECTOR_MAIN_URL . '/api_delivery';
-    const MDIRECTOR_API_CONTACT_ENDPOINT = self::MDIRECTOR_MAIN_URL . '/api_contact';
+    const MDIRECTOR_API_DELIVERY_ENDPOINT = self::MDIRECTOR_MAIN_URL
+    . '/api_delivery';
+    const MDIRECTOR_API_CONTACT_ENDPOINT = self::MDIRECTOR_MAIN_URL
+    . '/api_contact';
     const MDIRECTOR_API_LIST_ENDPOINT = self::MDIRECTOR_MAIN_URL . '/api_list';
-    const MDIRECTOR_API_CAMPAIGN_ENDPOINT = self::MDIRECTOR_MAIN_URL . '/api_campaign';
-    const TEMPLATES_PATH = MDIRECTOR_TEMPLATES_PATH . self::DEFAULT_TEMPLATE. '/';
+    const MDIRECTOR_API_CAMPAIGN_ENDPOINT = self::MDIRECTOR_MAIN_URL
+    . '/api_campaign';
+
+    const TEMPLATES_PATH = MDIRECTOR_TEMPLATES_PATH . self::DEFAULT_TEMPLATE
+    . '/';
+    const TEMPLATE_HTML_BASE_FILE = 'template.html';
 
     // Language / templates
     const MDIRECTOR_LANG_DOMAIN = 'mdirector-newsletter';
@@ -37,26 +48,58 @@ class Mdirector_Newsletter_Utils {
     const SETTINGS_OPTION_ON = 'yes';
     const SETTINGS_OPTION_OFF = 'no';
     const MIDNIGHT_HOUR = '00:00';
+    const EXCERPT_LENGTH_CHARS = 200;
 
+    // Prefixes
     const FORM_PREFIX = 'mdirector_widget-';
+    const DAILY_WEEKS_ALLOWED_PREFIX = 'mdirector_daily_weekday_';
     const FORM_CLASS = 'md__newsletter--form';
     const FORM_NAME = self::FORM_PREFIX . 'form';
 
-    public function __construct() {}
+    /**
+     * @var Mdirector_Newsletter_Twig
+     */
+    protected $twigInstance;
 
-    public function is_wpml() {
+    /**
+     * @var \Twig_Environment
+     */
+    protected $twigUserTemplate;
+
+    /**
+     * @var \Twig_TemplateWrapper
+     */
+    protected $adminTemplate;
+
+    /**
+     * Mdirector_Newsletter_Utils constructor.
+     *
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
+     */
+    public function __construct()
+    {
+        $this->twigInstance = new Mdirector_Newsletter_Twig();
+        $this->adminTemplate = $this->twigInstance->initAdminTemplate();
+    }
+
+    public function isWPML()
+    {
         return function_exists('icl_object_id');
     }
 
-    public function get_current_languages() {
-        if ($this->is_wpml()) {
-            return apply_filters('wpml_active_languages', null, 'orderby=id&order=desc');
+    public function getCurrentLanguages()
+    {
+        if ($this->isWPML()) {
+            return apply_filters('wpml_active_languages', null,
+                'orderby=id&order=desc');
         }
 
-        $default_name = explode('_', get_locale())[0];
+        $defaultName = explode('_', get_locale())[0];
         $languages = [
-            $default_name => [
-                'code' => $default_name,
+            $defaultName => [
+                'code' => $defaultName,
                 'translated_name' => __('DEFAULT-LANGUAGE',
                     Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN)
             ]
@@ -65,28 +108,36 @@ class Mdirector_Newsletter_Utils {
         return $languages;
     }
 
-    public function get_current_lang() {
-        if ($this->is_wpml()) {
+    public function getCurrentLang()
+    {
+        if ($this->isWPML()) {
             return ICL_LANGUAGE_CODE;
         }
 
         return self::MDIRECTOR_DEFAULT_USER_LANG;
     }
 
-    public function get_register_for_html($args = [], $instance = null) {
+    /**
+     * @param array $args
+     * @param null  $instance
+     *
+     * @return bool|string
+     * @throws \Throwable
+     */
+    public function getRegisterFormHTML($args = [], $instance = null)
+    {
         extract($args, EXTR_SKIP);
-        $options = $this->get_plugin_options();
+        $options = $this->getPluginOptions();
 
-        $mdirector_active = get_option('mdirector_active');
-        $select_frequency = null;
+        $mdirectorActive = get_option('mdirector_active');
         $output = '';
 
-        if (!isset($before_title)) {
-            $before_title = null;
+        if (!isset($beforeTitle)) {
+            $beforeTitle = null;
         }
 
-        if (!isset($after_title)) {
-            $after_title = null;
+        if (!isset($afterTitle)) {
+            $afterTitle = null;
         }
 
         if (empty($options['mdirector_frequency_daily'])
@@ -98,7 +149,7 @@ class Mdirector_Newsletter_Utils {
             ? ' ' : apply_filters('widget_title', $instance['title']);
 
         if (!empty($title)) {
-            $output .= $before_title . $title . $after_title;
+            $output .= $beforeTitle . $title . $afterTitle;
         }
 
         if (!empty($description)) {
@@ -106,105 +157,109 @@ class Mdirector_Newsletter_Utils {
                 . $instance['description'] . '</p>';
         }
 
-        if ($mdirector_active === self::SETTINGS_OPTION_ON) {
-            if ($options['mdirector_frequency_daily'] === self::SETTINGS_OPTION_ON
-                && $options['mdirector_frequency_weekly'] === self::SETTINGS_OPTION_ON) {
-                $select_frequency = '
-                            <div class="md__newsletter--area__select">
-                                <select class="md__newsletter--select" 
-                                    name="' . self::FORM_PREFIX . 'frequency">
-                                    <option value="daily">' .
-                                        __('WIDGET-FREQUENCY__DAILY',
-                                            Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN) . '
-                                    </option>
-                                    <option value="weekly">' .
-                                        __('WIDGET-FREQUENCY__WEEKLY',
-                                            Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN) . '
-                                    </option>
-                                </select>
-                            </div>';
-            } else if ($options['mdirector_frequency_daily'] === self::SETTINGS_OPTION_ON) {
-                $select_frequency = '<input class="md__newsletter--select" 
-                    value="daily" name="' . self::FORM_PREFIX . 'frequency" type="hidden">';
-            } else if ($options['mdirector_frequency_weekly'] === self::SETTINGS_OPTION_ON) {
-                $select_frequency = '<input class="md__newsletter--select" 
-                    value="weekly" name="' . self::FORM_PREFIX . 'frequency" type="hidden">';
-            }
-
+        if ($mdirectorActive === self::SETTINGS_OPTION_ON) {
             if ($options['mdirector_api'] && $options['mdirector_secret']) {
-                $output .= '
-		    	    <form class="' . self::FORM_CLASS . '" name="'. self::FORM_NAME . '" method="post">
-		    			<div class="md__newsletter--area__input">
-		    				<input 
-		    				    type="email" 
-		    				    class="md_newsletter--email_input" 
-		    				    placeholder="' . __('WIDGET-EMAIL',
-                                    Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN) . '" 
-		    				    value="" 
-		    				    name="' . self::FORM_PREFIX . 'email">
-		    			</div>' . $select_frequency . '
-                        <div class="md__newsletter--area__suscribe">';
-                $accept = ($options['mdirector_privacy_text'] != '')
-                    ? $options['mdirector_privacy_text']
+                $selectFrequency = $this->getSelectFrequency();
+                $currentLang = $this->getCurrentLang();
+                $currentPrivacyText = 'mdirector_policy_text_' . $currentLang;
+                $currentPrivacyUrl = 'mdirector_policy_url_' . $currentLang;
+
+                $accept = (isset($options[$currentPrivacyText])
+                    && $options[$currentPrivacyText] != '')
+                    ? $options[$currentPrivacyText]
                     : __('WIDGET-PRIVACY__POLICY__ACCEPTED',
                         Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN);
 
-                $md_privacy_link = ($options['mdirector_privacy_url'] != '')
-                    ? $options['mdirector_privacy_url'] : '#';
+                $mdPrivacyLink = (isset($options[$currentPrivacyUrl])
+                    && $options[$currentPrivacyUrl] != '')
+                    ? $options[$currentPrivacyUrl] : '#';
 
-                $output .= '
-                            <p class="md__newsletter--area__accept">
-                                <input 
-                                    class="md_newsletter--checkbox" 
-                                    type="checkbox" 
-                                    name="' . self::FORM_PREFIX . 'accept" 
-                                    autocomplete="off"/>
-                                <label for="mdirector_widget_accept"> 
-                                    <a 
-                                        href="' . $md_privacy_link . '" 
-                                        target="_blank" 
-                                        class="md__newsletter--accept">' . $accept . '</a>
-                                </label>
-                            </p>
-                            
-                            <div class="md__newsletter--area__button">
-                                <button class="md_newsletter--button" type="submit">' .
-                                    __('WIDGET-SUBSCRIPTION', Mdirector_Newsletter_Utils::MDIRECTOR_LANG_DOMAIN) . '
-                                    <img class="md_ajax_loader" 
-                                        src="' . MDIRECTOR_NEWSLETTER_PLUGIN_URL . 'assets/ajax-loader.png' . '"/>
-                                </button>
-                            </div>
-                        </div>
-                                   
-		    	    </form>';
+                $spinnerPath =
+                    MDIRECTOR_NEWSLETTER_PLUGIN_URL . 'assets/ajax-loader.png';
+
+                $templateData = [
+                    'formClass' => self::FORM_CLASS,
+                    'formName' => self::FORM_NAME,
+                    'formPrefix' => self::FORM_PREFIX,
+                    'selectFrequency' => $selectFrequency,
+                    'isSpinner' => file_exists($spinnerPath),
+                    'spinnerPath' => $spinnerPath,
+                    'privacyLink' => $mdPrivacyLink,
+                    'privacyLinkText' => $accept
+                ];
+                $output .= $this->adminTemplate->renderBlock('subscriptionForm',
+                    $templateData);
             }
         }
 
         return $output;
     }
 
-    public function get_user_templates() {
-        return $available_templates = array_map('basename',
+    /**
+     * @return string|null
+     * @throws \Throwable
+     */
+    private function getSelectFrequency()
+    {
+        $options = $this->getPluginOptions();
+        $selectFrequency = null;
+
+        $templateData = [
+            'fieldName' => self::FORM_PREFIX
+        ];
+
+        if ($options['mdirector_frequency_daily'] === self::SETTINGS_OPTION_ON
+            && $options['mdirector_frequency_weekly']
+            === self::SETTINGS_OPTION_ON) {
+            $selectFrequency =
+                $this->adminTemplate->renderBlock('selectFrequencyLayer',
+                    $templateData);
+        } else if ($options['mdirector_frequency_daily']
+            === self::SETTINGS_OPTION_ON) {
+            $templateData['value'] = self::DAILY_FREQUENCY;
+            $selectFrequency =
+                $this->adminTemplate->renderBlock('singleFrequencyLayer',
+                    $templateData);
+        } else if ($options['mdirector_frequency_weekly']
+            === self::SETTINGS_OPTION_ON) {
+            $templateData['value'] = self::WEEKLY_FREQUENCY;
+            $selectFrequency =
+                $this->adminTemplate->renderBlock('singleFrequencyLayer',
+                    $templateData);
+        }
+
+        return $selectFrequency;
+    }
+
+    public function getUserTemplates()
+    {
+        return array_map('basename',
             glob(MDIRECTOR_TEMPLATES_PATH . '*', GLOB_ONLYDIR));
     }
 
-    public function get_current_template($available_templates, $lang = null) {
-        $options = $this->get_plugin_options();
-        $template = 'mdirector_template_' . (!empty($lang) ? $lang : 'general');
+    public function getCurrentTemplate($available_templates, $lang = null)
+    {
+        $options = $this->getPluginOptions();
+        $template = 'mdirector_template_';
 
-        $current_template_selected = !empty($options[$template])
-            ? $options[$template]
-            : Mdirector_Newsletter_Utils::DEFAULT_TEMPLATE;
-
-        if (!in_array($current_template_selected, $available_templates) ) {
-            $current_template_selected = Mdirector_Newsletter_Utils::DEFAULT_TEMPLATE;
+        if (isset($options[$template . $lang])) {
+            $currentTemplateSelected = $options[$template . $lang];
+        } else if (isset($options[$template . 'general'])) {
+            $currentTemplateSelected = $options[$template . 'general'];
+        } else {
+            return Mdirector_Newsletter_Utils::DEFAULT_TEMPLATE;
         }
 
-        return $current_template_selected;
+        if (!in_array($currentTemplateSelected, $available_templates)) {
+            return Mdirector_Newsletter_Utils::DEFAULT_TEMPLATE;
+        }
+
+        return $currentTemplateSelected;
     }
 
-    public function clean_newsletter_process($frequency, $lang) {
-        $options = $this->get_plugin_options();
+    public function cleanNewsletterProcess($frequency, $lang)
+    {
+        $options = $this->getPluginOptions();
         $process = ($frequency === self::DAILY_FREQUENCY)
             ? 'mdirector_daily_sent_' . $lang
             : 'mdirector_weekly_sent_' . $lang;
@@ -217,10 +272,11 @@ class Mdirector_Newsletter_Utils {
         wp_reset_query();
     }
 
-    public function reset_deliveries_sent() {
-        $options = $this->get_plugin_options();
+    public function resetDeliveriesSent()
+    {
+        $options = $this->getPluginOptions();
 
-        foreach ($this->get_current_languages() as $language) {
+        foreach ($this->getCurrentLanguages() as $language) {
             $lang = $language['code'];
             $options['mdirector_daily_sent_' . $lang] = null;
             $options['mdirector_weekly_sent_' . $lang] = null;
@@ -229,48 +285,49 @@ class Mdirector_Newsletter_Utils {
         update_option('mdirector_settings', $options);
     }
 
-    private function get_plugin_options() {
+    private function getPluginOptions()
+    {
         return get_option('mdirector_settings')
             ? get_option('mdirector_settings') : [];
     }
 
-    private function text_truncate($string) {
+    private function textTruncate($string)
+    {
         $string = wp_strip_all_tags($string);
-        $string = preg_replace( '|\[(.+?)\](.+?\[/\\1\])?|s', '', $string);
+        $string = preg_replace('|\[(.+?)\](.+?\[/\\1\])?|s', '', $string);
 
-        if ( preg_match('/<!--more(.*?)?-->/', $string, $matches) ) {
+        if (preg_match('/<!--more(.*?)?-->/', $string, $matches)) {
             list($main) = explode($matches[0], $string, 2);
 
             return $main;
         } else {
             $string = htmlspecialchars($string);
 
-            $parts = preg_split('/([\s\n\r]+)/', $string, null, PREG_SPLIT_DELIM_CAPTURE);
-            $parts_count = count($parts);
 
-            $length = 0;
-            $last_part = 0;
-
-            for (; $last_part < $parts_count; ++$last_part) {
-                $length += strlen($parts[$last_part]);
-                if ($length > 200) { break; }
+            if (strlen($string) > self::EXCERPT_LENGTH_CHARS) {
+                $string =
+                    preg_replace('/\s+?(\S+)?$/', '...',
+                        substr($string, 0, self::EXCERPT_LENGTH_CHARS));
             }
 
-            return implode(array_slice($parts, 0, $last_part));
+            return $string;
         }
     }
 
-    private function get_main_image_size() {
+    private function getMainImageSize()
+    {
         return (self::TEMPLATES_PATH === 'templates-mdirector/')
             ? self::MAX_IMAGE_SIZE_MDIRECTOR_TEMPLATE
             : self::MAX_IMAGE_SIZE_DEFAULT_TEMPLATE;
     }
 
-    private function get_main_image($post_id, $size) {
-        if ($post_id) {
-            if (has_post_thumbnail($post_id)) {
-                $post_thumbnail_id = get_post_thumbnail_id($post_id);
-                $thumbnail = wp_get_attachment_image_src($post_thumbnail_id, $size);
+    private function getMainImage($postId, $size)
+    {
+        if ($postId) {
+            if (has_post_thumbnail($postId)) {
+                $postThumbnailId = get_post_thumbnail_id($postId);
+                $thumbnail =
+                    wp_get_attachment_image_src($postThumbnailId, $size);
 
                 return $thumbnail[0];
             }
@@ -284,102 +341,178 @@ class Mdirector_Newsletter_Utils {
      * @param        $frequency
      * @param string $lang
      *
-     * @throws MDOAuthException2
+     * @return bool
+     * @throws \MDOAuthException2
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
      */
-    private function md_send_mail($posts, $frequency, $lang = self::MDIRECTOR_DEFAULT_USER_LANG) {
-        add_filter( 'wp_mail_content_type', [$this, 'set_html_content_type'] );
+    private function mdSendMail(
+        $posts,
+        $frequency,
+        $lang = self::MDIRECTOR_DEFAULT_USER_LANG
+    ) {
+        add_filter('wp_mail_content_type', [$this, 'setHTMLContentType']);
 
         if (!empty($posts)) {
-            $templates_available = $this->get_user_templates();
-            $template_path = MDIRECTOR_TEMPLATES_PATH . $this->get_current_template($templates_available, $lang);
-            $html_content = file_get_contents($template_path . DIRECTORY_SEPARATOR . 'template.html');
+            $mailSubject =
+                $this->composeEmailSubject($posts, $frequency, $lang);
 
-            // Time to replace mail content
-            $mail_content = str_replace('{{header_title}}', get_bloginfo('name'), $html_content);
-            $mail_content = str_replace('{{site_link}}', get_bloginfo('url'), $mail_content);
+            $templatePath = $this->getTemplatePath($lang);
+            $templateURL = MDIRECTOR_NEWSLETTER_PLUGIN_URL . 'templates/' . $this->getTemplateName($lang) . DIRECTORY_SEPARATOR;
 
-            if (count($posts) > 1) {
-                $list_content = '';
-                for ($i = 0; $i < count($posts); $i++) {
-                    $row_content = file_get_contents($template_path . DIRECTORY_SEPARATOR .'list.html');
-                    $row_content = str_replace('{{titleURL}}', $posts[$i]['link'], $row_content);
-                    $row_content = str_replace('{{title}}', $posts[$i]['title'], $row_content);
-                    $row_content = str_replace('{{content}}', $posts[$i]['excerpt'], $row_content);
-                    $row_content = str_replace('{{post-link}}', $posts[$i]['link'], $row_content);
-                    
-                    $mail_content = str_replace('{{main_image}}', '', $mail_content);
-                    $post_image = $this->get_main_image($posts[$i]['ID'], 'thumb');
-                    $post_image_size = $this->get_main_image_size();
+            $templateMainFile = $this->getTemplateMainFile($templatePath);
 
-                    $row_content = ($post_image)
-                        ? str_replace('{{post_image}}', '
-                            <img alt="Featured Image" 
-                                class="headerImage" 
-                                id="edit-image-trigger" 
-                                src="' . $post_image . '" 
-                                width="' . $post_image_size . '" />', $row_content)
-                        : $row_content = str_replace('{{post_image}}', '', $row_content);
+            $templateData = [
+                'templateURL' => $templateURL,
+                'templatePath' => $templatePath,
+                'header_title' => get_bloginfo('name'),
+                'site_link' => get_bloginfo('url'),
+                'posts' => $posts
+            ];
 
-                    $list_content .= $row_content;
-                }
+            $this->twigUserTemplate =
+                $this->twigInstance->initUserTemplate($templateData);
+            $this->twigUserTemplate->loadTemplate($templateMainFile);
 
-                $mail_content = str_replace('{{list}}', $list_content, $mail_content);
-            } else {
-                // Single post
-                $row_content = file_get_contents($template_path . DIRECTORY_SEPARATOR . 'single.html');
-                $row_content = str_replace('{{titleURL}}', $posts[$i]['link'], $row_content);
-                $row_content = str_replace('{{title}}', $posts[$i]['title'], $row_content);
-                $row_content = str_replace('{{content}}', $posts[0]['excerpt'], $row_content);
-                $row_content = str_replace('{{post-link}}', $posts[0]['link'], $row_content);
+            $mailContent = ($this->templateMainFileIsTwig($templateMainFile))
+                ? $this->twigUserTemplate->render(Mdirector_Newsletter_Twig::USER_TEMPLATE,
+                    $templateData)
+                : $this->parsingTemplate($templateData);
 
-                $post_image = $this->get_main_image($posts[0]['ID'], 'full');
-                $post_image_size = $this->get_main_image_size();
-
-                $mail_content = $post_image
-                    ? str_replace('{{main_image}}', '
-                        <img alt="Featured Image" 
-                        class="headerImage" 
-                        id="edit-image-trigger" 
-                        src="'.$post_image.'" 
-                        width="'.$post_image_size.'" />', $mail_content)
-                    : str_replace('{{main_image}}', '', $mail_content);
-
-                $mail_content = str_replace('{{list}}', $row_content, $mail_content);
-            }
-
-            $mail_subject = $this->compose_email_subject($posts, $frequency, $lang);
-
-            $this->send_mail_API($mail_content, $mail_subject, $frequency, $lang);
+            return $this->sendMailAPI($mailContent, $mailSubject, $frequency,
+                $lang);
         }
+
+        return false;
     }
 
-    private function get_dynamic_post_title($posts, $criteria) {
+    private function getTemplateMainFile($templatePath)
+    {
+        $templateHTML = $templatePath . self::TEMPLATE_HTML_BASE_FILE;
+        $templateTwig = $templatePath . Mdirector_Newsletter_Twig::USER_TEMPLATE;
+
+        if (file_exists($templateHTML)) {
+            return self::TEMPLATE_HTML_BASE_FILE;
+        } elseif (file_exists($templateTwig)) {
+            return Mdirector_Newsletter_Twig::USER_TEMPLATE;
+        }
+
+        return false;
+    }
+
+    private function templateMainFileIsTwig($templateMainFile)
+    {
+        $fileParts = pathinfo($templateMainFile);
+
+        return $fileParts['extension'] === 'twig';
+    }
+
+    public function getTemplatePath($lang)
+    {
+        $templateName = $this->getTemplateName($lang);
+
+        return MDIRECTOR_TEMPLATES_PATH . $templateName . DIRECTORY_SEPARATOR;
+    }
+
+    public function getTemplateName($lang)
+    {
+        $templatesAvailable = $this->getUserTemplates();
+
+        return $this->getCurrentTemplate($templatesAvailable, $lang);
+    }
+
+    /**
+     * @param $template_data
+     *
+     * @return string
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
+     */
+    private function parsingTemplate($template_data)
+    {
+        $template_data['list'] = implode('',
+            array_map([$this, 'buildListFromPosts'], $template_data['posts']));
+
+        return $this->twigUserTemplate->render(self::TEMPLATE_HTML_BASE_FILE,
+            $template_data);
+    }
+
+    /**
+     * @param $post
+     *
+     * @return string
+     * @throws \Throwable
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
+     */
+    private function buildListFromPosts($post)
+    {
+        $postData = [
+            'post_image' => $this->getImageTagFromPost($post),
+            'titleURL' => $post['link'],
+            'title' => $post['title'],
+            'content' => $post['excerpt']
+        ];
+
+        return $this->twigUserTemplate->render('list.html', $postData);
+    }
+
+    /**
+     * @param $post
+     *
+     * @return string
+     * @throws \Throwable
+     */
+    private function getImageTagFromPost($post)
+    {
+        if (!$post['post_image']) {
+            return '';
+        }
+
+        $templateData = [
+            'post' => $post
+        ];
+
+        return $this->adminTemplate->renderBlock('imageTagFromPost',
+            $templateData);
+    }
+
+    private function getDynamicPostTitle($posts, $criteria)
+    {
         $titles = array_column($posts, 'title');
-        $titles_sorted = ($criteria === self::DYNAMIC_CRITERIA_FIRST_POST)
+        $titlesSorted = ($criteria === self::DYNAMIC_CRITERIA_FIRST_POST)
             ? array_reverse($titles)
             : $titles;
 
-        return reset($titles_sorted);
+        return reset($titlesSorted);
     }
 
-    private function compose_email_subject($posts, $frequency, $lang) {
-        $options = $this->get_plugin_options();
+    private function composeEmailSubject($posts, $frequency, $lang)
+    {
+        $options = $this->getPluginOptions();
 
-        if ($frequency === self::DAILY_FREQUENCY ) {
-            $subject = ($options['mdirector_subject_type_daily'] === self::DYNAMIC_SUBJECT)
-                ? $options['mdirector_subject_dynamic_prefix_daily_' . $lang] . ' ' .
-                    $this->get_dynamic_post_title($posts,
-                        $options['mdirector_subject_dynamic_value_daily'])
+        if ($frequency === self::DAILY_FREQUENCY) {
+            $subject = ($options['mdirector_subject_type_daily']
+                === self::DYNAMIC_SUBJECT)
+                ? $options['mdirector_subject_dynamic_prefix_daily_' . $lang]
+                . ' ' .
+                $this->getDynamicPostTitle($posts,
+                    $options['mdirector_subject_dynamic_value_daily'])
                 : $options['mdirector_subject_daily_' . $lang];
 
             $subject = !empty(trim($subject))
                 ? $subject
                 : self::DEFAULT_DAILY_MAIL_SUBJECT;
         } else {
-            $subject = ($options['mdirector_subject_type_weekly'] === self::DYNAMIC_SUBJECT)
-                ? $options['mdirector_subject_dynamic_prefix_weekly_' . $lang] . ' ' .
-                    $this->get_dynamic_post_title($posts,
-                        $options['mdirector_subject_dynamic_value_weekly'])
+            $subject = ($options['mdirector_subject_type_weekly']
+                === self::DYNAMIC_SUBJECT)
+                ? $options['mdirector_subject_dynamic_prefix_weekly_' . $lang]
+                . ' ' .
+                $this->getDynamicPostTitle($posts,
+                    $options['mdirector_subject_dynamic_value_weekly'])
                 : $options['mdirector_subject_weekly_' . $lang];
 
             $subject = !empty(trim($subject))
@@ -390,15 +523,17 @@ class Mdirector_Newsletter_Utils {
         return $subject;
     }
 
-    private function get_delivery_campaign_id ($frequency,
-        $lang = self::MDIRECTOR_DEFAULT_USER_LANG) {
-        $options = $this->get_plugin_options();
+    private function getDeliveryCampaignId(
+        $frequency,
+        $lang = self::MDIRECTOR_DEFAULT_USER_LANG
+    ) {
+        $options = $this->getPluginOptions();
 
-        if ($frequency === self::DAILY_FREQUENCY) {
-            return $options['mdirector_daily_campaign_' . $lang];
-        }
+        $campaignId = ($frequency === self::DAILY_FREQUENCY)
+            ? $options['mdirector_daily_campaign_' . $lang]
+            : $options['mdirector_weekly_campaign_' . $lang];
 
-        return $options['mdirector_weekly_campaign_' . $lang];
+        return $campaignId;
     }
 
     /**
@@ -407,63 +542,85 @@ class Mdirector_Newsletter_Utils {
      * @param null   $frequency
      * @param string $lang
      *
-     * @throws MDOAuthException2
+     * @return bool
+     * @throws \MDOAuthException2
      */
-    private function send_mail_API($mail_content, $mail_subject, $frequency = null,
-        $lang = self::MDIRECTOR_DEFAULT_USER_LANG) {
-        $options = $this->get_plugin_options();
-        $mdirector_active = get_option('mdirector_active');
+    private function sendMailAPI(
+        $mail_content,
+        $mail_subject,
+        $frequency = null,
+        $lang = self::MDIRECTOR_DEFAULT_USER_LANG
+    ) {
+        $options = $this->getPluginOptions();
+        $mdirectorActive = get_option('mdirector_active');
 
-        if ($mdirector_active == self::SETTINGS_OPTION_ON) {
-            $mdirector_Newsletter_Api = new Mdirector_Newsletter_Api();
+        if ($mdirectorActive == self::SETTINGS_OPTION_ON) {
+            $mdirectorNewsletterApi = new Mdirector_Newsletter_Api();
             $key = $options['mdirector_api'];
             $secret = $options['mdirector_secret'];
-            $list_id = $this->get_current_list_id($frequency, $lang);
-            $campaign_id = $this->get_delivery_campaign_id($frequency, $lang);
+            $listId = $this->getCurrentListId($frequency, $lang);
+            $campaignId = $this->getDeliveryCampaignId($frequency, $lang);
 
-            $mdirector_send_resp =
+            $APIData = [
+                'type' => 'email',
+                'name' => $frequency . '_' . date('Y_m_d'),
+                'fromName' => $options['mdirector_from_name']
+                    ? $options['mdirector_from_name']
+                    : 'from name',
+                'subject' => $mail_subject,
+                'campaign' => $campaignId,
+                'language' => $lang,
+                'creativity' => base64_encode($mail_content),
+                'segments' => json_encode(['LIST-' . $listId])
+            ];
+
+            $mdirectorSendResp =
                 json_decode(
-                    $mdirector_Newsletter_Api->callAPI(
+                    $mdirectorNewsletterApi->callAPI(
                         $key,
                         $secret,
-                        self::MDIRECTOR_API_DELIVERY_ENDPOINT,'POST',
-                        [
-                            'type' => 'email',
-                            'name' => $frequency . '_' . date('Y_m_d'),
-                            'fromName' => $options['mdirector_from_name']
-                                ? $options['mdirector_from_name']
-                                : 'from name',
-                            'subject' => $mail_subject,
-                            'campaign' => $campaign_id,
-                            'language' => $lang,
-                            'creativity' => base64_encode($mail_content),
-                            'segments' => json_encode(['LIST-' . $list_id])
-                        ]
+                        self::MDIRECTOR_API_DELIVERY_ENDPOINT, 'POST',
+                        $APIData
                     )
                 );
 
-            $env_id = isset($mdirector_send_resp->data)
-                ? $mdirector_send_resp->data->envId
+            if (isset($mdirectorSendResp->response) && $mdirectorSendResp->response === 'error') {
+                return false;
+            }
+
+            $envId = isset($mdirectorSendResp->data)
+                ? $mdirectorSendResp->data->envId
                 : null;
 
             // send the campaign
-            if ($env_id) {
-                $mdirector_Newsletter_Api->callAPI(
+            if ($envId) {
+                $campaignData = [
+                    'envId' => $envId,
+                    'date' => 'now'
+                ];
+
+                $mdirectorNewsletterApi->callAPI(
                     $key,
                     $secret,
                     self::MDIRECTOR_API_DELIVERY_ENDPOINT, 'PUT',
-                    ['envId' => $env_id, 'date' => 'now']
+                    $campaignData
                 );
             }
+
+            return true;
         }
+
+        return false;
     }
 
-    private function set_html_content_type() {
+    private function setHTMLContentType()
+    {
         return 'text/html';
     }
 
-    private function is_delivery_active($lang, $type) {
-        $options = $this->get_plugin_options();
+    private function isDeliveryActive($lang, $type)
+    {
+        $options = $this->getPluginOptions();
         $delivery = 'mdirector_' . $type . '_custom_list_' . $lang . '_active';
 
         return isset($options[$delivery])
@@ -471,99 +628,141 @@ class Mdirector_Newsletter_Utils {
             : false;
     }
 
-    private function get_exclude_cats() {
-        $options = $this->get_plugin_options();
+    private function getExcludeCats()
+    {
+        $options = $this->getPluginOptions();
 
-        $exclude_cats = ($options['mdirector_exclude_cats'])
+        $excludeCats = ($options['mdirector_exclude_cats'])
             ? unserialize($options['mdirector_exclude_cats'])
             : [];
 
-        if (count($exclude_cats) > 0) {
-            for ($i = 0; $i < count($exclude_cats); $i++) {
-                $exclude_cats[$i] = -1 * abs($exclude_cats[$i]);
+        if (count($excludeCats) > 0) {
+            for ($i = 0; $i < count($excludeCats); $i++) {
+                $excludeCats[$i] = -1 * abs($excludeCats[$i]);
             }
         }
 
-        return $exclude_cats;
+        return $excludeCats;
     }
 
-    private function build_posts($query) {
-        $total_posts = count($query->posts);
-        $posts = [];
+    private function buildPosts($foundPosts, $lang)
+    {
+        $options = $this->getPluginOptions();
+        $totalFoundPosts = count($foundPosts);
+        $minimumEntries = $options['mdirector_minimum_entries'];
 
-        if (!empty($total_posts)) {
-            for ($i = 0; $i < $total_posts; $i++) {
-                $selected_post = $query->posts[$i];
-                $posts[] = [
-                    'ID' => $selected_post->ID,
-                    'title' => $selected_post->post_title,
-                    'content' => $selected_post->post_content,
-                    'link' => get_permalink($selected_post->ID),
-                    'excerpt' => $this->text_truncate($selected_post->post_content),
-                    'date' => $selected_post->post_date
-                ];
-            }
+        if (
+            is_numeric($minimumEntries) && $totalFoundPosts < $minimumEntries
+        ) {
+            $complementaryPosts =
+                $this->getMinimumPostsForNewsletter($totalFoundPosts,
+                    $minimumEntries, $lang);
+            $foundPosts = array_merge($foundPosts, $complementaryPosts);
         }
 
-        return $posts;
+        return array_map([$this, 'parsePost'], $foundPosts);
+    }
+
+    private function getMinimumPostsForNewsletter(
+        $total_found_posts,
+        $minimum_entries,
+        $lang
+    ) {
+        $remainingItems = $minimum_entries - $total_found_posts;
+
+        $args = [
+            'post_type' => 'post',
+            'post_status' => 'publish',
+            'nopaging ' => true,
+            'offset' => $total_found_posts,
+            'posts_per_page' => $remainingItems
+        ];
+
+        if (!empty($excludeCats = $this->getExcludeCats())) {
+            $args['cat'] = implode(', ', $excludeCats);
+        }
+
+        return $this->getPosts($args, $lang);
+    }
+
+    private function parsePost($post)
+    {
+        return [
+            'ID' => $post->ID,
+            'title' => $post->post_title,
+            'content' => $post->post_content,
+            'link' => get_permalink($post->ID),
+            'excerpt' => $this->textTruncate($post->post_content),
+            'date' => $post->post_date,
+            'post_image' => $this->getMainImage($post->ID, 'thumb'),
+            'post_image_size' => $this->getMainImageSize()
+        ];
+    }
+
+    private function getPosts($args, $lang)
+    {
+        do_action('wpml_switch_language', $lang);
+        $query = new \WP_Query($args);
+        do_action('wpml_switch_language', $this->getCurrentLang());
+
+        return $query->posts;
     }
 
     /**
      * @param $lang
      *
      * @return bool
-     * @throws MDOAuthException2
+     * @throws \MDOAuthException2
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
      */
-    private function md_send_daily_mails($lang) {
-        $options = $this->get_plugin_options();
+    private function mdSendDailyMails($lang)
+    {
+        $options = $this->getPluginOptions();
 
         $hour = ($options['mdirector_hour_daily'])
             ? $options['mdirector_hour_daily']
             : self::MIDNIGHT_HOUR;
-        $time_exploded = explode(':', $hour);
-        $actual_time = strtotime(date('Y-m-d H:i:s'));
-        $mail_sent = date( 'Y-m-d', strtotime(
+        $timeExploded = explode(':', $hour);
+        $actualTime = strtotime(date('Y-m-d H:i:s'));
+        $mailSent = date('Y-m-d', strtotime(
             isset($options['mdirector_daily_sent_' . $lang])
                 ? $options['mdirector_daily_sent_' . $lang]
                 : null
         ));
-        $can_send = $mail_sent != date('Y-m-d') ? 1 : 0;
 
-        $from_date = date('Y-m-d H:i:s',
-            mktime($time_exploded[0],$time_exploded[1], 00,
-                date('m'), date('d') - 1, date('Y')));
-        $to_date = date('Y-m-d H:i:s',
-            mktime($time_exploded[0], $time_exploded[1], 00,
-                date('m'), date('d'), date('Y')));
+        $canSend = $this->checkIfDeliveryCanBeSent($mailSent);
 
-        if (isset($_POST['cpt_submit_test_now']) ||
-            ($actual_time >= strtotime($to_date) && $can_send == 1)) {
+        $fromDate =
+            $this->calculateFromDate($timeExploded, self::DAILY_FREQUENCY);
+        $toDate = $this->calculateToDate($timeExploded);
+
+        if (isset($_POST['cpt_submit_test_now'])
+            || ($actualTime >= strtotime($toDate) && $canSend)) {
 
             $args = [
-                'post_type'     => 'post',
-                'post_status'   => 'publish',
-                'date_query'    => [
-                    'after'     => $from_date,
-                    'before'    => $to_date
+                'post_type' => 'post',
+                'post_status' => 'publish',
+                'date_query' => [
+                    'after' => $fromDate,
+                    'before' => $toDate
                 ],
-                'nopaging '     => true
+                'nopaging ' => true
             ];
 
-            if (!empty($exclude_cats = $this->get_exclude_cats())) {
-                $args['cat'] = implode(', ', $exclude_cats);
+            if (!empty($excludeCats = $this->getExcludeCats())) {
+                $args['cat'] = implode(', ', $excludeCats);
             }
 
-            do_action( 'wpml_switch_language', $lang );
-            $query = new WP_Query($args);
-            do_action( 'wpml_switch_language', $this->get_current_lang() );
-
-            $posts = $this->build_posts($query);
+            $posts = $this->buildPosts($this->getPosts($args, $lang), $lang);
 
             if (!empty($posts)) {
-                $this->md_send_mail($posts, self::DAILY_FREQUENCY, $lang);
-                $this->clean_newsletter_process(self::DAILY_FREQUENCY, $lang);
+                if ($this->mdSendMail($posts, self::DAILY_FREQUENCY, $lang)) {
+                    $this->cleanNewsletterProcess(self::DAILY_FREQUENCY, $lang);
 
-                return true;
+                    return true;
+                };
             }
 
             trigger_error('There are no new posts for daily mails and lang ' .
@@ -573,14 +772,32 @@ class Mdirector_Newsletter_Utils {
         return false;
     }
 
+    private function checkIfDeliveryCanBeSent($mailSent)
+    {
+        $options = $this->getPluginOptions();
+        $currentDayOption =
+            self::DAILY_WEEKS_ALLOWED_PREFIX . strtolower(date('D'));
+
+        if (isset($options[$currentDayOption])
+            && $options[$currentDayOption] !== self::SETTINGS_OPTION_ON) {
+            return false;
+        }
+
+        return $mailSent !== date('Y-m-d');
+    }
+
     /**
      * @param $lang
      *
      * @return bool
-     * @throws MDOAuthException2
+     * @throws \MDOAuthException2
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
      */
-    private function md_send_weekly_mails($lang) {
-        $options = $this->get_plugin_options();
+    private function mdSendWeeklyMails($lang)
+    {
+        $options = $this->getPluginOptions();
 
         $day = $options['mdirector_frequency_day']
             ? $options['mdirector_frequency_day']
@@ -588,50 +805,46 @@ class Mdirector_Newsletter_Utils {
         $hour = $options['mdirector_hour_weekly']
             ? $options['mdirector_hour_weekly']
             : self::MIDNIGHT_HOUR;
-        $time_exploded = explode(':', $hour);
-        $actual_time = time();
-        $mail_sent = date( 'Y-m-d', strtotime(
+        $timeExploded = explode(':', $hour);
+        $actualTime = time();
+        $mailSent = date('Y-m-d', strtotime(
             isset($options['mdirector_weekly_sent_' . $lang])
                 ? $options['mdirector_weekly_sent_' . $lang]
                 : null
         ));
-        $can_send = ($mail_sent !== date('Y-m-d')) ? 1 : 0;
+        $canSend = ($mailSent !== date('Y-m-d')) ? 1 : 0;
 
-        $from_date = date('Y-m-d H:i:s',
-            mktime($time_exploded[0],$time_exploded[1], 00,
-                date('m'), date('d') - 7, date('Y')));
-        $to_date = date('Y-m-d H:i:s',
-            mktime($time_exploded[0], $time_exploded[1], 00,
-                date('m'), date('d'), date('Y')));
+        $fromDate =
+            $this->calculateFromDate($timeExploded, self::WEEKLY_FREQUENCY);
+        $toDate = $this->calculateToDate($timeExploded);
 
-        if (isset($_POST['cpt_submit_test_now']) ||
-            (date('N') === $day && ($actual_time >= strtotime($to_date)) && ($can_send === 1))) {
+        if (isset($_POST['cpt_submit_test_now'])
+            || (date('N') === $day && ($actualTime >= strtotime($toDate))
+                && ($canSend === 1))) {
 
             $args = [
-                'post_type'     => 'post',
-                'post_status'   => 'publish',
-                'date_query'    => [
-                    'after'     => $from_date,
-                    'before'    => $to_date
+                'post_type' => 'post',
+                'post_status' => 'publish',
+                'date_query' => [
+                    'after' => $fromDate,
+                    'before' => $toDate
                 ],
-                'nopaging '     => true
+                'nopaging ' => true
             ];
 
-            if (!empty($exclude_cats = $this->get_exclude_cats())) {
-                $args['cat'] = implode(', ', $exclude_cats);
+            if (!empty($excludeCats = $this->getExcludeCats())) {
+                $args['cat'] = implode(', ', $excludeCats);
             }
 
-            do_action( 'wpml_switch_language', $lang );
-            $query = new WP_Query($args);
-            do_action( 'wpml_switch_language', $this->get_current_lang() );
-
-            $posts = $this->build_posts($query);
+            $posts = $this->buildPosts($this->getPosts($args, $lang), $lang);
 
             if (!empty($posts)) {
-                $this->md_send_mail($posts, self::WEEKLY_FREQUENCY, $lang);
-                $this->clean_newsletter_process(self::WEEKLY_FREQUENCY, $lang);
+                if ($this->mdSendMail($posts, self::WEEKLY_FREQUENCY, $lang)) {
+                    $this->cleanNewsletterProcess(self::WEEKLY_FREQUENCY,
+                        $lang);
 
-                return true;
+                    return true;
+                }
             }
 
             trigger_error('There are no new posts for weekly mails and lang ' .
@@ -641,18 +854,39 @@ class Mdirector_Newsletter_Utils {
         return false;
     }
 
+    protected function calculateFromDate($time, $frequency)
+    {
+        $daysToSubtract = $frequency === self::DAILY_FREQUENCY ? 1 : 7;
+
+        return date('Y-m-d H:i:s',
+            mktime($time[0], $time[1], 00,
+                date('m'), date('d') - $daysToSubtract, date('Y')));
+
+    }
+
+    protected function calculateToDate($time)
+    {
+        return date('Y-m-d H:i:s',
+            mktime($time[0], $time[1], 00,
+                date('m'), date('d'), date('Y')));
+    }
+
     /**
      * @return array
-     * @throws MDOAuthException2
+     * @throws \MDOAuthException2
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
      */
-    public function build_daily_mails() {
+    public function buildDailyMails()
+    {
         $response = [];
 
-        foreach( $this->get_current_languages() as $language) {
+        foreach ($this->getCurrentLanguages() as $language) {
             $lang = $language['code'];
 
-            if ($this->is_delivery_active($lang, self::DAILY_FREQUENCY)) {
-                $response[$lang] = $this->md_send_daily_mails($lang);
+            if ($this->isDeliveryActive($lang, self::DAILY_FREQUENCY)) {
+                $response[$lang] = $this->mdSendDailyMails($lang);
             }
         }
 
@@ -661,32 +895,39 @@ class Mdirector_Newsletter_Utils {
 
     /**
      * @return array
-     * @throws MDOAuthException2
+     * @throws \MDOAuthException2
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
      */
-    public function build_weekly_mails() {
+    public function buildWeeklyMails()
+    {
         $response = [];
 
-        foreach ($this->get_current_languages() as $lang) {
+        foreach ($this->getCurrentLanguages() as $lang) {
             $lang = $lang['code'];
 
-            if ($this->is_delivery_active($lang, self::WEEKLY_FREQUENCY)) {
-                $response[$lang] = $this->md_send_weekly_mails($lang);
+            if ($this->isDeliveryActive($lang, self::WEEKLY_FREQUENCY)) {
+                $response[$lang] = $this->mdSendWeeklyMails($lang);
             }
         }
 
         return $response;
     }
 
-    public function get_current_list_id($type, $lang) {
-        $options = $this->get_plugin_options();
+    public function getCurrentListId($type, $lang)
+    {
+        $options = $this->getPluginOptions();
 
-        if (isset($options['mdirector_use_test_lists']) &&
-            $options['mdirector_use_test_lists'] === self::SETTINGS_OPTION_ON) {
+        if (isset($options['mdirector_use_test_lists'])
+            && $options['mdirector_use_test_lists']
+            === self::SETTINGS_OPTION_ON) {
             return $options['mdirector_' . $type . '_test_list_' . $lang];
         }
 
-        if (isset($options['mdirector_use_custom_lists']) &&
-            $options['mdirector_use_custom_lists'] === self::SETTINGS_OPTION_ON) {
+        if (isset($options['mdirector_use_custom_lists'])
+            && $options['mdirector_use_custom_lists']
+            === self::SETTINGS_OPTION_ON) {
             return $options['mdirector_' . $type . '_custom_list_' . $lang];
         }
 

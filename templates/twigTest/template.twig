@@ -1,0 +1,72 @@
+{% extends "base.twig" %}
+
+{% block entryPost %}
+    <td width="33%">
+        {% if post.post_image %}
+            <img alt="{{ post.title }}" src="{{ post.post_image }}" width="{{ post.post_image_size }}">
+        {% endif %}
+
+        <h1>{{ post.title }}</h1>
+        <p>{{ post.excerpt }}</p>
+    </td>
+{% endblock %}
+
+{% block content %}
+    <table width="100%" style="margin-bottom: 40px">
+        <tbody>
+            <tr>
+                {% for post in posts|slice(0, 3) %}
+                    {{ block('entryPost') }}
+                {% endfor %}
+            </tr>
+            <tr>
+                <td colspan="3">
+                    {{ '[banner id="85"]' | do_shortcode }}
+                </td>
+            </tr>
+            <tr>
+                {% for post in posts|slice(3, 3) %}
+                    {{ block('entryPost') }}
+                {% endfor %}
+            </tr>
+            <tr>
+                <td colspan="3">
+                    {{ '[banner id="82"]' | do_shortcode }}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    {% if posts |length > 6 %}
+   <h1>Hasta el 10</h1>
+    <table>
+        <tbody>
+        <tr>
+            <td>
+                <ul>
+                    {% for post in posts|slice(6, 4) %}
+                        <li>{{ post.title }}</li>
+                    {% endfor %}
+                </ul>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    {% endif %}
+    {% if posts | length > 10 %}
+    <h1>Del 10 al 15</h1>
+    <table>
+        <tbody>
+        <tr>
+            <td>
+                <ol>
+                    {% for post in posts|slice(10, 5) %}
+                        <li>{{ post.title }}</li>
+                    {% endfor %}
+                </ol>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    {% endif %}
+{% endblock %}

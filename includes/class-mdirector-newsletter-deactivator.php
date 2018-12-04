@@ -1,4 +1,5 @@
 <?php
+namespace MDirectorNewsletter\includes;
 
 /**
  * Fired during plugin deactivation

@@ -62,6 +62,7 @@ jQuery(document).ready(function ($) {
 
     function md_error_handling($target, error_code, custom_msg) {
         $target.next('.md_handling').remove();
+        custom_msg || (custom_msg = LOCALES.WIDGET_SCRIPT_GENERAL_ERROR);
 
         var msg;
 

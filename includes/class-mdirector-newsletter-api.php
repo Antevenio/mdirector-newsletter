@@ -1,5 +1,11 @@
 <?php
 
+namespace MDirectorNewsletter\includes;
+
+use MDOAuthException2;
+use MDOAuthRequester;
+use MDOAuthStore;
+
 /**
  * MDirector API
  *
@@ -9,7 +15,9 @@
  */
 class Mdirector_Newsletter_Api
 {
-    const OAUTH_PATH = MDIRECTOR_NEWSLETTER_PLUGIN_DIR . '/lib/oauth-php/library/';
+    const OAUTH_PATH = MDIRECTOR_NEWSLETTER_PLUGIN_DIR
+    . '/lib/oauth-php/library/';
+
     /**
      * @param null $key
      * @param null $secret
@@ -18,7 +26,7 @@ class Mdirector_Newsletter_Api
      * @param null $params
      *
      * @return string
-     * @throws MDOAuthException2
+     * @throws \MDOAuthException2
      */
     public function callAPI(
         $key = null,

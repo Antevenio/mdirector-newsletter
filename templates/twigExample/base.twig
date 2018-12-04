@@ -1,0 +1,302 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <style type="text/css">/* /\/\/\/\/\/\/\/\/ CLIENT-SPECIFIC STYLES /\/\/\/\/\/\/\/\/ */
+        #outlook a {
+            padding: 0;
+        }
+
+        /* Force Outlook to provide a "view in browser" message */
+        .ReadMsgBody {
+            width: 100%;
+        }
+
+        .ExternalClass {
+            width: 100%;
+        }
+
+        /* Force Hotmail to display emails at full width */
+        .ExternalClass, .ExternalClass p, .ExternalClass span, .ExternalClass font, .ExternalClass td, .ExternalClass div {
+            line-height: 100%;
+        }
+
+        /* Force Hotmail to display normal line spacing */
+        body, table, td, p, a, li, blockquote {
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+        }
+
+        /* Prevent WebKit and Windows mobile changing default text sizes */
+        table, td {
+            mso-table-lspace: 0pt;
+            mso-table-rspace: 0pt;
+        }
+
+        /* Remove spacing between tables in Outlook 2007 and up */
+        img {
+            -ms-interpolation-mode: bicubic;
+        }
+
+        /* Allow smoother rendering of resized image in Internet Explorer */ /* /\/\/\/\/\/\/\/\/ RESET STYLES /\/\/\/\/\/\/\/\/ */
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        img {
+            border: 0;
+            height: auto;
+            line-height: 100%;
+            outline: none;
+            text-decoration: none;
+        }
+
+        table {
+            border-collapse: collapse !important;
+        }
+
+        body, #bodyTable, #bodyCell {
+            height: 100% !important;
+            margin: 0;
+            padding: 0;
+            width: 100% !important;
+        }
+
+        /* /\/\/\/\/\/\/\/\/ TEMPLATE STYLES /\/\/\/\/\/\/\/\/ */
+        #bodyCell {
+            padding: 20px;
+        }
+
+        #layout {
+            width: 600px;
+        }
+
+        /* ========== Page Styles ========== */ /** * @tab Page * @section background style * @tip Set the background color and top border for your email. You may want to choose colors that match your company's branding. * @theme page */
+        #headerImage {
+            height: auto;
+            max-width: 600px;
+        }
+
+        /* /\/\/\/\/\/\/\/\/ MOBILE STYLES /\/\/\/\/\/\/\/\/ */
+        @media only screen and (max-width: 480px) {
+            /* /\/\/\/\/\/\/ CLIENT-SPECIFIC MOBILE STYLES /\/\/\/\/\/\/ */
+            body, table, td, p, a, li, blockquote {
+                -webkit-text-size-adjust: none !important;
+            }
+
+            /* Prevent Webkit platforms from changing default text sizes */
+            body {
+                width: 100% !important;
+                min-width: 100% !important;
+            }
+
+            /* Prevent iOS Mail from adding padding to the body */
+            /* /\/\/\/\/\/\/ MOBILE RESET STYLES /\/\/\/\/\/\/ */
+            #bodyCell {
+                padding: 10px !important;
+            }
+
+            /* /\/\/\/\/\/\/ MOBILE TEMPLATE STYLES /\/\/\/\/\/\/ */
+            /* ======== Page Styles ======== */
+            /** * @tab Mobile Styles * @section template width * @tip Make the template fluid for portrait or landscape view adaptability. If a fluid layout doesn't work for you, set the width to 300px instead. */
+            #layout {
+                max-width: 600px !important; /*@editable*/
+                width: 100% !important;
+            }
+
+            /* ======== Header Styles ======== */
+            #templatePreheader {
+                display: none !important;
+            }
+
+            /* Hide the template preheader to save space */
+            /** * @tab Mobile Styles * @section header image * @tip Make the main header image fluid for portrait or landscape view adaptability, and set the image's original width as the max-width. If a fluid setting doesn't work, set the image width to half its original size instead. */
+            #headerImage {
+                height: auto !important; /*@editable*/
+                max-width: 600px !important; /*@editable*/
+                width: 100% !important;
+            }
+
+            /** * @tab Mobile Styles * @section header text * @tip Make the header content text larger in size for better readability on small screens. We recommend a font size of at least 16px. */
+            .headerContent { /*@editable*/
+                font-size: 20px !important; /*@editable*/
+                line-height: 125% !important;
+            }
+
+            /* ======== Body Styles ======== */
+            /** * @tab Mobile Styles * @section body image * @tip Make the main body image fluid for portrait or landscape view adaptability, and set the image's original width as the max-width. If a fluid setting doesn't work, set the image width to half its original size instead. */
+            #edit-image-trigger {
+                height: auto !important; /*@editable*/
+                max-width: 560px !important; /*@editable*/
+                width: 100% !important;
+            }
+
+            /** * @tab Mobile Styles * @section body text * @tip Make the body content text larger in size for better readability on small screens. We recommend a font size of at least 16px. */
+            .bodyContent { /*@editable*/
+                font-size: 18px !important; /*@editable*/
+                line-height: 125% !important;
+            }
+
+            .templateSocialContainer {
+                display: inline !important;
+            }
+
+            /* ======== Footer Styles ======== */
+            /** * @tab Mobile Styles * @section footer text * @tip Make the body content text larger in size for better readability on small screens. */
+            .footerContent { /*@editable*/
+                font-size: 14px !important; /*@editable*/
+                line-height: 115% !important;
+            }
+
+            .footerContent a {
+                display: block !important;
+            }
+            /* Place footer social and utility links on their own lines, for easier access */
+        }
+
+        /* Custom styles for the current template */
+        .presentation {
+            background-color: #fff;
+            padding: 20px;
+            margin: 0;
+        }
+
+        table table table table table td {
+            padding: 0 10px;
+            vertical-align: top;
+        }
+
+        table table table table table img {
+            max-height: 105px;
+        }
+
+        h1, h2 {
+            font-size: 22px;
+            color: #323741;
+        }
+
+        h2 {
+            color: #ED1C24;
+            padding-top: 25px;
+        }
+
+        a {
+            font-family: Arial, sans-serif;
+            color: #005E9A;
+            font-size: 14px;
+            line-height: 20px;
+            text-decoration: none;
+        }
+
+        p {
+            font-size: 12px;
+            line-height: 18px;
+            color: #7f8c8d;
+            padding-bottom: 50px;
+        }
+
+        .social {
+            height: 36px;
+            width: 36px;
+        }
+
+        .post-title {
+            font-size: 16px;
+            line-height: 24px;
+        }
+    </style>
+</head>
+<body leftmargin="0" marginheight="0" marginwidth="0" offset="0" topmargin="0">
+<center>
+    <table align="center" border="0" cellpadding="0" cellspacing="0"
+            class="general-background-color general-font-family" height="100%" id="bodyTable"
+            style="font-family: HelveticaNeue, Arial, sans-serif; background-color: #9BC4E0;" width="100%">
+        <tbody>
+        <tr>
+            <td align="center" id="bodyCell" valign="top">
+                <table border="0" cellpadding="0" cellspacing="0"
+                    class="general-border-style general-border-width general-border-color" id="layout"
+                    style="border-width: 10px; border-color: #9BC4E0; border-style: solid; width: 100%; max-width:600px; ">
+                    <tbody>
+                    <tr>
+                        <td>
+                            <table border="0" cellpadding="0" cellspacing="0"
+                                class="table"
+                                style="font-family: HelveticaNeue, Arial, sans-serif; font-size: 24px; color: #ffffff; width: 100%; text-align: center; background-color: #9BC4E0;"
+                                width="100%">
+                                <tbody>
+                                <tr>
+                                    <td style="text-align: inherit; vertical-align: middle; line-height: 1em;" valign="middle">
+                                        <div>
+                                            <p class="presentation">Weekly newsletter about a wonderful world.</p>
+                                            <img alt="Logo" src="{{ templateURL }}/img/logo.png">
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <table align="left" border="0" cellpadding="0" cellspacing="0"
+                                class="table"
+                                style="font-family: HelveticaNeue, Arial, sans-serif; font-size: 14px; color: rgb(57, 57, 57); text-align: left; width: 100%; background-color: rgb(255, 255, 255);"
+                                width="100%">
+                                <tbody>
+                                <tr>
+                                    <td style="padding: 28px 22px 0;" valign="top">
+                                        <table align="left" border="0" cellpadding="0" cellspacing="0"
+                                            style="margin-bottom: 10px; color: inherit; line-height: 1em;"
+                                            width="100%">
+                                            <tbody>
+                                            <tr>
+                                                <td>{% block content %}{% endblock %}</td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+
+                                        <img border="0" class="divider" height="20"
+                                            src="https://www.mdirector.com/img/email-templates/spacer.gif?1424074876"
+                                            width="1"/>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <table class="footer" align="left" border="0" cellpadding="0" cellspacing="0"
+                                style="font-family: HelveticaNeue, Arial, sans-serif; font-size: 12px; color: #ffffff; width: 100%; text-align: center; background-color: #487fa5;"
+                                width="100%">
+                                <tbody>
+                                <tr>
+                                    <td class="footerContent"
+                                        style="padding: 20px; margin: 20px; color: rgb(0, 0, 0); font-size: inherit; font-family: inherit; text-align: inherit; line-height: 1em;"
+                                        valign="middle">
+                                        <p style="color: #ffffff;"><i>Copyright © 2018 My Awesome Company, All rights reserved.</i><br>
+                                            You are receiving this email because you opted in via our website.</p>
+                                        <div><a
+                                            href="{{ site_link }}"
+                                            style="text-decoration: underline;color: #ffffff;"
+                                            target="_blank">{{ site_link }}</a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</center>
+</body>
+</html>

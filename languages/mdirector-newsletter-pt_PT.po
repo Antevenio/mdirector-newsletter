@@ -41,6 +41,27 @@ msgstr "Sábado"
 msgid "WEEKDAY__SUNDAY"
 msgstr "Domingo"
 
+msgid "WEEKDAY__MONDAY-SHORT"
+msgstr "S"
+
+msgid "WEEKDAY__TUESDAY-SHORT"
+msgstr "T"
+
+msgid "WEEKDAY__WEDNESDAY-SHORT"
+msgstr "Q"
+
+msgid "WEEKDAY__THURSDAY-SHORT"
+msgstr "Q"
+
+msgid "WEEKDAY__FRIDAY-SHORT"
+msgstr "S"
+
+msgid "WEEKDAY__SATURDAY-SHORT"
+msgstr "D"
+
+msgid "WEEKDAY__SUNDAY-SHORT"
+msgstr "S"
+
 msgid "SUBJECT-VALUES__FIRST-POST-TITLE"
 msgstr "Título do primeiro post"
 
@@ -67,6 +88,12 @@ msgstr "Inicia sessão em sua <a href=\"https://auth.mdirector.com\" target=\"_b
 
 msgid "NEW-LISTS__NEW-ID"
 msgstr "con el ID:"
+
+msgid "MAIN-FORM__SAVE-SUCCESS"
+msgstr "Opções de configuração salvas corretamente."
+
+msgid "DEBUG-FORM__SAVE-SUCCESS"
+msgstr "Opções de teste salvas corretamente."
 
 msgid "DAILY-LISTS__ERROR-NOTICE"
 msgstr "A lista (ou listas) diárias que você indicou não existe. Se utilizarão as originais."
@@ -186,7 +213,7 @@ msgid "TAB-CONTENT-HELP__LIST-12"
 msgstr "Agora já pode colocar o formulário / widget no seu blog. Para isso, ingresse a Aparência > Widgets no painel de seu wordpress e arrastre ao seu sidebar o widget de MDirector. Você poderá configurar um título, uma descrição / explicação para que apareça encima do seu formulário e um link e checkbox para a política de privacidade ou términos legais. Já está, seus usuários podem começar a registrar-se."
 
 msgid "TAB-CONTENT-HELP__LIST-13"
-msgstr "Além do widget, você pode usar um shortcode para colocar o formulário de registro em qualquer página ou post do seu blog. Para isso adicione [mdirector_subscriptionbox] ao conteúdo de qualquer uma de suas páginas ou posts."
+msgstr "Além do widget, você pode usar um shortcode para colocar o formulário de registro em qualquer página ou post do seu blog. Para isso adicione [mdirectorSubscriptionBox] ao conteúdo de qualquer uma de suas páginas ou posts."
 
 msgid "TAB-CONTENT-HELP__LIST-14"
 msgstr "Você pode personalizar o aspecto do template da newsletter enviada aos usuários modificando os arquivos da pasta /templates/ do diretório do plugin (Conhecimentos de HTML / CSS requeridos)."
@@ -386,6 +413,15 @@ msgstr "Você pode configurar um template diferente para cada um, podendo assim 
 msgid "STEP-8__PLUGIN-AVAILABLE-TEXT-4"
 msgstr "Este plugin é compatível com WPML, pelo que você poderá configurar vários de seus aspectos para cada um dos idiomas que tem ativado na sua página web."
 
+msgid "STEP-8__PLUGIN-MIN-ENTRIES-TITLE"
+msgstr "Noticias necesarias para completar un envío:"
+
+msgid "STEP-8__PLUGIN-MIN-ENTRIES-DESCRIPTION"
+msgstr "Este plugin reúne por defecto las últimas entradas publicadas en tu blog para crear un envío. Sin embargo, puedes especificar un número mínimo para que en caso de que no haya suficientes entradas nuevas en el momento de enviar la newsletter, se cojan otras más antiguas hasta completar dicho número."
+
+msgid "STEP-8__PLUGIN-MIN-ENTRIES-LABEL"
+msgstr "Indica el número mínimo de entradas:"
+
 msgid "STEP-9__TITLE"
 msgstr "9. Reiniciar data do último envio diário e semanal."
 
@@ -487,3 +523,6 @@ msgstr "Por favor, aceite a política de privacidade."
 
 msgid "WIDGET-SCRIPT-EMAIL-ALREADY-REGISTERED"
 msgstr "O correio introduzido já estava registrado a lista."
+
+msgid "WIDGET-SCRIPT-GENERAL-ERROR"
+msgstr "Ocorreu um problema ao registrar seu contato. Por favor, tente novamente mais tarde."
